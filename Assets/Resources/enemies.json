@@ -12,13 +12,19 @@
        "hp": 30,
        "speed": 7,
        "damage": 10
-   },  
+   },
    {
        "name": "warlock",
        "sprite": 19,
        "hp": 30,
        "speed": 7,
        "damage": 10
+   },
+   {
+        "name": "ogre",
+        "sprite": 11,
+        "hp": 60,
+        "speed": 2,
+        "damage": 15
    }
- 
 ]
