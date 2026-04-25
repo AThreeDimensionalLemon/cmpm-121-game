@@ -8,9 +8,14 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
     private static Level currentLevel = null;
 
-    public void SetLevel(int inLevel) {
+    public void SetLevel(string inLevel) {
         JToken levelTokens = JToken.Parse(Resources.Load<TextAsset>("levels").text);
-        currentLevel = levelTokens[inLevel].ToObject<Level>(); //TODO: See how this treats the spawns field
+        foreach (var token in levelTokens) {
+            if (token.Value<string>("name") == inLevel) {
+                currentLevel = token.ToObject<Level>();
+                break;
+            }
+        }
     }
 
     public Level GetLevel() {
