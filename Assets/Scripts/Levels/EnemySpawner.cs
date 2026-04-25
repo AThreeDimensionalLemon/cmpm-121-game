@@ -35,7 +35,7 @@ public class EnemySpawner : MonoBehaviour
         level_selector.gameObject.SetActive(false);
         // this is not nice: we should not have to be required to tell the player directly that the level is starting
         manager.player.GetComponent<PlayerController>().StartLevel();
-        manager.levelManager.SetLevel("Easy"); //TODO: Make buttons send integer level value instead?
+        manager.levelManager.SetLevel("Easy"); //TODO: Make buttons that send the level names
 
         StartCoroutine(SpawnWave());
     }

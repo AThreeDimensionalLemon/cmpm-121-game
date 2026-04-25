@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting.Antlr3.Runtime;
 
-public class WaveMaker {
-    private static WaveMaker instance;
+public class WaveMaker : MonoBehaviour {
 
     //public Wave Make(int wave) {
+    //    Level currentLevel = GameManager.Instance.levelManager.GetLevel();
     //    return new Wave();
     //}
 }
