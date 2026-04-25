@@ -6,15 +6,15 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
-    private Level currentLevel = null;
+    private static Level currentLevel = null;
 
     public void SetLevel(int inLevel) {
-        JToken token = JToken.Parse(Resources.Load<TextAsset>("levels").text);
-        //currentLevel = token.ToObject(Level[])[inLevel];
+        JToken levelTokens = JToken.Parse(Resources.Load<TextAsset>("levels").text);
+        currentLevel = levelTokens[inLevel].ToObject<Level>(); //TODO: See how this treats the spawns field
     }
 
-    public string GetLevel() {
-        if (currentLevel != null) return currentLevel.name;
+    public Level GetLevel() {
+        if (currentLevel != null) return currentLevel;
         else throw new Exception("Current level has not yet been set");
     }
 

@@ -7,18 +7,9 @@ using System.Text;
 using Unity.VisualScripting.Antlr3.Runtime;
 
 public class WaveMaker {
+    private static WaveMaker instance;
 
-    public WaveMaker(int inLevel) {
-        
-    }
-
-    public Wave Make(int wave) {
-        return new Wave();
-    }
-
-    public string LoadedLevel {
-        get {
-            return loadedLevel.name;
-        }
-    }
+    //public Wave Make(int wave) {
+    //    return new Wave();
+    //}
 }

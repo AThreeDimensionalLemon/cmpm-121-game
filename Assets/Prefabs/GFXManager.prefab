@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2963255102610807039}
   - component: {fileID: 3127186393118423181}
   - component: {fileID: 421493446964380599}
+  - component: {fileID: 6814612331226045554}
   m_Layer: 0
   m_Name: GFXManager
   m_TagString: Untagged
@@ -150,3 +151,15 @@ MonoBehaviour:
   - {fileID: -7581497738134486756, guid: e621137f9197f0842a52168123ca0298, type: 3}
   - {fileID: 1517201070320196100, guid: e621137f9197f0842a52168123ca0298, type: 3}
   - {fileID: -755728717, guid: e621137f9197f0842a52168123ca0298, type: 3}
+--- !u!114 &6814612331226045554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107732465084047900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72753c86f08b6947911f75902ad821a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelManager

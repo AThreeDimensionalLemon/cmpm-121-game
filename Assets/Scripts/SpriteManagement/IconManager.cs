@@ -24,7 +24,6 @@ public class IconManager : MonoBehaviour
 
     public Sprite Get(int index)
     {
-        Debug.Log(sprites);
         return sprites[index];
     }
 
