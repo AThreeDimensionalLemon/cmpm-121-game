@@ -6,11 +6,11 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
-    private static Level currentLevel = null;
+    private Level currentLevel = null;
+    private JArray parsedLevelJson;
 
     public void SetLevel(string inLevel) {
-        JToken levelTokens = JToken.Parse(Resources.Load<TextAsset>("levels").text);
-        foreach (var token in levelTokens) {
+        foreach (var token in parsedLevelJson) {
             if (token.Value<string>("name") == inLevel) {
                 currentLevel = token.ToObject<Level>();
                 break;
@@ -23,7 +23,12 @@ public class LevelManager : MonoBehaviour {
         else throw new Exception("Current level has not yet been set");
     }
 
+    public JArray GetJson() {
+        return parsedLevelJson;
+    }
+
     void Start() {
         GameManager.Instance.levelManager = this;
+        parsedLevelJson = JArray.Parse(Resources.Load<TextAsset>("levels").text);
     }
 }

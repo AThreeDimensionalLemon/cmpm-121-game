@@ -6,21 +6,35 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Collections;
 using System.Linq;
+using UnityEditor.ShaderGraph.Internal;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public Image level_selector;
-    public GameObject button;
+    public Image level_selector; //background of level selection window
+    public GameObject button; //prefab of buttons
     public GameObject enemy;
     public SpawnPoint[] SpawnPoints;    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        GameObject selector = Instantiate(button, level_selector.transform);
-        selector.transform.localPosition = new Vector3(0, 130);
-        selector.GetComponent<MenuSelectorController>().spawner = this;
-        selector.GetComponent<MenuSelectorController>().SetLevel("Start");
+    void Start() { //instantiate buttons for level selection
+        float windowHeight = level_selector.GetComponent<RectTransform>().rect.height;
+        float windowBorderSize = button.GetComponent<RectTransform>().offsetMin.x; //how far in the window's borders extend in
+        float buttonYBuffer = 4;
+        JArray levelsJson = GameManager.Instance.levelManager.GetJson();
+        int levelsCount = levelsJson.Count();
+
+        for (int i = 0; i < levelsCount; ++i) {
+            GameObject selector = Instantiate(button, level_selector.transform);
+            RectTransform selectorDims = selector.GetComponent<RectTransform>();
+            float windowSafeAreaHeight = (windowHeight - windowBorderSize * 2);
+
+            selectorDims.sizeDelta = new Vector2(selectorDims.sizeDelta.x, windowSafeAreaHeight / levelsCount - buttonYBuffer * 2);
+            float selectorHeight = selectorDims.rect.height;
+            selector.transform.localPosition = new Vector3(0, windowHeight / 2 - (windowBorderSize + (selectorHeight + buttonYBuffer * 2) * i));
+
+            selector.GetComponent<MenuSelectorController>().spawner = this;
+            selector.GetComponent<MenuSelectorController>().SetLevel(levelsJson[i]["name"].ToObject<string>());
+        }
     }
 
     // Update is called once per frame
@@ -35,7 +49,7 @@ public class EnemySpawner : MonoBehaviour
         level_selector.gameObject.SetActive(false);
         // this is not nice: we should not have to be required to tell the player directly that the level is starting
         manager.player.GetComponent<PlayerController>().StartLevel();
-        manager.levelManager.SetLevel("Easy"); //TODO: Make buttons that send the level names
+        manager.levelManager.SetLevel(levelname);
 
         StartCoroutine(SpawnWave());
     }
