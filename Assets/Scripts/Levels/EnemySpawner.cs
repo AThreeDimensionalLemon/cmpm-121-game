@@ -15,12 +15,23 @@ public class EnemySpawner : MonoBehaviour
     public SpawnPoint[] SpawnPoints;    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    void Start() { //instantiate buttons for level selection
+        float windowHeight = level_selector.GetComponent<RectTransform>().rect.height;
+        JArray levelsJson = GameManager.Instance.levelManager.GetJson();
+        int levelsCount = levelsJson.Count();
+
+        for (int i = 0; i < levelsCount; ++i) {
         GameObject selector = Instantiate(button, level_selector.transform);
         selector.transform.localPosition = new Vector3(0, 130);
         selector.GetComponent<MenuSelectorController>().spawner = this;
-        selector.GetComponent<MenuSelectorController>().SetLevel("Start");
+            selector.GetComponent<MenuSelectorController>().SetLevel(levelsJson[i]["name"].ToObject<string>());
+        }
+
+        //Basic loop
+        //GameObject selector = Instantiate(button, level_selector.transform);
+        //selector.transform.localPosition = new Vector3(0, 130);
+        //selector.GetComponent<MenuSelectorController>().spawner = this;
+        //selector.GetComponent<MenuSelectorController>().SetLevel("Start");
     }
 
     // Update is called once per frame
