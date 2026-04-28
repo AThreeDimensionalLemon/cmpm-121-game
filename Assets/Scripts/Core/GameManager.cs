@@ -25,6 +25,27 @@ public class GameManager
         }
     }
 
+    private int currentWave = 1;
+
+    public void ResetWaves()
+    {
+        currentWave = 1;
+    }
+
+    public void IncrementWave()
+    {
+        currentWave++;
+        if (currentWave > currentLevel.waves)
+        {
+            throw new OverflowException("The current level does not define this many waves.");
+        }
+    }
+
+    public int GetWave()
+    {
+        return currentWave;
+    }
+
     public GameObject player;
     
     public ProjectileManager projectileManager;

@@ -6,8 +6,10 @@ using System.Text;
 public class Spawn {
     public string enemy;
     public string count;
-    public string hp;
-    public int delay;
-    public int[] sequence;
-    public string location;
+    public int[] sequence = { 1 };
+    public int delay = 2;
+    public string location = "random";
+    public string hp = "base";
+    public string speed = "base";
+    public string damage = "base";
 }
