@@ -37,7 +37,7 @@ public class GameManager
         currentWave++;
         if (currentWave > levelManager.GetLevel().waves)
         {
-            throw new OverflowException("The current level does not define this many waves.");
+            theInstance.state = GameState.GAMEOVER;
         }
     }
 

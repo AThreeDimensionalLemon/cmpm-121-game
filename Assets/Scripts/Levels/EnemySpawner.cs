@@ -11,10 +11,13 @@ using RPNEvaluator;
 
 public class EnemySpawner : MonoBehaviour
 {
+    private string EnemiesJsonPath = "enemies";
+
     public Image level_selector; //background of level selection window
     public GameObject button; //prefab of buttons
     public GameObject enemy;
-    public SpawnPoint[] SpawnPoints;    
+    public SpawnPoint[] SpawnPoints;
+    public Dictionary<string, Enemy> enemy_prototypes;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() { //instantiate buttons for level selection
@@ -35,6 +38,14 @@ public class EnemySpawner : MonoBehaviour
 
             selector.GetComponent<MenuSelectorController>().spawner = this;
             selector.GetComponent<MenuSelectorController>().SetLevel(levelsJson[i]["name"].ToObject<string>());
+        }
+
+        enemy_prototypes = new Dictionary<string, Enemy>();
+        JToken json = JToken.Parse(Resources.Load<TextAsset>(EnemiesJsonPath).text);
+        foreach(JToken token in json)
+        {
+            Enemy in_enemy = token.ToObject<Enemy>();
+            enemy_prototypes.Add(in_enemy.name, in_enemy);
         }
     }
 
@@ -78,12 +89,33 @@ public class EnemySpawner : MonoBehaviour
 
         Level currLevel = manager.levelManager.GetLevel();
         int wave = manager.GetWave();
-        for (int i = 0; i < 10; ++i)
+        foreach(Spawn spawn in manager.levelManager.GetLevel().spawns)
         {
-            yield return SpawnZombie();
+            Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
+            yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
         }
         yield return new WaitWhile(() => manager.enemy_count > 0);
         manager.state = GameManager.GameState.WAVEEND;
+    }
+
+    SpawnPoint FindValidSpawnPoint(string in_behavior)
+    {
+        string[] tokens = in_behavior.Split(' ');
+        if (tokens.Length == 1)
+        {
+            return SpawnPoints[Random.Range(0, SpawnPoints.Length)];
+        }
+        else
+        {
+            List<SpawnPoint> curated_spawns = new List<SpawnPoint>();
+            foreach (SpawnPoint point in SpawnPoints)
+            {
+                if (point.kind.ToString().ToLower().Equals(tokens[1].ToLower())) {
+                    curated_spawns.Add(point);
+                }
+            }
+            return curated_spawns[Random.Range(0, curated_spawns.Count)];
+        }
     }
 
     IEnumerator SpawnZombie()
@@ -98,11 +130,13 @@ public class EnemySpawner : MonoBehaviour
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(50, Hittable.Team.MONSTERS, new_enemy);
         en.speed = 10;
+        en.damage = 5;
+        en.damage_type = Damage.Type.PHYSICAL;
         GameManager.Instance.AddEnemy(new_enemy);
         yield return new WaitForSeconds(0.5f);
     }
 
-    IEnumerator SpawnEnemy()
+    IEnumerator SpawnEnemy(SpawnPoint spawn_point, Enemy in_enemy, int in_delay)
     {
         Vector2 offset = Random.insideUnitCircle * 1.8f;
         Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
@@ -112,6 +146,8 @@ public class EnemySpawner : MonoBehaviour
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(in_enemy.hp, Hittable.Team.MONSTERS, new_enemy);
         en.speed = in_enemy.speed;
+        en.damage = in_enemy.damage;
+        en.damage_type = Damage.Type.PHYSICAL; // leaving this hardcoded for now, because we haven't added enemy damage types into the JSON yet
         GameManager.Instance.AddEnemy(new_enemy);
         yield return new WaitForSeconds(in_delay);
     }

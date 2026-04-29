@@ -18,6 +18,15 @@ public class Enemy
         damage = 0;
     }
 
+    public Enemy(Enemy in_enemy)
+    {
+        name = in_enemy.name;
+        sprite = in_enemy.sprite;
+        hp = in_enemy.hp;
+        speed = in_enemy.speed;
+        damage = in_enemy.damage;
+    }
+
     /* TO READ FROM JSON, USE THIS CODE:
      * 
      *  string EnemiesJsonPath = "enemies";
