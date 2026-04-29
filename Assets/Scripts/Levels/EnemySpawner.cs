@@ -93,7 +93,7 @@ public class EnemySpawner : MonoBehaviour
         {
             //Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
             //yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
-            StartCoroutine(SpawnWaveSegment(spawn));
+            yield return StartCoroutine(SpawnWaveSegment(spawn));
         }
         yield return new WaitWhile(() => manager.enemy_count > 0);
         manager.state = GameManager.GameState.WAVEEND;
