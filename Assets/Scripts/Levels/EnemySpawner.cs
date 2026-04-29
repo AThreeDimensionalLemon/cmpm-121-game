@@ -52,14 +52,14 @@ public class EnemySpawner : MonoBehaviour
         manager.player.GetComponent<PlayerController>().StartLevel();
 
         manager.levelManager.SetLevel(levelname);
-        manager.levelManager.ResetWaves();
+        manager.ResetWaves();
 
         StartCoroutine(SpawnWave());
     }
 
     public void NextWave()
     {
-        GameManager.Instance.levelManager.IncrementWave();
+        GameManager.Instance.IncrementWave();
         StartCoroutine(SpawnWave());
     }
 
@@ -77,7 +77,7 @@ public class EnemySpawner : MonoBehaviour
         manager.state = GameManager.GameState.INWAVE;
 
         Level currLevel = manager.levelManager.GetLevel();
-        int wave = manager.levelManager.GetWave();
+        int wave = manager.GetWave();
         for (int i = 0; i < 10; ++i)
         {
             yield return SpawnZombie();

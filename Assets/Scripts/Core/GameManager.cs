@@ -35,7 +35,7 @@ public class GameManager
     public void IncrementWave()
     {
         currentWave++;
-        if (currentWave > currentLevel.waves)
+        if (currentWave > levelManager.GetLevel().waves)
         {
             throw new OverflowException("The current level does not define this many waves.");
         }
