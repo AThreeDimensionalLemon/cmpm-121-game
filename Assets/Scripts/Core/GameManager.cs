@@ -38,6 +38,7 @@ public class GameManager
         if (currentWave > levelManager.GetLevel().waves)
         {
             theInstance.state = GameState.GAMEOVER;
+            Debug.Log("You win!");
         }
     }
 

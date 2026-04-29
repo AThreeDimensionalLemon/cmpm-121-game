@@ -71,7 +71,10 @@ public class EnemySpawner : MonoBehaviour
     public void NextWave()
     {
         GameManager.Instance.IncrementWave();
-        StartCoroutine(SpawnWave());
+        if (GameManager.Instance.state != GameManager.GameState.GAMEOVER)
+        {
+            StartCoroutine(SpawnWave());
+        }
     }
 
 
@@ -91,10 +94,15 @@ public class EnemySpawner : MonoBehaviour
         int wave = manager.GetWave();
         foreach(Spawn spawn in manager.levelManager.GetLevel().spawns)
         {
+<<<<<<< Updated upstream
             //Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
             //yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
             yield return StartCoroutine(SpawnWaveSegment(spawn));
+=======
+            StartCoroutine(SpawnWaveSegment(spawn));
+>>>>>>> Stashed changes
         }
+        yield return CalculateWaveLength(manager.levelManager.GetLevel().spawns);
         yield return new WaitWhile(() => manager.enemy_count > 0);
         manager.state = GameManager.GameState.WAVEEND;
     }
@@ -135,6 +143,35 @@ public class EnemySpawner : MonoBehaviour
                 sequence_index = 0;
             }
         }
+    }
+
+    IEnumerator CalculateWaveLength(Spawn[] in_spawns)
+    {
+        int wave_length = 0;
+        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
+        foreach(Spawn spawn in in_spawns)
+        {
+            int delay = RPNEvaluator.RPNEvaluator.Evaluate(spawn.delay, RPNDict);
+            int count = RPNEvaluator.RPNEvaluator.Evaluate(spawn.count, RPNDict);
+            int spawn_length = 0;
+            int sequence_index = 0;
+            while (count > 0)
+            {
+                count -= spawn.sequence[sequence_index];
+                spawn_length += delay;
+                sequence_index++;
+                if(sequence_index >= spawn.sequence.Length)
+                {
+                    sequence_index = 0;
+                }
+            }
+            if (spawn_length > wave_length)
+            {
+                wave_length = spawn_length;
+            }
+        }
+        yield return new WaitForSeconds(wave_length);
     }
 
     SpawnPoint FindValidSpawnPoint(string in_behavior)
