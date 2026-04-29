@@ -94,13 +94,7 @@ public class EnemySpawner : MonoBehaviour
         int wave = manager.GetWave();
         foreach(Spawn spawn in manager.levelManager.GetLevel().spawns)
         {
-<<<<<<< Updated upstream
-            //Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
-            //yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
-            yield return StartCoroutine(SpawnWaveSegment(spawn));
-=======
             StartCoroutine(SpawnWaveSegment(spawn));
->>>>>>> Stashed changes
         }
         yield return CalculateWaveLength(manager.levelManager.GetLevel().spawns);
         yield return new WaitWhile(() => manager.enemy_count > 0);
