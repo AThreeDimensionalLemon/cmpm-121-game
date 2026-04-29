@@ -101,6 +101,8 @@ public class EnemySpawner : MonoBehaviour
         manager.state = GameManager.GameState.WAVEEND;
     }
 
+    // spawns all enemies of the type given by in_spawn.
+    // called asynchronously by SpawnWave().
     IEnumerator SpawnWaveSegment(Spawn in_spawn)
     {
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
@@ -139,6 +141,8 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // determines how long the longest SpawnWaveSegment() will take to run
+    // for the current wave, and returns a WaitForSeconds with that length.
     IEnumerator CalculateWaveLength(Spawn[] in_spawns)
     {
         int wave_length = 0;
@@ -168,6 +172,8 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitForSeconds(wave_length);
     }
 
+    // Given the 'location' field from a Spawn, finds and
+    // returns a valid spawn point for that enemy.
     SpawnPoint FindValidSpawnPoint(string in_behavior)
     {
         string[] tokens = in_behavior.Split(' ');
@@ -186,24 +192,6 @@ public class EnemySpawner : MonoBehaviour
             }
             return curated_spawns[Random.Range(0, curated_spawns.Count)];
         }
-    }
-
-    IEnumerator SpawnZombie()
-    {
-        SpawnPoint spawn_point = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
-        Vector2 offset = Random.insideUnitCircle * 1.8f;
-                
-        Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
-        GameObject new_enemy = Instantiate(enemy, initial_position, Quaternion.identity);
-
-        new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(0);
-        EnemyController en = new_enemy.GetComponent<EnemyController>();
-        en.hp = new Hittable(50, Hittable.Team.MONSTERS, new_enemy);
-        en.speed = 10;
-        en.damage = 5;
-        en.damage_type = Damage.Type.PHYSICAL;
-        GameManager.Instance.AddEnemy(new_enemy);
-        yield return new WaitForSeconds(0.5f);
     }
 
     IEnumerator SpawnEnemy(SpawnPoint spawn_point, Enemy in_enemy, int in_delay)
