@@ -91,8 +91,6 @@ public class EnemySpawner : MonoBehaviour
         int wave = manager.GetWave();
         foreach(Spawn spawn in manager.levelManager.GetLevel().spawns)
         {
-            //Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
-            //yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
             yield return StartCoroutine(SpawnWaveSegment(spawn));
         }
         yield return new WaitWhile(() => manager.enemy_count > 0);
@@ -155,24 +153,6 @@ public class EnemySpawner : MonoBehaviour
             }
             return curated_spawns[Random.Range(0, curated_spawns.Count)];
         }
-    }
-
-    IEnumerator SpawnZombie()
-    {
-        SpawnPoint spawn_point = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
-        Vector2 offset = Random.insideUnitCircle * 1.8f;
-                
-        Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
-        GameObject new_enemy = Instantiate(enemy, initial_position, Quaternion.identity);
-
-        new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(0);
-        EnemyController en = new_enemy.GetComponent<EnemyController>();
-        en.hp = new Hittable(50, Hittable.Team.MONSTERS, new_enemy);
-        en.speed = 10;
-        en.damage = 5;
-        en.damage_type = Damage.Type.PHYSICAL;
-        GameManager.Instance.AddEnemy(new_enemy);
-        yield return new WaitForSeconds(0.5f);
     }
 
     IEnumerator SpawnEnemy(SpawnPoint spawn_point, Enemy in_enemy, int in_delay)
