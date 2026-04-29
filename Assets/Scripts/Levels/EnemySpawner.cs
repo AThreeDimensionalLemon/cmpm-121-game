@@ -91,11 +91,50 @@ public class EnemySpawner : MonoBehaviour
         int wave = manager.GetWave();
         foreach(Spawn spawn in manager.levelManager.GetLevel().spawns)
         {
-            Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
-            yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
+            //Enemy to_spawn = new Enemy(enemy_prototypes[spawn.enemy]);
+            //yield return SpawnEnemy(FindValidSpawnPoint(spawn.location), to_spawn, spawn.delay);
+            StartCoroutine(SpawnWaveSegment(spawn));
         }
         yield return new WaitWhile(() => manager.enemy_count > 0);
         manager.state = GameManager.GameState.WAVEEND;
+    }
+
+    IEnumerator SpawnWaveSegment(Spawn in_spawn)
+    {
+        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
+        int enemies_to_spawn = RPNEvaluator.RPNEvaluator.Evaluate(in_spawn.count, RPNDict);
+        int sequence_index = 0;
+        Enemy to_spawn = new Enemy(enemy_prototypes[in_spawn.enemy]);
+
+        // initialize enemy prototype stats
+        RPNDict.Add("base", enemy_prototypes[in_spawn.enemy].hp);
+        to_spawn.hp = RPNEvaluator.RPNEvaluator.Evaluate(in_spawn.hp, RPNDict);
+        RPNDict["base"] = enemy_prototypes[in_spawn.enemy].speed;
+        to_spawn.speed = RPNEvaluator.RPNEvaluator.Evaluate(in_spawn.speed, RPNDict);
+        RPNDict["base"] = enemy_prototypes[in_spawn.enemy].damage;
+        to_spawn.damage = RPNEvaluator.RPNEvaluator.Evaluate(in_spawn.damage, RPNDict);
+
+        while(enemies_to_spawn > 0)
+        {
+            for(int i = 0; i < in_spawn.sequence[sequence_index] - 1; i++) {
+                if (enemies_to_spawn > 0)
+                {
+                    yield return SpawnEnemy(FindValidSpawnPoint(in_spawn.location), to_spawn, 0);
+                }
+                enemies_to_spawn--;
+            }
+            if (enemies_to_spawn > 0)
+            {
+                yield return SpawnEnemy(FindValidSpawnPoint(in_spawn.location), to_spawn, RPNEvaluator.RPNEvaluator.Evaluate(in_spawn.delay, RPNDict));
+            }
+            enemies_to_spawn--;
+            sequence_index++;
+            if (sequence_index >= in_spawn.sequence.Length)
+            {
+                sequence_index = 0;
+            }
+        }
     }
 
     SpawnPoint FindValidSpawnPoint(string in_behavior)
