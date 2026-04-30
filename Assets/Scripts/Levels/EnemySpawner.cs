@@ -8,6 +8,7 @@ using System.Collections;
 using System.Linq;
 using UnityEditor.ShaderGraph.Internal;
 using RPNEvaluator;
+using Unity.VisualScripting;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -52,7 +53,19 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    // I don't like that this is here, but I don't know how to make the
+    // restart game button talk directly to the GameManager because the
+    // GameManager isn't a MonoBehavior. So, it's here. I know it shouldn't
+    // be. -Iain
+    public void RestartGame()
+    {
+        GameManager.Instance.state = GameManager.GameState.PREGAME;
+        GameManager.Instance.ResetWaves();
+        GameManager.Instance.playerStatisticsManager.ResetStatistics();
+        level_selector.GameObject().SetActive(true);
     }
 
     public void StartLevel(string levelname)
@@ -70,7 +83,6 @@ public class EnemySpawner : MonoBehaviour
 
     public void NextWave()
     {
-        GameManager.Instance.IncrementWave();
         if (GameManager.Instance.state != GameManager.GameState.GAMEOVER)
         {
             StartCoroutine(SpawnWave());
@@ -98,7 +110,11 @@ public class EnemySpawner : MonoBehaviour
         }
         yield return CalculateWaveLength(manager.levelManager.GetLevel().spawns);
         yield return new WaitWhile(() => manager.enemy_count > 0);
-        manager.state = GameManager.GameState.WAVEEND;
+        GameManager.Instance.IncrementWave();
+        if (GameManager.Instance.state != GameManager.GameState.GAMEOVER && GameManager.Instance.state != GameManager.GameState.GAMELOST)
+        {
+            manager.state = GameManager.GameState.WAVEEND;
+        }
     }
 
     // spawns all enemies of the type given by in_spawn.
