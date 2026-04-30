@@ -1,9 +1,11 @@
 using NUnit.Framework;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEngine;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class RewardScreenManager : MonoBehaviour
 {
@@ -22,8 +24,9 @@ public class RewardScreenManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        text_list.Add(TextTypes.WIN, "You win!");
-        text_list.Add(TextTypes.LOSS, "You lose!");
+        text_list.Add(TextTypes.WIN, "You win!\n\n\nGame Stats:\n");
+        text_list.Add(TextTypes.LOSS, "You lose!\n\n\nGame Stats:\n");
+        text_list.Add(TextTypes.POSTWAVE, "Wave destroyed!\n\n\nGame stats so far:\n");
     }
 
     // Update is called once per frame
@@ -61,15 +64,10 @@ public class RewardScreenManager : MonoBehaviour
 
     void SetRewardScreenText(TextTypes in_text)
     {
+        PlayerStatisticsManager stats = GameManager.Instance.playerStatisticsManager;
         TextMeshProUGUI tmp = rewardUI.transform.GetChild(0).GameObject().GetComponent<TextMeshProUGUI>();
-        if (in_text != TextTypes.POSTWAVE)
-        {
-            tmp.text = text_list[in_text];
-        }
-        else
-        {
-            tmp.text = "Stats:\nTime elapsed: " + 5
-                              + "\nEnemies killed: " + 2;
-        }
+        tmp.text = text_list[in_text] + stats.GetStatisticsReadout();
     }
+
+    
 }

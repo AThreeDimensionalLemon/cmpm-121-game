@@ -56,10 +56,15 @@ public class EnemySpawner : MonoBehaviour
 
     }
 
+    // I don't like that this is here, but I don't know how to make the
+    // restart game button talk directly to the GameManager because the
+    // GameManager isn't a MonoBehavior. So, it's here. I know it shouldn't
+    // be. -Iain
     public void RestartGame()
     {
         GameManager.Instance.state = GameManager.GameState.PREGAME;
         GameManager.Instance.ResetWaves();
+        GameManager.Instance.playerStatisticsManager.ResetStatistics();
         level_selector.GameObject().SetActive(true);
     }
 

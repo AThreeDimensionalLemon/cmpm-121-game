@@ -48,6 +48,7 @@ public class Spell
     {
         this.team = team;
         GameManager.Instance.projectileManager.CreateProjectile(0, "straight", where, target - where, 15f, OnHit);
+
         yield return new WaitForEndOfFrame();
     }
 
@@ -56,6 +57,10 @@ public class Spell
         if (other.team != team)
         {
             other.Damage(new Damage(GetDamage(), Damage.Type.ARCANE));
+            if (team == Hittable.Team.PLAYER)
+            {
+                GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
+            }
         }
 
     }

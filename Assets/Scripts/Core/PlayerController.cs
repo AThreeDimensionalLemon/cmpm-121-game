@@ -48,11 +48,16 @@ public class PlayerController : MonoBehaviour
 
     void OnAttack(InputValue value)
     {
-        if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER) return;
+        if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER || GameManager.Instance.state == GameManager.GameState.GAMELOST) return;
         Vector2 mouseScreen = Mouse.current.position.value;
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0;
         StartCoroutine(spellcaster.Cast(transform.position, mouseWorld));
+        if (GameManager.Instance.state == GameManager.GameState.INWAVE)
+        {
+            GameManager.Instance.playerStatisticsManager.DamageFired += spellcaster.spell.GetDamage();
+            GameManager.Instance.playerStatisticsManager.SpellsCasted++;
+        }
     }
 
     void OnMove(InputValue value)

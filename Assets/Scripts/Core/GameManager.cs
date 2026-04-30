@@ -46,7 +46,7 @@ public class GameManager
     public void IncrementWave()
     {
         currentWave++;
-        if (currentWave > levelManager.GetLevel().waves)
+        if (currentWave > levelManager.GetLevel().waves && theInstance.state != GameState.GAMELOST)
         {
             theInstance.state = GameState.GAMEOVER;
         }
@@ -65,6 +65,7 @@ public class GameManager
     public PlayerSpriteManager playerSpriteManager;
     public RelicIconManager relicIconManager;
     public LevelManager levelManager;
+    public PlayerStatisticsManager playerStatisticsManager;
 
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }
