@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 public class SpellBuilder 
 {
+    private JToken parsedSpellsJson;
 
     public Spell Build(SpellCaster owner)
     {
@@ -15,7 +16,8 @@ public class SpellBuilder
 
    
     public SpellBuilder()
-    {        
+    {
+        parsedSpellsJson = JToken.Parse(Resources.Load<TextAsset>("spells").text);
     }
 
 }
