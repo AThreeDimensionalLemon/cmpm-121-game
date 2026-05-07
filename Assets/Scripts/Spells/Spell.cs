@@ -5,38 +5,48 @@ using Newtonsoft.Json.Linq;
 
 public class Spell 
 {
+    //spell stats
+    private string name;
+    private string description;
+    private int icon;
+    private Damage damage;
+    private int manaCost;
+    private int cooldown;
+    private Projectile projectile;
+
+    //other stuff
     public float last_cast;
     public SpellCaster owner;
     public Hittable.Team team;
 
-    public Spell(SpellCaster owner)
+    public Spell(SpellCaster owner, JToken jsonConfig)
     {
         this.owner = owner;
     }
 
     public string GetName()
     {
-        return "Bolt";
+        return name;
     }
 
     public int GetManaCost()
     {
-        return 10;
+        return manaCost;
     }
 
     public int GetDamage()
     {
-        return 100;
+        return damage.amount;
     }
 
     public float GetCooldown()
     {
-        return 0.75f;
+        return cooldown;
     }
 
     public virtual int GetIcon()
     {
-        return 0;
+        return icon;
     }
 
     public bool IsReady()
