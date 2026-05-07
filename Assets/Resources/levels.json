@@ -100,5 +100,35 @@
                 "location": "random bone"
             }
         ]
+   },
+   {
+    "name": "Testing",
+    "waves": "1",
+    "spawns": [
+        {
+            "enemy": "zombie",
+            "count": "1",
+            "hp": "99999",
+            "speed": "0",
+            "damage": "0",
+            "location": "random green"
+        },
+        {
+            "enemy": "skeleton",
+            "count": "1",
+            "hp": "99999",
+            "speed": "0",
+            "damage": "0",
+            "location": "random bone"
+        },
+        {
+            "enemy": "warlock",
+            "count": "1",
+            "hp": "99999",
+            "speed": "0",
+            "damage": "0",
+            "location": "random red"
+        }
+    ]
    }
 ]
