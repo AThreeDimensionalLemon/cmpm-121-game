@@ -7,6 +7,6 @@ using RPNEvaluator;
 public class Projectile {
     public string trajectory;
     public string speed;
-    public string lifetime;
+    public string lifetime = "0";
     public int sprite;
 }
