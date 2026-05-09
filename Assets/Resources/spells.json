@@ -43,6 +43,9 @@
    "damage_amp": {
        "name": "damage-amplified",
        "description": "Increased damage and increased mana cost.",
+       "modifiers" : [
+            
+       ]
        "damage_multiplier": "1.5",
        "mana_multiplier": "1.5"
    },

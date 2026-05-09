@@ -15,6 +15,10 @@ public class SpellBuilder
         return new Spell(owner, parsedSpellsJson[name]);
     }
 
+    public ModifiedSpell ModifySpell(Spell target, string name) {
+        return new ModifiedSpell(target, parsedSpellsJson[name]);
+    }
+
     public static SpellBuilder Instance {
         get {
             if (theInstance == null) theInstance = new SpellBuilder();
@@ -22,7 +26,6 @@ public class SpellBuilder
         }
     }
 
-   
     private SpellBuilder()
     {
         parsedSpellsJson = JToken.Parse(Resources.Load<TextAsset>("spells").text);
