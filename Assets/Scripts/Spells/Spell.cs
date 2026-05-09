@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using RPNEvaluator;
+using System.Text;
+using UnityEngine;
 
-public class Spell 
+public class Spell : ICastable
 {
     //spell stats
     private string name;
@@ -24,8 +24,7 @@ public class Spell
     public SpellCaster owner;
     public Hittable.Team team;
 
-    public Spell(SpellCaster owner, JToken jsonConfig)
-    { //assigning manually because some fields not in JSON and complex storage of projectile info
+    public Spell(SpellCaster owner, JToken jsonConfig) { //assigning manually because some fields not in JSON and complex storage of projectile info
         this.owner = owner;
         this.name = jsonConfig["name"].ToString();
         this.description = jsonConfig["description"].ToString();
@@ -39,13 +38,11 @@ public class Spell
         this.secondary_projectile = (jsonConfig["secondary_projectile"] != null) ? jsonConfig["secondary_projectile"].ToObject<Projectile>() : null;
     }
 
-    public string GetName()
-    {
+    public string GetName() {
         return name;
     }
 
-    public int GetManaCost()
-    {
+    public int GetManaCost() {
         return RPNEvaluator.RPNEvaluator.Evaluate(this.mana_cost, new Dictionary<string, int>());
     }
 
@@ -53,23 +50,19 @@ public class Spell
         return this.damage.amount;
     }
 
-    public float GetCooldown()
-    {
+    public float GetCooldown() {
         return RPNEvaluator.RPNEvaluator.Evaluatef(this.cooldown, new Dictionary<string, float>());
     }
 
-    public virtual int GetIcon()
-    {
+    public virtual int GetIcon() {
         return icon;
     }
 
-    public bool IsReady()
-    {
+    public bool IsReady() {
         return (last_cast + GetCooldown() < Time.time);
     }
 
-    public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team)
-    {
+    public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {
         this.team = team;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(this.projectile.speed, new Dictionary<string, float>());
         GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, target - where, speed, OnHit);
@@ -77,17 +70,13 @@ public class Spell
         yield return new WaitForEndOfFrame();
     }
 
-    void OnHit(Hittable other, Vector3 impact)
-    {
-        if (other.team != team)
-        {
+    void OnHit(Hittable other, Vector3 impact) {
+        if (other.team != team) {
             other.Damage(this.damage);
-            if (team == Hittable.Team.PLAYER)
-            {
+            if (team == Hittable.Team.PLAYER) {
                 GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
             }
         }
 
     }
-
 }

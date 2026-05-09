@@ -10,7 +10,7 @@ public class SpellBuilder
     private JToken parsedSpellsJson;
     private static SpellBuilder theInstance;
 
-    public Spell Build(SpellCaster owner, string name)
+    public Spell BuildSpell(SpellCaster owner, string name)
     {
         return new Spell(owner, parsedSpellsJson[name]);
     }
