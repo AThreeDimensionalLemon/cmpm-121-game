@@ -11,7 +11,8 @@ public class GameManager
         INWAVE,
         WAVEEND,
         COUNTDOWN,
-        GAMEOVER
+        GAMEOVER,
+        GAMELOST
     }
     public GameState state;
 
@@ -32,13 +33,22 @@ public class GameManager
         currentWave = 1;
     }
 
+    public void KillAllEnemies()
+    {
+        while (enemies.Count > 0)
+        {
+            GameObject enemy = enemies[0];
+            Hittable hp = enemy.GetComponent<EnemyController>().hp;
+            hp.Damage(new Damage(hp.hp, Damage.Type.PHYSICAL));
+        }
+    }
+
     public void IncrementWave()
     {
         currentWave++;
-        if (currentWave > levelManager.GetLevel().waves)
+        if (currentWave > levelManager.GetLevel().waves && theInstance.state != GameState.GAMELOST)
         {
             theInstance.state = GameState.GAMEOVER;
-            Debug.Log("You win!");
         }
     }
 
@@ -55,6 +65,7 @@ public class GameManager
     public PlayerSpriteManager playerSpriteManager;
     public RelicIconManager relicIconManager;
     public LevelManager levelManager;
+    public PlayerStatisticsManager playerStatisticsManager;
 
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }

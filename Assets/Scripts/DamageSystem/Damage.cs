@@ -1,3 +1,6 @@
+using Newtonsoft.Json.Linq;
+using RPNEvaluator;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Damage 
@@ -8,10 +11,16 @@ public class Damage
         PHYSICAL, ARCANE, NATURE, FIRE, ICE, DARK, LIGHT
     }
     public Type type;
-    public Damage(int amount, Type type)
+    public Damage(int inAmount, Damage.Type inType) { //constructor used by pre-existing stuff
+        this.amount = inAmount;
+        this.type = inType;
+    }
+    public Damage(JToken damageToken) //constructor used by spell
     {
-        this.amount = amount;
-        this.type = type;
+        this.amount = RPNEvaluator.RPNEvaluator.Evaluate(damageToken["amount"].ToString(), new Dictionary<string, int> {
+            { "power", 1 } //TODO: Figure out how to store player power and, subsequently, how to get it here
+        });
+        this.type = TypeFromString(damageToken["type"].ToString());
     }
 
     public static Type TypeFromString(string type)

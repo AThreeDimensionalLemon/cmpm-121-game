@@ -7,15 +7,25 @@ using System.Collections.Generic;
 
 public class SpellBuilder 
 {
+    private JToken parsedSpellsJson;
+    private static SpellBuilder theInstance;
 
-    public Spell Build(SpellCaster owner)
+    public Spell Build(SpellCaster owner, string name)
     {
-        return new Spell(owner);
+        return new Spell(owner, parsedSpellsJson[name]);
+    }
+
+    public static SpellBuilder Instance {
+        get {
+            if (theInstance == null) theInstance = new SpellBuilder();
+            return theInstance;
+        }
     }
 
    
-    public SpellBuilder()
-    {        
+    private SpellBuilder()
+    {
+        parsedSpellsJson = JToken.Parse(Resources.Load<TextAsset>("spells").text);
     }
 
 }
