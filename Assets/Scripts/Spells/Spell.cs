@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Spell : ICastable
@@ -23,6 +24,10 @@ public class Spell : ICastable
     public float last_cast;
     public SpellCaster owner;
     public Hittable.Team team;
+
+    public Spell(Spell duplicateTarget) {
+        
+    }
 
     public Spell(SpellCaster owner, JToken jsonConfig) { //assigning manually because some fields not in JSON and complex storage of projectile info
         this.owner = owner;
@@ -60,6 +65,12 @@ public class Spell : ICastable
 
     public bool IsReady() {
         return (last_cast + GetCooldown() < Time.time);
+    }
+
+    //ICastable requires this implementation so that SpellUI can store ICastables instead
+    //I think a better solution would be to see how interfaces require the implementation of properties, but I really don't wanna work on this bug anymore
+    public float GetLastCast() {
+        return last_cast;
     }
 
     public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {

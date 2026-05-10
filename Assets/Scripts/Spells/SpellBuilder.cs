@@ -15,7 +15,7 @@ public class SpellBuilder
         return new Spell(owner, parsedSpellsJson[name]);
     }
 
-    public ModifiedSpell ModifySpell(Spell target, string name) {
+    public ModifiedSpell ModifySpell(ICastable target, string name) {
         return new ModifiedSpell(target, parsedSpellsJson[name]);
     }
 

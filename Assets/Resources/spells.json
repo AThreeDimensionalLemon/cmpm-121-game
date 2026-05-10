@@ -44,10 +44,17 @@
        "name": "damage-amplified",
        "description": "Increased damage and increased mana cost.",
        "modifiers" : [
-            
+            {
+                "value": "damage",
+                "type": "multiplier",
+                "modification": "1.5"
+            },
+            {
+                "value": "mana",
+                "type": "multiplier",
+                "modification": "1.5"
+            }
        ]
-       "damage_multiplier": "1.5",
-       "mana_multiplier": "1.5"
    },
    "speed_amp": {
        "name": "speed-amplified",
