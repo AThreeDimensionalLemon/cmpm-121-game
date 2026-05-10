@@ -25,10 +25,6 @@ public class Spell : ICastable
     public SpellCaster owner;
     public Hittable.Team team;
 
-    public Spell(Spell duplicateTarget) {
-        
-    }
-
     public Spell(SpellCaster owner, JToken jsonConfig) { //assigning manually because some fields not in JSON and complex storage of projectile info
         this.owner = owner;
         this.name = jsonConfig["name"].ToString();
