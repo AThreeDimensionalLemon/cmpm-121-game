@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using JetBrains.Annotations;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ public class ModifiedSpell : ICastable
 
     public string name;
     public string description;
-    public Dictionary<string, string> modifications;
+    public Dictionary<string, StatModifier> modifications;
 
     private string TypeToOperator(string valueModType) {
         string v = valueModType.ToLower();
@@ -27,28 +28,43 @@ public class ModifiedSpell : ICastable
         baseSpell = inBaseSpell;
         name = modifierToken["name"].ToString();
         description = modifierToken["name"].ToString();
-        modifications = new Dictionary<string, string>();
-        foreach (var valueMod in modifierToken["modifiers"]) {
-            string value = valueMod["value"].ToString();
-            string modification = valueMod["modification"].ToString() + " " + TypeToOperator(valueMod["type"].ToString());
-            modifications.Add(value, modification);
-        }
+        modifications = modifierToken["modifiers"].ToObject<Dictionary<string, StatModifier>>();
     }
 
     public string GetName() {
         return name + " " + baseSpell.GetName();
     }
 
+    private int GetModifiedResult(int baseValue, string valueName) {
+        int result = baseValue;
+        if (modifications.ContainsKey(valueName)) {
+            int modification = (int)RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, new Dictionary<string, float>());
+            if (modifications[valueName].type.ToLower() == "multiplier") result *= modification;
+            else result += modification;
+        }
+        return result;
+    }
+
+    private float GetModifiedResult(float baseValue, string valueName) { //curse you .NET 2.1
+        float result = baseValue;
+        if (modifications.ContainsKey(valueName)) {
+            float modification = (float)RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, new Dictionary<string, float>());
+            if (modifications[valueName].type.ToLower() == "multiplier") result *= modification;
+            else result += modification;
+        }
+        return result;
+    }
+
     public int GetManaCost() {
-        return baseSpell.GetManaCost();
+        return GetModifiedResult(baseSpell.GetManaCost(), "mana");
     }
 
     public int GetDamage() {
-        return baseSpell.GetDamage();
+        return GetModifiedResult(baseSpell.GetDamage(), "damage");
     }
 
     public float GetCooldown() {
-        return baseSpell.GetCooldown();
+        return GetModifiedResult(baseSpell.GetCooldown(), "cooldown");
     }
 
     public int GetIcon() {

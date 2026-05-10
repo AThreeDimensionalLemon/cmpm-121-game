@@ -69,6 +69,7 @@ public class Spell : ICastable
         return last_cast;
     }
 
+    
     public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {
         this.team = team;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(this.projectile.speed, new Dictionary<string, float> { { "power", 1 } });
