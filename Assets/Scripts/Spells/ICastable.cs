@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public interface ICastable {
+
+    //stuff that probably could've been implemented as properties
     string GetName();
     int GetManaCost();
     int GetDamage();
@@ -15,5 +17,10 @@ public interface ICastable {
     int GetIcon();
     bool IsReady();
     float GetLastCast();
+    Damage.Type GetDamageType();
+    List<Projectile> GetProjectiles();
+
+    //cast the spell
+    IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed, Dictionary<string, float> modifierVariables, Action<Hittable, Vector3> OnModifiedHit);
     IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team);
 }

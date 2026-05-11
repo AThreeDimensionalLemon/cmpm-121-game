@@ -63,13 +63,32 @@ public class Spell : ICastable
         return (last_cast + GetCooldown() < Time.time);
     }
 
+    public Damage.Type GetDamageType() {
+        return damage.type;
+    }
+
+    public List<Projectile> GetProjectiles() {
+        var result = new List<Projectile> { projectile };
+        if (secondary_projectile != null) result.Add(secondary_projectile);
+        return result;
+    }
+
     //ICastable requires this implementation so that SpellUI can store ICastables instead
     //I think a better solution would be to see how interfaces require the implementation of properties, but I really don't wanna work on this bug anymore
     public float GetLastCast() {
         return last_cast;
     }
 
-    
+    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed, Dictionary<string, float> modifierVariables, Action<Hittable, Vector3> OnModifiedHit) {
+        this.team = team;
+        string speedEquation = (modifierSpeed != null) ? this.projectile.speed + " " + modifierSpeed : this.projectile.speed;
+        float speed = RPNEvaluator.RPNEvaluator.Evaluatef(speedEquation, modifierVariables); 
+        GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, target - where, speed, OnModifiedHit);
+
+        yield return new WaitForEndOfFrame();
+    }
+
+
     public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {
         this.team = team;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(this.projectile.speed, new Dictionary<string, float> { { "power", 1 } });

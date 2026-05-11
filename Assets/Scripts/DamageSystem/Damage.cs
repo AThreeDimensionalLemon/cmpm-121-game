@@ -11,7 +11,7 @@ public class Damage
         PHYSICAL, ARCANE, NATURE, FIRE, ICE, DARK, LIGHT
     }
     public Type type;
-    public Damage(int inAmount, Damage.Type inType) { //constructor used by pre-existing stuff
+    public Damage(int inAmount, Damage.Type inType) {
         this.amount = inAmount;
         this.type = inType;
     }

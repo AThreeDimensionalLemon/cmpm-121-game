@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using static Hittable;
 
 public class ModifiedSpell : ICastable
 {
@@ -14,6 +15,7 @@ public class ModifiedSpell : ICastable
     public string name;
     public string description;
     public Dictionary<string, StatModifier> modifications;
+    public Hittable.Team team;
 
     private string TypeToOperator(string valueModType) {
         string v = valueModType.ToLower();
@@ -79,7 +81,43 @@ public class ModifiedSpell : ICastable
         return baseSpell.GetLastCast();
     }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {
-        return baseSpell.Cast(where, target, team);
+    public Damage.Type GetDamageType() {
+        if (modifications.ContainsKey("damage_type")) return Damage.TypeFromString(modifications["damage_type"].ToString());
+        else return baseSpell.GetDamageType();
+    }
+
+    public List<Projectile> GetProjectiles() { //TODO: Implement getting even more projectiles
+        List<Projectile> result = baseSpell.GetProjectiles();
+        return result;
+    }
+
+    private string TypeToOperation(string inModifierType) {
+        string m = inModifierType.ToLower();
+        switch(m) {
+            case "multiplier": return "*";
+            default: return "+";
+        }
+    }
+
+    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team inTeam) {
+        this.team = inTeam;
+        string speedModification = (modifications.ContainsKey("speed")) ? modifications["speed"].modification + " " + TypeToOperation(modifications["speed"].type) : null;
+        return baseSpell.Cast(where, target, this.team, speedModification, new Dictionary<string, float> { { "power", 1 } }, OnHit);
+    }
+
+    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team inTeam, string lastModSpeed, Dictionary<string, float> modifierVariables, Action<Hittable, Vector3> OnModifiedHit) {
+        this.team = inTeam;
+        string speedModification = (modifications.ContainsKey("speed")) ? modifications["speed"].modification + " " + TypeToOperation(modifications["speed"].type) : null;
+        if (lastModSpeed != null) speedModification += " " + lastModSpeed;
+        return baseSpell.Cast(where, target, this.team, speedModification, new Dictionary<string, float> { { "power", 1 } }, OnHit);
+    }
+
+    void OnHit(Hittable other, Vector3 impact) {
+        if (other.team != team) {
+            other.Damage(new Damage(GetDamage(), GetDamageType()));
+            if (team == Hittable.Team.PLAYER) {
+                GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
+            }
+        }
     }
 }
