@@ -12,7 +12,8 @@ public class Spell : ICastable
     private string name;
     private string description;
     private int icon;
-    private string N;
+    private string N; //number of projectiles
+    private string spray; //angle of projectiles' launch, if N > 1
     private Damage damage;
     private string secondary_damage;
     private string mana_cost;
@@ -29,8 +30,10 @@ public class Spell : ICastable
         this.owner = owner;
         this.name = jsonConfig["name"].ToString();
         this.description = jsonConfig["description"].ToString();
-        this.icon = jsonConfig["icon"].ToObject<int>();
+        //this.icon = jsonConfig["icon"].ToObject<int>();
+        this.icon = 0;
         this.N = (jsonConfig["N"] != null) ? jsonConfig["N"].ToString() : "0"; //if the key doesn't exist, use default of "0"
+        this.spray = (jsonConfig["spray"] != null) ? jsonConfig["spray"].ToString() : "0";
         this.damage = new Damage(jsonConfig["damage"]);
         this.secondary_damage = (jsonConfig["secondary_damage"] != null) ? jsonConfig["secondary_damage"].ToString() : "0";
         this.mana_cost = jsonConfig["mana_cost"].ToString();
@@ -92,7 +95,28 @@ public class Spell : ICastable
     public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {
         this.team = team;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(this.projectile.speed, new Dictionary<string, float> { { "power", 1 } });
-        GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, target - where, speed, OnHit);
+        int projectileAmount = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
+        List<Vector3> targets = new List<Vector3>();
+        targets.Add(target);
+        if (projectileAmount > 1) {
+            float totalAngle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
+            float rightBound = -(totalAngle / 2);
+            //Debug.Log("totalAngle: " + totalAngle + " | leftBound: " + leftBound + " | rightBound: " + rightBound);
+            var rand = new System.Random();
+            for (int i = 0; i < projectileAmount; i++) {
+                double randomAngle = rightBound + rand.NextDouble() * totalAngle;
+                //Debug.Log("randomAngle: " + randomAngle);
+                double newTargetX = Math.Cos(randomAngle) * target.x - Math.Sin(randomAngle) * target.y;
+                double newTargetY = Math.Sin(randomAngle) * target.x + Math.Cos(randomAngle) * target.y;
+                Vector3 newTarget = new Vector3((float)newTargetX, (float)newTargetY, target.z);
+                //Debug.Log("target.normalized: " + target.normalized + " | newTarget.normalized: " + newTarget.normalized + " | Vector3.Angle(target, newTarget): " + Vector3.Angle(target, newTarget));
+                targets.Add(newTarget);
+            }
+        }
+
+        foreach (Vector3 listedTarget in targets) {
+            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, OnHit);
+        }
 
         yield return new WaitForEndOfFrame();
     }
