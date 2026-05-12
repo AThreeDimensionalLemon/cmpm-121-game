@@ -8,7 +8,7 @@ public class SpellCaster
     public int max_mana;
     public int mana_reg;
     public Hittable.Team team;
-    public Spell spell;
+    public ICastable spell;
 
     public IEnumerator ManaRegeneration()
     {
@@ -26,7 +26,9 @@ public class SpellCaster
         this.max_mana = mana;
         this.mana_reg = mana_reg;
         this.team = team;
-        spell = SpellBuilder.Instance.Build(this, "arcane_bolt");
+        spell = SpellBuilder.Instance.BuildSpell(this, "arcane_bolt");
+        spell = SpellBuilder.Instance.ModifySpell(spell, "damage_amp");
+        //Debug.Log(spell.GetName());
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target)
@@ -34,6 +36,7 @@ public class SpellCaster
         if (mana >= spell.GetManaCost() && spell.IsReady())
         {
             mana -= spell.GetManaCost();
+            Debug.Log(spell.GetName() + " spent " + spell.GetManaCost() + " mana to deal " + spell.GetDamage() + " damage");
             yield return spell.Cast(where, target, team);
         }
         yield break;
