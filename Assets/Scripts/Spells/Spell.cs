@@ -117,7 +117,7 @@ public class Spell : ICastable
 
         //spawn projectiles
         foreach (Vector3 listedTarget in targets) { 
-            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, target - where, speed, HitEvent); 
+            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, HitEvent);
         }
 
         yield return new WaitForEndOfFrame();
