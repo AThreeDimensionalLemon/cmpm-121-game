@@ -26,8 +26,8 @@ public class SpellCaster
         this.max_mana = mana;
         this.mana_reg = mana_reg;
         this.team = team;
-        spell = SpellBuilder.Instance.BuildSpell(this, "arcane_spray");
-        //spell = SpellBuilder.Instance.ModifySpell(spell, "damage_amp");
+        spell = SpellBuilder.Instance.BuildSpell(this, "arcane_bolt");
+        spell = SpellBuilder.Instance.ModifySpell(spell, "damage_amp");
         //Debug.Log(spell.GetName());
     }
 
@@ -36,7 +36,7 @@ public class SpellCaster
         if (mana >= spell.GetManaCost() && spell.IsReady())
         {
             mana -= spell.GetManaCost();
-            //Debug.Log(spell.GetName() + " spent " + spell.GetManaCost() + " mana to deal " + spell.GetDamage() + " damage");
+            Debug.Log(spell.GetName() + " spent " + spell.GetManaCost() + " mana to deal " + spell.GetDamage() + " damage");
             yield return spell.Cast(where, target, team);
         }
         yield break;

@@ -82,46 +82,41 @@ public class Spell : ICastable
         return last_cast;
     }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed, Dictionary<string, float> modifierVariables, Action<Hittable, Vector3> OnModifiedHit) {
+    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
         this.team = team;
+
+        //set default variables here because none of them are compile-time constants
         string speedEquation = (modifierSpeed != null) ? this.projectile.speed + " " + modifierSpeed : this.projectile.speed;
-        float speed = RPNEvaluator.RPNEvaluator.Evaluatef(speedEquation, modifierVariables); 
-        GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, target - where, speed, OnModifiedHit);
+        var variables = (modifierVariables != null) ? modifierVariables : new Dictionary<string, float> { { "power", 1 } };
+        float speed = RPNEvaluator.RPNEvaluator.Evaluatef(speedEquation, variables);
+        Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
 
-        yield return new WaitForEndOfFrame();
-    }
-
-
-    public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team) {
-        this.team = team;
-        float speed = RPNEvaluator.RPNEvaluator.Evaluatef(this.projectile.speed, new Dictionary<string, float> { { "power", 1 } });
+        //prepare multiple projectiles, if applicable
         int projectileAmount = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
         List<Vector3> targets = new List<Vector3>();
         targets.Add(target);
         if (projectileAmount > 1) {
             float totalAngle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
             float rightBound = -(totalAngle / 2);
-            //Debug.Log("totalAngle: " + totalAngle + " | leftBound: " + leftBound + " | rightBound: " + rightBound);
             var rand = new System.Random();
             for (int i = 0; i < projectileAmount; i++) {
                 double randomAngle = rightBound + rand.NextDouble() * totalAngle;
-                //Debug.Log("randomAngle: " + randomAngle);
                 double newTargetX = Math.Cos(randomAngle) * target.x - Math.Sin(randomAngle) * target.y;
                 double newTargetY = Math.Sin(randomAngle) * target.x + Math.Cos(randomAngle) * target.y;
-                Vector3 newTarget = new Vector3((float)newTargetX, (float)newTargetY, target.z);
-                //Debug.Log("target.normalized: " + target.normalized + " | newTarget.normalized: " + newTarget.normalized + " | Vector3.Angle(target, newTarget): " + Vector3.Angle(target, newTarget));
-                targets.Add(newTarget);
+                targets.Add(new Vector3((float)newTargetX, (float)newTargetY, target.z));
             }
         }
 
-        foreach (Vector3 listedTarget in targets) {
-            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, OnHit);
+        //spawn projectiles
+        foreach (Vector3 listedTarget in targets) { 
+            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, target - where, speed, HitEvent); 
         }
 
         yield return new WaitForEndOfFrame();
     }
 
     void OnHit(Hittable other, Vector3 impact) {
+        Debug.Log("normal spell's OnHit event triggered");
         if (other.team != team) {
             other.Damage(this.damage);
             if (team == Hittable.Team.PLAYER) {

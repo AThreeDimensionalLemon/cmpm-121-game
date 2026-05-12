@@ -50,7 +50,7 @@ public class ModifiedSpell : ICastable
     private float GetModifiedResult(float baseValue, string valueName) { //curse you .NET 2.1
         float result = baseValue;
         if (modifications.ContainsKey(valueName)) {
-            float modification = (float)RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, new Dictionary<string, float>());
+            float modification = RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, new Dictionary<string, float>());
             if (modifications[valueName].type.ToLower() == "multiplier") result *= modification;
             else result += modification;
         }
@@ -99,24 +99,30 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team inTeam) {
+    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team inTeam, string lastModSpeed = null, Dictionary<string, float> lastModVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
         this.team = inTeam;
-        string speedModification = (modifications.ContainsKey("speed")) ? modifications["speed"].modification + " " + TypeToOperation(modifications["speed"].type) : null;
-        return baseSpell.Cast(where, target, this.team, speedModification, new Dictionary<string, float> { { "power", 1 } }, OnHit);
-    }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team inTeam, string lastModSpeed, Dictionary<string, float> modifierVariables, Action<Hittable, Vector3> OnModifiedHit) {
-        this.team = inTeam;
+        //setting variables that aren't compile-time contants
+        //speed mod
         string speedModification = (modifications.ContainsKey("speed")) ? modifications["speed"].modification + " " + TypeToOperation(modifications["speed"].type) : null;
-        if (lastModSpeed != null) speedModification += " " + lastModSpeed;
-        return baseSpell.Cast(where, target, this.team, speedModification, new Dictionary<string, float> { { "power", 1 } }, OnHit);
+        if (lastModSpeed != null && speedModification != null) speedModification += lastModSpeed;
+        else if (lastModSpeed != null) speedModification = lastModSpeed;
+
+        //variables
+        var variables = new Dictionary<string, float> { { "power", 1 } };
+
+        //Hit event
+        Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
+
+        return baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
     }
 
     void OnHit(Hittable other, Vector3 impact) {
+        Debug.Log("modified spell's OnHit event triggered");
         if (other.team != team) {
-            other.Damage(new Damage(GetDamage(), GetDamageType()));
+            other.Damage(new Damage(this.GetDamage(), this.GetDamageType()));
             if (team == Hittable.Team.PLAYER) {
-                GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
+                GameManager.Instance.playerStatisticsManager.DamageDealt += this.GetDamage();
             }
         }
     }
