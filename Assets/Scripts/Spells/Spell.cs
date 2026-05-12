@@ -2,9 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Spell : ICastable
 {
@@ -82,6 +84,20 @@ public class Spell : ICastable
         return last_cast;
     }
 
+    private List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount) {
+        List<Vector3> result = new();
+        System.Random rand = new();
+        Vector2 initLocDir = Vector2.Normalize(direction - origin);
+        for (int i = 0; i < targetAmount; i++) {
+            double randAng = -(angleRange / 2) + rand.NextDouble() * (angleRange);
+            double newLocDirX = Math.Cos(randAng) * initLocDir.x - Math.Sin(randAng) * initLocDir.y;
+            double newLocDirY = Math.Sin(randAng) * initLocDir.x + Math.Cos(randAng) * initLocDir.y;
+            Vector3 newWorDir = new((float)newLocDirX + origin.x, (float)newLocDirY + origin.y, direction.z);
+            result.Add(newWorDir);
+        }
+        return result;
+    }
+
     public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
         this.team = team;
 
@@ -93,18 +109,10 @@ public class Spell : ICastable
 
         //prepare multiple projectiles, if applicable
         int projectileAmount = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
-        List<Vector3> targets = new List<Vector3>();
-        targets.Add(target);
+        List<Vector3> targets = new() { target };
         if (projectileAmount > 1) {
-            float totalAngle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
-            float rightBound = -(totalAngle / 2);
-            var rand = new System.Random();
-            for (int i = 0; i < projectileAmount; i++) {
-                double randomAngle = rightBound + rand.NextDouble() * totalAngle;
-                double newTargetX = Math.Cos(randomAngle) * target.x - Math.Sin(randomAngle) * target.y;
-                double newTargetY = Math.Sin(randomAngle) * target.x + Math.Cos(randomAngle) * target.y;
-                targets.Add(new Vector3((float)newTargetX, (float)newTargetY, target.z));
-            }
+            float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
+            targets.AddRange(GetTargetList(where, target, angle, projectileAmount));
         }
 
         //spawn projectiles
