@@ -10,9 +10,13 @@ public class SpellBuilder
     private JToken parsedSpellsJson;
     private static SpellBuilder theInstance;
 
-    public Spell Build(SpellCaster owner, string name)
+    public Spell BuildSpell(SpellCaster owner, string name)
     {
         return new Spell(owner, parsedSpellsJson[name]);
+    }
+
+    public ModifiedSpell ModifySpell(ICastable target, string name) {
+        return new ModifiedSpell(target, parsedSpellsJson[name]);
     }
 
     public static SpellBuilder Instance {
@@ -22,7 +26,6 @@ public class SpellBuilder
         }
     }
 
-   
     private SpellBuilder()
     {
         parsedSpellsJson = JToken.Parse(Resources.Load<TextAsset>("spells").text);
