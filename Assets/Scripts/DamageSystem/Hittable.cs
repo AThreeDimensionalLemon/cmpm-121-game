@@ -16,7 +16,7 @@ public class Hittable
     public void Damage(Damage damage)
     {
         EventBus.Instance.DoDamage(owner.transform.position, damage, this);
-        hp -= RPNEvaluator.RPNEvaluator.Evaluate(damage.amount, new Dictionary<string, int>());
+        hp -= RPNEvaluator.RPNEvaluator.Evaluate(damage.amount, damage.damage_dict);
         if (hp <= 0)
         {
             hp = 0;

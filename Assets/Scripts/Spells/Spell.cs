@@ -37,7 +37,9 @@ public class Spell : ICastable
         this.icon = 0;
         this.N = (jsonConfig["N"] != null) ? jsonConfig["N"].ToString() : "0"; //if the key doesn't exist, use default of "0"
         this.spray = (jsonConfig["spray"] != null) ? jsonConfig["spray"].ToString() : "0";
-        this.damage = new Damage(jsonConfig["damage"]);
+        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
+        RPNDict.Add("power", owner.spell_power);
+        this.damage = new Damage(jsonConfig["damage"], RPNDict);
         this.secondary_damage = (jsonConfig["secondary_damage"] != null) ? jsonConfig["secondary_damage"].ToString() : "0";
         this.mana_cost = jsonConfig["mana_cost"].ToString();
         this.cooldown = jsonConfig["cooldown"].ToString();
@@ -59,9 +61,7 @@ public class Spell : ICastable
     }
 
     public int GetDamage() {
-        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
-        RPNDict.Add("power", owner.spell_power);
-        return RPNEvaluator.RPNEvaluator.Evaluate(this.damage.amount, RPNDict);
+        return RPNEvaluator.RPNEvaluator.Evaluate(this.damage.amount, this.damage.damage_dict);
     }
 
     public float GetCooldown() {

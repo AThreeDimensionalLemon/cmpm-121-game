@@ -6,6 +6,7 @@ using UnityEngine;
 public class Damage 
 {
     public string amount;
+    public Dictionary<string, int> damage_dict;
     public enum Type
     {
         PHYSICAL, ARCANE, NATURE, FIRE, ICE, DARK, LIGHT
@@ -15,10 +16,11 @@ public class Damage
         this.amount = inAmount;
         this.type = inType;
     }
-    public Damage(JToken damageToken) //constructor used by spell
+    public Damage(JToken damageToken, Dictionary<string, int> damageDict) //constructor used by spell
     {
         this.amount = damageToken["amount"].ToString();
         this.type = TypeFromString(damageToken["type"].ToString());
+        damage_dict = damageDict;
     }
 
     public static Type TypeFromString(string type)

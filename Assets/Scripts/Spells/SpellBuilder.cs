@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using System;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 
 public class SpellBuilder 
@@ -24,12 +25,19 @@ public class SpellBuilder
         return new ModifiedSpell(target, spell_modifiers[name]);
     }
 
-    public ICastable BuildRandomSpell(SpellCaster owner)
+    public ICastable BuildRandomSpell(SpellCaster owner, int numMods)
     {
         var rand = new System.Random();
-        Spell startingSpell = BuildSpell(owner, base_spells.Keys.ElementAt(rand.Next(base_spells.Count())));
-        int numModifiers = rand.Next();
-        return startingSpell;
+        ICastable randSpell = BuildSpell(owner, base_spells.Keys.ElementAt(rand.Next(base_spells.Count())));
+        //int numModifiers = rand.Next(GameManager.Instance.GetWave() / 2);
+        List<string> modsToApply = spell_modifiers.Keys.ToList();
+        for (int i = 0; i < numMods; i++)
+        {
+            int index = rand.Next(modsToApply.Count);
+            randSpell = ModifySpell(randSpell, modsToApply[index]);
+            modsToApply.RemoveAt(index);
+        }
+        return randSpell;
     }
 
     public static SpellBuilder Instance {
