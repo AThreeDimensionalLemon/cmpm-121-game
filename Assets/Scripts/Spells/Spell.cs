@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 public class Spell : ICastable
@@ -49,7 +50,7 @@ public class Spell : ICastable
     }
 
     public int GetManaCost() {
-        return RPNEvaluator.RPNEvaluator.Evaluate(this.mana_cost, new Dictionary<string, int>());
+        return RPNEvaluator.RPNEvaluator.Evaluate(this.mana_cost, new Dictionary<string, int> { { "power", 1 } });
     }
 
     public int GetDamage() {
@@ -79,7 +80,6 @@ public class Spell : ICastable
     }
 
     //ICastable requires this implementation so that SpellUI can store ICastables instead
-    //I think a better solution would be to see how interfaces require the implementation of properties, but I really don't wanna work on this bug anymore
     public float GetLastCast() {
         return last_cast;
     }
@@ -108,15 +108,15 @@ public class Spell : ICastable
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
 
         //prepare multiple projectiles, if applicable
-        int projectileAmount = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
+        int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
         List<Vector3> targets = new() { target };
-        if (projectileAmount > 1) {
+        if (intN > 1 && secondary_projectile == null) {
             float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
-            targets.AddRange(GetTargetList(where, target, angle, projectileAmount));
+            targets.AddRange(GetTargetList(where, target, angle, intN));
         }
 
         //spawn projectiles
-        foreach (Vector3 listedTarget in targets) { 
+        foreach (Vector3 listedTarget in targets) {
             GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, HitEvent);
         }
 
@@ -124,13 +124,20 @@ public class Spell : ICastable
     }
 
     void OnHit(Hittable other, Vector3 impact) {
-        Debug.Log("normal spell's OnHit event triggered");
         if (other.team != team) {
             other.Damage(this.damage);
+            if (this.projectile.is_splitting) {
+                Debug.Log("split!");
+                int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
+                float speed = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.speed, new Dictionary<string, float> { { "power", 1 } });
+                float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, new Dictionary<string, float> { { "power", 1 } });
+                foreach (Vector3 target in GetTargetList(impact, Vector3.right, 2 * (float)Math.PI, intN)) {
+                    GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.secondary_projectile.trajectory, impact, target - impact, speed, OnHit, lifetime, other);
+                }
+            }
             if (team == Hittable.Team.PLAYER) {
                 GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
             }
         }
-
     }
 }

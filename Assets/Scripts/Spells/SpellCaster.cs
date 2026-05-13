@@ -26,8 +26,8 @@ public class SpellCaster
         this.max_mana = mana;
         this.mana_reg = mana_reg;
         this.team = team;
-        spell = SpellBuilder.Instance.BuildSpell(this, "arcane_bolt");
-        spell = SpellBuilder.Instance.ModifySpell(spell, "damage_amp");
+        spell = SpellBuilder.Instance.BuildSpell(this, "arcane_blast");
+        //spell = SpellBuilder.Instance.ModifySpell(spell, "damage_amp");
         //Debug.Log(spell.GetName());
     }
 
