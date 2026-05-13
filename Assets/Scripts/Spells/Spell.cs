@@ -18,7 +18,7 @@ public class Spell : ICastable
     private string N; //number of projectiles
     private string spray; //angle of projectiles' launch, if N > 1
     private Damage damage;
-    private string secondary_damage;
+    private Damage secondary_damage;
     private string mana_cost;
     private string cooldown;
     private Projectile projectile;
@@ -40,7 +40,7 @@ public class Spell : ICastable
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("power", owner.spell_power);
         this.damage = new Damage(jsonConfig["damage"], RPNDict);
-        this.secondary_damage = (jsonConfig["secondary_damage"] != null) ? jsonConfig["secondary_damage"].ToString() : "0";
+        this.secondary_damage = (jsonConfig["secondary_damage"] != null) ? new Damage(jsonConfig["secondary_damage"], RPNDict) : new Damage("0", RPNDict);
         this.mana_cost = jsonConfig["mana_cost"].ToString();
         this.cooldown = jsonConfig["cooldown"].ToString();
         this.projectile = jsonConfig["projectile"].ToObject<Projectile>();
@@ -143,6 +143,8 @@ public class Spell : ICastable
         if (other.team != team) {
             other.Damage(this.damage);
             if (this.projectile.is_splitting) {
+                Debug.Log("split!");
+                //this.projectile.is_splitting = false;
                 Dictionary<string, int> RPNDictInt = new() { { "power", owner.spell_power } };
                 Dictionary<string, float> RPNDictFloat = new() { { "power", owner.spell_power } };
                 int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
@@ -155,6 +157,18 @@ public class Spell : ICastable
             if (team == Hittable.Team.PLAYER) {
                 GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
             }
+        }
+    }
+
+    void SecondaryOnHit(Hittable other, Vector3 impact)
+    {
+        if (other.team != team)
+        {
+            other.Damage(this.secondary_damage);
+        }
+        if (team == Hittable.Team.PLAYER)
+        {
+            GameManager.Instance.playerStatisticsManager.DamageDealt += GetDamage();
         }
     }
 }

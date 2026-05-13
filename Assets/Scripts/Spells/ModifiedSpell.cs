@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static Hittable;
 using static UnityEngine.GraphicsBuffer;
 
@@ -42,7 +43,7 @@ public class ModifiedSpell : ICastable
 
     public string GetDescription()
     {
-        return name + ": " + description + '\n' + baseSpell.GetDescription();
+        return spellName + ": " + description + '\n' + baseSpell.GetDescription();
     }
 
     public SpellCaster GetOwner()
@@ -51,19 +52,23 @@ public class ModifiedSpell : ICastable
     }
 
     private int GetModifiedResult(int baseValue, string valueName) {
-        int result = baseValue;
+        Dictionary<string, float> RPNDict = new();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
+        float result = baseValue;
         if (modifications.ContainsKey(valueName)) {
-            int modification = (int)RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, new Dictionary<string, float>());
+            float modification = RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, RPNDict);
             if (modifications[valueName].type.ToLower() == "multiplier") result *= modification;
             else result += modification;
         }
-        return result;
+        return (int)result;
     }
 
     private float GetModifiedResult(float baseValue, string valueName) { //curse you .NET 2.1
+        Dictionary<string, float> RPNDict = new();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
         float result = baseValue;
         if (modifications.ContainsKey(valueName)) {
-            float modification = RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, new Dictionary<string, float>());
+            float modification = RPNEvaluator.RPNEvaluator.Evaluatef(modifications[valueName].modification, RPNDict);
             if (modifications[valueName].type.ToLower() == "multiplier") result *= modification;
             else result += modification;
         }
@@ -137,7 +142,7 @@ public class ModifiedSpell : ICastable
         //handle delay
         if (modifications.ContainsKey("delay")) {
             float delay = RPNEvaluator.RPNEvaluator.Evaluatef(modifications["delay"].modification, variables);
-            CoroutineManager.Instance.Run(DelayedCast(delay, where, target, speedModification, variables, HitEvent));
+            CoroutineManager.Instance.Run(DelayedCast(delay, speedModification, variables, HitEvent));
             //DelayedSpellCaster.Instance.DelayedCast(this.baseSpell, this.team, delay, where, target, speedModification, variables, HitEvent);
         }
 
@@ -153,10 +158,15 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    IEnumerator DelayedCast(float delay, Vector3 where, List<Vector3> target, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3> HitEvent) {
+    IEnumerator DelayedCast(float delay, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3> HitEvent) {
         Debug.Log("beginning delayed cast");
-        yield return new WaitForSeconds(delay * 5);
+        yield return new WaitForSeconds(delay);
         Debug.Log("casting delayed spell");
+        Vector3 where = GameManager.Instance.player.transform.position;
+        Vector2 mouseScreen = Mouse.current.position.value;
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
+        mouseWorld.z = 0;
+        List<Vector3> target = new List<Vector3> { mouseWorld }; 
         yield return this.baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
     }
 }
