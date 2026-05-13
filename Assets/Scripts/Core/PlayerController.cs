@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
                                       Hittable.Team.PLAYER);
         AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
         AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "magic_missile"));
+        //AddNewSpell(SpellBuilder.Instance.ModifySpell(spellcaster, SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"), "doubler"));
         StartCoroutine(spellcaster.ManaRegeneration());
 
         hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict),

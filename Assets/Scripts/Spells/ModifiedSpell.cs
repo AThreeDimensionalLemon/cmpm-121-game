@@ -7,12 +7,13 @@ using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
 using static Hittable;
+using static UnityEngine.GraphicsBuffer;
 
 public class ModifiedSpell : ICastable
 {
     public ICastable baseSpell;
 
-    public string name;
+    public string spellName;
     public string description;
     public Dictionary<string, StatModifier> modifications;
     public Hittable.Team team;
@@ -29,14 +30,14 @@ public class ModifiedSpell : ICastable
 
     public ModifiedSpell(SpellCaster inOwner, ICastable inBaseSpell, JToken modifierToken) {
         baseSpell = inBaseSpell;
-        name = modifierToken["name"].ToString();
+        spellName = modifierToken["name"].ToString();
         description = modifierToken["name"].ToString();
         modifications = modifierToken["modifiers"].ToObject<Dictionary<string, StatModifier>>();
         owner = inOwner;
     }
 
     public string GetName() {
-        return name + " " + baseSpell.GetName();
+        return spellName + " " + baseSpell.GetName();
     }
 
     public SpellCaster GetOwner()
@@ -116,24 +117,32 @@ public class ModifiedSpell : ICastable
         else if (lastModSpeed != null) speedModification = lastModSpeed;
 
         //others
-        var variables = new Dictionary<string, float> { { "power", baseSpell.GetOwner().spell_power } };
+        Dictionary<string, float> variables = new() { { "power", owner.spell_power } };
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
 
         //handle delay
-        if (modifications.ContainsKey("delay")) { 
-            baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
+        if (modifications.ContainsKey("delay")) {
+            float delay = RPNEvaluator.RPNEvaluator.Evaluatef(modifications["delay"].modification, variables);
+            CoroutineManager.Instance.Run(DelayedCast(delay, where, target, speedModification, variables, HitEvent));
+            //DelayedSpellCaster.Instance.DelayedCast(this.baseSpell, this.team, delay, where, target, speedModification, variables, HitEvent);
         }
 
         return baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
     }
 
     void OnHit(Hittable other, Vector3 impact) {
-        Debug.Log("modified spell's OnHit event triggered");
         if (other.team != team) {
             other.Damage(new Damage(this.GetDamage().ToString(), this.GetDamageType()));
             if (team == Hittable.Team.PLAYER) {
                 GameManager.Instance.playerStatisticsManager.DamageDealt += this.GetDamage();
             }
         }
+    }
+
+    IEnumerator DelayedCast(float delay, Vector3 where, Vector3 target, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3> HitEvent) {
+        Debug.Log("beginning delayed cast");
+        yield return new WaitForSeconds(delay * 5);
+        Debug.Log("casting delayed spell");
+        yield return this.baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
     }
 }
