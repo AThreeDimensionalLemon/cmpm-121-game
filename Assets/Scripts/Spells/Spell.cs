@@ -46,6 +46,11 @@ public class Spell : ICastable
         return name;
     }
 
+    public SpellCaster GetOwner()
+    {
+        return owner;
+    }
+
     public int GetManaCost() {
         return RPNEvaluator.RPNEvaluator.Evaluate(this.mana_cost, new Dictionary<string, int>());
     }
@@ -86,15 +91,19 @@ public class Spell : ICastable
 
     public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
         this.team = team;
+        Dictionary<string, int> RPNDictInt = new Dictionary<string, int>();
+        Dictionary<string, float> RPNDictFloat = new Dictionary<string, float>();
+        RPNDictInt.Add("power", owner.spell_power);
+        RPNDictFloat.Add("power", owner.spell_power);
 
         //set default variables here because none of them are compile-time constants
         string speedEquation = (modifierSpeed != null) ? this.projectile.speed + " " + modifierSpeed : this.projectile.speed;
-        var variables = (modifierVariables != null) ? modifierVariables : new Dictionary<string, float> { { "power", 1 } };
+        var variables = (modifierVariables != null) ? modifierVariables : RPNDictFloat;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(speedEquation, variables);
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
 
         //prepare multiple projectiles, if applicable
-        int projectileAmount = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
+        int projectileAmount = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
         List<Vector3> targets = new List<Vector3>();
         targets.Add(target);
         if (projectileAmount > 1) {

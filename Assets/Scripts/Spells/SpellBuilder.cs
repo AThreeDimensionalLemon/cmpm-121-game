@@ -24,6 +24,14 @@ public class SpellBuilder
         return new ModifiedSpell(target, spell_modifiers[name]);
     }
 
+    public ICastable BuildRandomSpell(SpellCaster owner)
+    {
+        var rand = new System.Random();
+        Spell startingSpell = BuildSpell(owner, base_spells.Keys.ElementAt(rand.Next(base_spells.Count())));
+        int numModifiers = rand.Next();
+        return startingSpell;
+    }
+
     public static SpellBuilder Instance {
         get {
             if (theInstance == null) theInstance = new SpellBuilder();

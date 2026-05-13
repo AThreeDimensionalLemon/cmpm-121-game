@@ -37,6 +37,11 @@ public class ModifiedSpell : ICastable
         return name + " " + baseSpell.GetName();
     }
 
+    public SpellCaster GetOwner()
+    {
+        return baseSpell.GetOwner();
+    }
+
     private int GetModifiedResult(int baseValue, string valueName) {
         int result = baseValue;
         if (modifications.ContainsKey(valueName)) {
@@ -109,12 +114,12 @@ public class ModifiedSpell : ICastable
         else if (lastModSpeed != null) speedModification = lastModSpeed;
 
         //variables
-        var variables = new Dictionary<string, float> { { "power", 1 } };
+        Dictionary<string, float> variables = new Dictionary<string, float> { { "power", baseSpell.GetOwner().spell_power } };
 
         //Hit event
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
 
-        return baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
+        return baseSpell.Cast(where, target, this.team, speedModification, lastModVariables != null ? lastModVariables : variables, HitEvent);
     }
 
     void OnHit(Hittable other, Vector3 impact) {
