@@ -31,9 +31,9 @@ public class PlayerController : MonoBehaviour
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
 
-        spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict),
-                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict),
-                                      /*RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict),*/
+        spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict), // max mana
+                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict), // mana regen
+                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict), // spell power
                                       Hittable.Team.PLAYER);
         StartCoroutine(spellcaster.ManaRegeneration());
 
@@ -54,10 +54,9 @@ public class PlayerController : MonoBehaviour
     {
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
-
-        spellcaster.max_mana = RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict);
-        spellcaster.mana_reg = RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict);
-        //spellcaster.spell_power = RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict);
+        spellcaster.HandleWaveScaling(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict));
 
         hp.SetMaxHP(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict));
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class Hittable
 {
@@ -15,7 +16,7 @@ public class Hittable
     public void Damage(Damage damage)
     {
         EventBus.Instance.DoDamage(owner.transform.position, damage, this);
-        hp -= damage.amount;
+        hp -= RPNEvaluator.RPNEvaluator.Evaluate(damage.amount, new Dictionary<string, int>());
         if (hp <= 0)
         {
             hp = 0;

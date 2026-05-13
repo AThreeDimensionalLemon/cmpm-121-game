@@ -5,21 +5,19 @@ using UnityEngine;
 
 public class Damage 
 {
-    public int amount;
+    public string amount;
     public enum Type
     {
         PHYSICAL, ARCANE, NATURE, FIRE, ICE, DARK, LIGHT
     }
     public Type type;
-    public Damage(int inAmount, Damage.Type inType) {
+    public Damage(string inAmount, Damage.Type inType) {
         this.amount = inAmount;
         this.type = inType;
     }
     public Damage(JToken damageToken) //constructor used by spell
     {
-        this.amount = RPNEvaluator.RPNEvaluator.Evaluate(damageToken["amount"].ToString(), new Dictionary<string, int> {
-            { "power", 1 } //TODO: Figure out how to store player power and, subsequently, how to get it here
-        });
+        this.amount = damageToken["amount"].ToString();
         this.type = TypeFromString(damageToken["type"].ToString());
     }
 

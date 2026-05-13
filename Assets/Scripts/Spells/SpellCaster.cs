@@ -9,6 +9,7 @@ public class SpellCaster
     public int mana_reg;
     public Hittable.Team team;
     public ICastable spell;
+    public int spell_power;
 
     public IEnumerator ManaRegeneration()
     {
@@ -20,15 +21,23 @@ public class SpellCaster
         }
     }
 
-    public SpellCaster(int mana, int mana_reg, Hittable.Team team)
+    public SpellCaster(int mana, int mana_reg, int spell_power, Hittable.Team team)
     {
         this.mana = mana;
         this.max_mana = mana;
         this.mana_reg = mana_reg;
+        this.spell_power = spell_power;
         this.team = team;
         spell = SpellBuilder.Instance.BuildSpell(this, "arcane_bolt");
         spell = SpellBuilder.Instance.ModifySpell(spell, "damage_amp");
         //Debug.Log(spell.GetName());
+    }
+
+    public void HandleWaveScaling(int mana, int mana_reg, int spell_power)
+    {
+        this.mana = mana;
+        this.mana_reg = mana_reg;
+        this.spell_power = spell_power;
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target)
