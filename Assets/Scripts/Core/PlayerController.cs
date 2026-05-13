@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
         spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict),
                                       RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict),
-                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict),
+                                      /*RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict),*/
                                       Hittable.Team.PLAYER);
         StartCoroutine(spellcaster.ManaRegeneration());
 
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
         spellcaster.max_mana = RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict);
         spellcaster.mana_reg = RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict);
-        spellcaster.spell_power = RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict);
+        //spellcaster.spell_power = RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict);
 
         hp.SetMaxHP(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict));
 
