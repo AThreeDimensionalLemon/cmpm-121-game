@@ -122,7 +122,7 @@ public class Spell : ICastable
         int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
         List<Vector3> targets = new() { target };
         if (intN > 1 && secondary_projectile == null) {
-            float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
+            float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, variables);
             targets.AddRange(GetTargetList(where, target, angle, intN));
         }
 
@@ -138,10 +138,11 @@ public class Spell : ICastable
         if (other.team != team) {
             other.Damage(this.damage);
             if (this.projectile.is_splitting) {
-                Debug.Log("split!");
-                int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
-                float speed = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.speed, new Dictionary<string, float> { { "power", 1 } });
-                float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, new Dictionary<string, float> { { "power", 1 } });
+                Dictionary<string, int> RPNDictInt = new() { { "power", owner.spell_power } };
+                Dictionary<string, float> RPNDictFloat = new() { { "power", owner.spell_power } };
+                int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
+                float speed = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.speed, RPNDictFloat);
+                float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, RPNDictFloat);
                 foreach (Vector3 target in GetTargetList(impact, Vector3.right, 2 * (float)Math.PI, intN)) {
                     GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.secondary_projectile.trajectory, impact, target - impact, speed, OnHit, lifetime, other);
                 }
