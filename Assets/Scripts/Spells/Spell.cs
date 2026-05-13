@@ -96,7 +96,7 @@ public class Spell : ICastable
         return last_cast;
     }
 
-    private List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount) {
+    public static List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount) {
         List<Vector3> result = new();
         System.Random rand = new();
         Vector2 initLocDir = Vector2.Normalize(direction - origin);
@@ -110,7 +110,7 @@ public class Spell : ICastable
         return result;
     }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
+    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null, string inTrajectory = null) {
         this.team = team;
         Dictionary<string, int> RPNDictInt = new Dictionary<string, int>();
         Dictionary<string, float> RPNDictFloat = new Dictionary<string, float>();
@@ -122,18 +122,18 @@ public class Spell : ICastable
         var variables = (modifierVariables != null) ? modifierVariables : RPNDictFloat;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(speedEquation, variables);
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
+        string trajectory = ((inTrajectory != null) ? inTrajectory : this.projectile.trajectory);
 
         //prepare multiple projectiles, if applicable
         int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
-        List<Vector3> targets = new() { target };
         if (intN > 1 && secondary_projectile == null) {
-            float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, new Dictionary<string, float>());
-            targets.AddRange(GetTargetList(where, target, angle, intN));
+            float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, variables);
+            target.AddRange(GetTargetList(where, target[0], angle, intN));
         }
 
         //spawn projectiles
-        foreach (Vector3 listedTarget in targets) {
-            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, HitEvent);
+        foreach (Vector3 listedTarget in target) {
+            GameManager.Instance.projectileManager.CreateProjectile(this.icon, trajectory, where, listedTarget - where, speed, HitEvent);
         }
 
         yield return new WaitForEndOfFrame();
@@ -143,11 +143,8 @@ public class Spell : ICastable
         if (other.team != team) {
             other.Damage(this.damage);
             if (this.projectile.is_splitting) {
-                Dictionary<string, int> RPNDictInt = new();
-                Dictionary<string, float> RPNDictFloat = new();
-                RPNDictInt.Add("power", owner.spell_power);
-                RPNDictFloat.Add("power", owner.spell_power);
-                Debug.Log("split!");
+                Dictionary<string, int> RPNDictInt = new() { { "power", owner.spell_power } };
+                Dictionary<string, float> RPNDictFloat = new() { { "power", owner.spell_power } };
                 int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
                 float speed = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.speed, RPNDictFloat);
                 float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, RPNDictFloat);
