@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Collections.Generic;
 using RPNEvaluator;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public ManaBar manaui;
 
     public SpellCaster spellcaster;
-    public SpellUI spellui;
+    public List<SpellUI> spelluiList;
 
     public int speed;
 
@@ -35,6 +36,8 @@ public class PlayerController : MonoBehaviour
                                       RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict), // mana regen
                                       RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict), // spell power
                                       Hittable.Team.PLAYER);
+        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
+        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "magic_missile"));
         StartCoroutine(spellcaster.ManaRegeneration());
 
         hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict),
@@ -47,7 +50,7 @@ public class PlayerController : MonoBehaviour
         // tell UI elements what to show
         healthui.SetHealth(hp);
         manaui.SetSpellCaster(spellcaster);
-        spellui.SetSpell(spellcaster.spell);
+        spelluiList[0].SetSpell(spellcaster.spells[0]);
     }
 
     public void StartWave()
@@ -61,6 +64,15 @@ public class PlayerController : MonoBehaviour
         hp.SetMaxHP(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict));
 
         speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
+    }
+
+    public void AddNewSpell(ICastable spell)
+    {
+        int index = spellcaster.AddSpell(spell);
+        if (index != -1)
+        {
+            spelluiList[index].SetSpell(spell);
+        }
     }
 
     // Update is called once per frame
@@ -78,7 +90,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(spellcaster.Cast(transform.position, mouseWorld));
         if (GameManager.Instance.state == GameManager.GameState.INWAVE)
         {
-            GameManager.Instance.playerStatisticsManager.DamageFired += spellcaster.spell.GetDamage();
+            GameManager.Instance.playerStatisticsManager.DamageFired += spellcaster.spells[spellcaster.current_spell_index].GetDamage();
             GameManager.Instance.playerStatisticsManager.SpellsCasted++;
         }
     }

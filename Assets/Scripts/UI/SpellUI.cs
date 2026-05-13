@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class SpellUI : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class SpellUI : MonoBehaviour
     {
         this.spell = spell;
         GameManager.Instance.spellIconManager.PlaceSprite(spell.GetIcon(), icon.GetComponent<Image>());
+        this.icon.transform.parent.GameObject().SetActive(true);
+    }
+
+    public void RemoveSpell()
+    {
+        this.spell = null;
+        this.icon.transform.parent.GameObject().SetActive(false);
     }
 
     // Update is called once per frame

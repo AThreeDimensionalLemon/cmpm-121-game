@@ -25,13 +25,13 @@ public class SpellBuilder
         return new ModifiedSpell(target, spell_modifiers[name]);
     }
 
-    public ICastable BuildRandomSpell(SpellCaster owner, int numMods)
+    public ICastable BuildRandomSpell(SpellCaster owner, string maxMods, Dictionary<string, int> RPNDict)
     {
         var rand = new System.Random();
         ICastable randSpell = BuildSpell(owner, base_spells.Keys.ElementAt(rand.Next(base_spells.Count())));
         //int numModifiers = rand.Next(GameManager.Instance.GetWave() / 2);
         List<string> modsToApply = spell_modifiers.Keys.ToList();
-        for (int i = 0; i < numMods; i++)
+        for (int i = 0; i < rand.Next(RPNEvaluator.RPNEvaluator.Evaluate(maxMods, RPNDict)); i++)
         {
             int index = rand.Next(modsToApply.Count);
             randSpell = ModifySpell(randSpell, modsToApply[index]);
