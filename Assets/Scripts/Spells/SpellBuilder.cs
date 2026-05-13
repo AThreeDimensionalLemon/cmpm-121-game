@@ -21,8 +21,8 @@ public class SpellBuilder
         return new Spell(owner, base_spells[name]);
     }
 
-    public ModifiedSpell ModifySpell(ICastable target, string name) {
-        return new ModifiedSpell(target, spell_modifiers[name]);
+    public ModifiedSpell ModifySpell(SpellCaster owner, ICastable target, string name) {
+        return new ModifiedSpell(owner, target, spell_modifiers[name]);
     }
 
     public ICastable BuildRandomSpell(SpellCaster owner, string maxMods, Dictionary<string, int> RPNDict)
@@ -34,7 +34,7 @@ public class SpellBuilder
         for (int i = 0; i < rand.Next(RPNEvaluator.RPNEvaluator.Evaluate(maxMods, RPNDict)); i++)
         {
             int index = rand.Next(modsToApply.Count);
-            randSpell = ModifySpell(randSpell, modsToApply[index]);
+            randSpell = ModifySpell(owner, randSpell, modsToApply[index]);
             modsToApply.RemoveAt(index);
         }
         return randSpell;

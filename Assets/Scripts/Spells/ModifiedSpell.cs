@@ -16,6 +16,7 @@ public class ModifiedSpell : ICastable
     public string description;
     public Dictionary<string, StatModifier> modifications;
     public Hittable.Team team;
+    public SpellCaster owner;
 
     private string TypeToOperator(string valueModType) {
         string v = valueModType.ToLower();
@@ -26,11 +27,12 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    public ModifiedSpell(ICastable inBaseSpell, JToken modifierToken) {
+    public ModifiedSpell(SpellCaster inOwner, ICastable inBaseSpell, JToken modifierToken) {
         baseSpell = inBaseSpell;
         name = modifierToken["name"].ToString();
         description = modifierToken["name"].ToString();
         modifications = modifierToken["modifiers"].ToObject<Dictionary<string, StatModifier>>();
+        owner = inOwner;
     }
 
     public string GetName() {
