@@ -22,4 +22,35 @@ public class SpellUIContainer : MonoBehaviour
         
     }
 
+    public void ResetSpellUI()
+    {
+        foreach (GameObject spellui in spellUIs)
+        {
+            spellui.GetComponent<SpellUI>().RemoveSpell();
+            spellui.SetActive(false);
+        }
+    }
+
+    public void ActivateDropButtons()
+    {
+        foreach (GameObject spellui in spellUIs)
+        {
+            if (spellui.activeSelf)
+            {
+                spellui.GetComponent<SpellUI>().dropbutton.SetActive(true);
+            }
+        }
+    }
+
+    public void DeactivateDropButtons()
+    {
+        foreach (GameObject spellui in spellUIs)
+        {
+            if (spellui.activeSelf)
+            {
+                spellui.GetComponent<SpellUI>().dropbutton.SetActive(false);
+            }
+        }
+    }
+
 }

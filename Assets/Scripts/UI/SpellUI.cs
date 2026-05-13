@@ -26,6 +26,7 @@ public class SpellUI : MonoBehaviour
         this.spell = spell;
         GameManager.Instance.spellIconManager.PlaceSprite(spell.GetIcon(), icon.GetComponent<Image>());
         this.icon.transform.parent.GameObject().SetActive(true);
+        this.dropbutton.SetActive(false);
     }
 
     public void RemoveSpell()

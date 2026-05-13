@@ -51,6 +51,11 @@ public class Spell : ICastable
         return name;
     }
 
+    public string GetDescription()
+    {
+        return name + ": " + description;
+    }
+
     public SpellCaster GetOwner()
     {
         return owner;
@@ -138,10 +143,14 @@ public class Spell : ICastable
         if (other.team != team) {
             other.Damage(this.damage);
             if (this.projectile.is_splitting) {
+                Dictionary<string, int> RPNDictInt = new();
+                Dictionary<string, float> RPNDictFloat = new();
+                RPNDictInt.Add("power", owner.spell_power);
+                RPNDictFloat.Add("power", owner.spell_power);
                 Debug.Log("split!");
-                int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, new Dictionary<string, int> { { "power", 1 } });
-                float speed = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.speed, new Dictionary<string, float> { { "power", 1 } });
-                float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, new Dictionary<string, float> { { "power", 1 } });
+                int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
+                float speed = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.speed, RPNDictFloat);
+                float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, RPNDictFloat);
                 foreach (Vector3 target in GetTargetList(impact, Vector3.right, 2 * (float)Math.PI, intN)) {
                     GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.secondary_projectile.trajectory, impact, target - impact, speed, OnHit, lifetime, other);
                 }

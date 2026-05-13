@@ -33,7 +33,11 @@ public class PlayerStatisticsManager : MonoBehaviour
 
     public String GetStatisticsReadout()
     {
-        int efficiency = (int)(((float)DamageDealt / DamageFired) * 100);
+        int efficiency = 100;
+        if (DamageFired > 0)
+        {
+            efficiency = (int)(((float)DamageDealt / DamageFired) * 100);
+        }
         string text = "Time elapsed: " + (int)TimeElapsed + " seconds"
                        + "\nDamage Dealt: " + DamageDealt
                        + "\nDamage Efficiency: " + efficiency + '%'
