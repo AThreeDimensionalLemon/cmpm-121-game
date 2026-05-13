@@ -22,6 +22,6 @@ public interface ICastable {
     List<Projectile> GetProjectiles();
 
     //cast the spell
-    IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> OnModifiedHit = null);
+    IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> OnModifiedHit = null);
     //IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team);
 }

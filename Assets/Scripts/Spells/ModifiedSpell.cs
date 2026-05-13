@@ -107,17 +107,25 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team inTeam, string lastModSpeed = null, Dictionary<string, float> lastModVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
+    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team inTeam, string lastModSpeed = null, Dictionary<string, float> lastModVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
         this.team = inTeam;
 
         //setting variables that aren't compile-time contants
+        //variables
+        Dictionary<string, float> variables = new() { { "power", owner.spell_power } };
+
+        //add a target
+        if (modifications.ContainsKey("angle")) {
+            float angle = RPNEvaluator.RPNEvaluator.Evaluatef(modifications["angle"].modification, variables);
+            target.AddRange(Spell.GetTargetList(where, target[0], angle, 1)); 
+        }
+
         //speed mod
         string speedModification = (modifications.ContainsKey("speed")) ? modifications["speed"].modification + " " + TypeToOperation(modifications["speed"].type) : null;
         if (lastModSpeed != null && speedModification != null) speedModification += lastModSpeed;
         else if (lastModSpeed != null) speedModification = lastModSpeed;
 
         //others
-        Dictionary<string, float> variables = new() { { "power", owner.spell_power } };
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
 
         //handle delay
@@ -139,7 +147,7 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    IEnumerator DelayedCast(float delay, Vector3 where, Vector3 target, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3> HitEvent) {
+    IEnumerator DelayedCast(float delay, Vector3 where, List<Vector3> target, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3> HitEvent) {
         Debug.Log("beginning delayed cast");
         yield return new WaitForSeconds(delay * 5);
         Debug.Log("casting delayed spell");

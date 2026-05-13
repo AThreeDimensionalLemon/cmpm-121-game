@@ -91,7 +91,7 @@ public class Spell : ICastable
         return last_cast;
     }
 
-    private List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount) {
+    public static List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount) {
         List<Vector3> result = new();
         System.Random rand = new();
         Vector2 initLocDir = Vector2.Normalize(direction - origin);
@@ -105,7 +105,7 @@ public class Spell : ICastable
         return result;
     }
 
-    public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
+    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
         this.team = team;
         Dictionary<string, int> RPNDictInt = new Dictionary<string, int>();
         Dictionary<string, float> RPNDictFloat = new Dictionary<string, float>();
@@ -120,14 +120,13 @@ public class Spell : ICastable
 
         //prepare multiple projectiles, if applicable
         int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
-        List<Vector3> targets = new() { target };
         if (intN > 1 && secondary_projectile == null) {
             float angle = RPNEvaluator.RPNEvaluator.Evaluatef(this.spray, variables);
-            targets.AddRange(GetTargetList(where, target, angle, intN));
+            target.AddRange(GetTargetList(where, target[0], angle, intN));
         }
 
         //spawn projectiles
-        foreach (Vector3 listedTarget in targets) {
+        foreach (Vector3 listedTarget in target) {
             GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, HitEvent);
         }
 

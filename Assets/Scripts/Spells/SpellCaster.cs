@@ -91,7 +91,7 @@ public class SpellCaster
         {
             mana -= current_spell.GetManaCost();
             Debug.Log(spells[current_spell_index].GetName() + " spent " + current_spell.GetManaCost() + " mana to deal " + current_spell.GetDamage() + " damage");
-            yield return current_spell.Cast(where, target, team);
+            yield return current_spell.Cast(where, new List<Vector3> { target }, team);
         }
         yield break;
     }
