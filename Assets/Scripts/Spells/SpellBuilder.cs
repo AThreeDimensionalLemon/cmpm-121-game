@@ -25,6 +25,7 @@ public class SpellBuilder
         return new ModifiedSpell(owner, target, spell_modifiers[name]);
     }
 
+    // maxMods is an integer RPN expression with dict RPNDict.
     public ICastable BuildRandomSpell(SpellCaster owner, string maxMods, Dictionary<string, int> RPNDict)
     {
         var rand = new System.Random();

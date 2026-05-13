@@ -51,6 +51,11 @@ public class Spell : ICastable
         return name;
     }
 
+    public string GetDescription()
+    {
+        return name + ": " + description;
+    }
+
     public SpellCaster GetOwner()
     {
         return owner;

@@ -11,6 +11,7 @@ public interface ICastable {
 
     //stuff that probably could've been implemented as properties
     string GetName();
+    string GetDescription();
     SpellCaster GetOwner();
     int GetManaCost();
     int GetDamage();

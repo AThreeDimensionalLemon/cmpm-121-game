@@ -5,12 +5,23 @@ using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.UI;
 using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class RewardScreenManager : MonoBehaviour
 {
     public GameObject rewardUI;
+    public GameObject statsReadout;
+    public GameObject nextWaveButton;
+    public GameObject restartButton;
+    public GameObject spellIconFrame;
+    public GameObject spellIcon;
+    public GameObject spellDescription;
+    public GameObject takeSpellButton;
+    public SpellUIContainer spellUI;
 
+
+    private ICastable rewardSpell;
     public enum TextTypes
     {
         POSTWAVE,
@@ -19,7 +30,7 @@ public class RewardScreenManager : MonoBehaviour
     }
     public TextTypes text;
 
-    private System.Collections.Generic.Dictionary<TextTypes, string> text_list = new System.Collections.Generic.Dictionary<TextTypes,string>();
+    private Dictionary<TextTypes, string> text_list = new Dictionary<TextTypes,string>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,37 +46,85 @@ public class RewardScreenManager : MonoBehaviour
         switch(GameManager.Instance.state)
         {
             case GameManager.GameState.WAVEEND:
-                SetRewardScreenText(TextTypes.POSTWAVE);
-                rewardUI.SetActive(true);
-                rewardUI.transform.GetChild(1).GameObject().SetActive(true); // enable next wave button
-                rewardUI.transform.GetChild(2).GameObject().SetActive(false); // disable restart button
+                if (!rewardUI.activeSelf)
+                {
+                    //SetRewardScreenText(TextTypes.POSTWAVE);
+                    rewardUI.SetActive(true);
+                    nextWaveButton.SetActive(true);
+                    restartButton.SetActive(false);
+
+                    GenerateSpellReward();
+                    if (GameManager.Instance.player.GetComponent<PlayerController>().spellcaster.IsFull())
+                    {
+                        spellUI.ActivateDropButtons();
+                    }
+                    spellIconFrame.SetActive(true);
+                    spellIcon.SetActive(true);
+                    spellDescription.SetActive(true);
+                    takeSpellButton.SetActive(true);
+                }
                 break;
             case GameManager.GameState.GAMEOVER:
-                SetRewardScreenText(TextTypes.WIN);
-                rewardUI.SetActive(true);
-                rewardUI.transform.GetChild(1).GameObject().SetActive(false); // disable next wave button
-                rewardUI.transform.GetChild(2).GameObject().SetActive(true); // enable restart button
+                if (!rewardUI.activeSelf)
+                {
+                    SetRewardScreenText(TextTypes.WIN);
+                    rewardUI.SetActive(true);
+                    nextWaveButton.SetActive(false);
+                    restartButton.SetActive(true);
+
+                    spellIconFrame.SetActive(false);
+                    spellIcon.SetActive(false);
+                    spellDescription.SetActive(false);
+                    takeSpellButton.SetActive(false);
+                }
                 break;
             case GameManager.GameState.GAMELOST:
-                SetRewardScreenText(TextTypes.LOSS);
-                rewardUI.SetActive(true);
-                rewardUI.transform.GetChild(1).GameObject().SetActive(false); // disable next wave button
-                rewardUI.transform.GetChild(2).GameObject().SetActive(true); // enable restart button
-                GameManager.Instance.KillAllEnemies();
+                if (!rewardUI.activeSelf)
+                {
+                    SetRewardScreenText(TextTypes.LOSS);
+                    rewardUI.SetActive(true);
+                    nextWaveButton.SetActive(false);
+                    restartButton.SetActive(true);
+                    GameManager.Instance.KillAllEnemies();
+
+                    spellIconFrame.SetActive(false);
+                    spellIcon.SetActive(false);
+                    spellDescription.SetActive(false);
+                    takeSpellButton.SetActive(false);
+                }
                 break;
             default:
                 if (rewardUI.activeSelf)
                 {
                     rewardUI.SetActive(false);
+                    spellUI.DeactivateDropButtons();
                 }
                 break;
+        }
+    }
+
+    void GenerateSpellReward()
+    {
+        Dictionary<string, int> RPNDict = new();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
+        rewardSpell = SpellBuilder.Instance.BuildRandomSpell(GameManager.Instance.player.GetComponent<PlayerController>().spellcaster, "wave 2 / 1 +", RPNDict);
+        GameManager.Instance.spellIconManager.PlaceSprite(rewardSpell.GetIcon(), spellIcon.GetComponent<Image>());
+        spellDescription.GetComponent<TextMeshProUGUI>().text = rewardSpell.GetName() + "\n\n" + rewardSpell.GetDescription();
+    }
+
+    public void GiveSpellToPlayer()
+    {
+        if (GameManager.Instance.player.GetComponent<PlayerController>().AddNewSpell(rewardSpell))
+        {
+            takeSpellButton.SetActive(false);
+            spellUI.DeactivateDropButtons();
         }
     }
 
     void SetRewardScreenText(TextTypes in_text)
     {
         PlayerStatisticsManager stats = GameManager.Instance.playerStatisticsManager;
-        TextMeshProUGUI tmp = rewardUI.transform.GetChild(0).GameObject().GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI tmp = statsReadout.GetComponent<TextMeshProUGUI>();
         tmp.text = text_list[in_text] + stats.GetStatisticsReadout();
     }
 

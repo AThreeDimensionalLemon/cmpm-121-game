@@ -40,6 +40,11 @@ public class ModifiedSpell : ICastable
         return spellName + " " + baseSpell.GetName();
     }
 
+    public string GetDescription()
+    {
+        return name + ": " + description + '\n' + baseSpell.GetDescription();
+    }
+
     public SpellCaster GetOwner()
     {
         return baseSpell.GetOwner();

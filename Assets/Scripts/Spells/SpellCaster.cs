@@ -39,6 +39,18 @@ public class SpellCaster
         //Debug.Log(spell.GetName());
     }
 
+    public bool IsFull()
+    {
+        for (int i = 0; i < spells.Length; i++)
+        {
+            if (spells[i] == null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public int AddSpell(ICastable spell)
     {
         bool added = false;

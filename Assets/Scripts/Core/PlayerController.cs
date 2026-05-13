@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public ManaBar manaui;
 
     public SpellCaster spellcaster;
-    public List<SpellUI> spelluiList;
+    public SpellUIContainer spellUI;
 
     public int speed;
 
@@ -36,9 +36,8 @@ public class PlayerController : MonoBehaviour
                                       RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict), // mana regen
                                       RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict), // spell power
                                       Hittable.Team.PLAYER);
-        //AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
-        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "magic_missile"));
-        //AddNewSpell(SpellBuilder.Instance.ModifySpell(spellcaster, SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"), "homing"));
+        spellUI.ResetSpellUI();
+        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
         StartCoroutine(spellcaster.ManaRegeneration());
 
         hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict),
@@ -51,7 +50,6 @@ public class PlayerController : MonoBehaviour
         // tell UI elements what to show
         healthui.SetHealth(hp);
         manaui.SetSpellCaster(spellcaster);
-        spelluiList[0].SetSpell(spellcaster.spells[0]);
     }
 
     public void StartWave()
@@ -67,13 +65,21 @@ public class PlayerController : MonoBehaviour
         speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
     }
 
-    public void AddNewSpell(ICastable spell)
+    public bool AddNewSpell(ICastable spell)
     {
         int index = spellcaster.AddSpell(spell);
         if (index != -1)
         {
-            spelluiList[index].SetSpell(spell);
+            spellUI.spellUIs[index].GetComponent<SpellUI>().SetSpell(spell);
+            return true;
         }
+        return false;
+    }
+    public void RemoveSpellAtIndex(int index)
+    {
+        spellcaster.DropSpell(index);
+        spellUI.spellUIs[index].GetComponent<SpellUI>().RemoveSpell();
+        spellUI.DeactivateDropButtons();
     }
 
     // Update is called once per frame
@@ -98,8 +104,23 @@ public class PlayerController : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER) return;
+        if (GameManager.Instance.state != GameManager.GameState.COUNTDOWN && GameManager.Instance.state != GameManager.GameState.INWAVE)
+        {
+            unit.movement = Vector2.zero;
+            return;
+        }
         unit.movement = value.Get<Vector2>()*speed;
+    }
+
+    void OnChangeSpell(InputValue value)
+    {
+        do {
+            spellcaster.current_spell_index++;
+            if (spellcaster.current_spell_index >= spellcaster.spells.Length)
+            {
+                spellcaster.current_spell_index = 0;
+            }
+        } while (spellcaster.spells[spellcaster.current_spell_index] == null);
     }
 
     void Die()
