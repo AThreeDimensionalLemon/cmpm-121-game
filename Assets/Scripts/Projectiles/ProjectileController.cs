@@ -7,6 +7,7 @@ public class ProjectileController : MonoBehaviour
     public float lifetime;
     public event Action<Hittable,Vector3> OnHit;
     public ProjectileMovement movement;
+    private Hittable filter = null;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,7 +30,8 @@ public class ProjectileController : MonoBehaviour
             var ec = collision.gameObject.GetComponent<EnemyController>();
             if (ec != null)
             {
-                OnHit(ec.hp, transform.position);
+                if (ec.hp != filter) OnHit(ec.hp, transform.position);
+                else return;
             }
             else
             {
@@ -47,6 +49,10 @@ public class ProjectileController : MonoBehaviour
     public void SetLifetime(float lifetime)
     {
         StartCoroutine(Expire(lifetime));
+    }
+
+    public void SetFilter(Hittable inFilter) {
+        filter = inFilter;
     }
 
     IEnumerator Expire(float lifetime)

@@ -9,4 +9,5 @@ public class Projectile {
     public string speed;
     public string lifetime = "0";
     public int sprite;
+    public bool is_splitting = false;
 }
