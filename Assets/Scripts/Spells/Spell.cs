@@ -54,7 +54,9 @@ public class Spell : ICastable
     }
 
     public int GetDamage() {
-        return this.damage.amount;
+        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
+        RPNDict.Add("power", owner.spell_power);
+        return RPNEvaluator.RPNEvaluator.Evaluate(this.damage.amount, RPNDict);
     }
 
     public float GetCooldown() {

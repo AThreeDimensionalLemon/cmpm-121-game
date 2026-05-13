@@ -123,7 +123,7 @@ public class ModifiedSpell : ICastable
     void OnHit(Hittable other, Vector3 impact) {
         Debug.Log("modified spell's OnHit event triggered");
         if (other.team != team) {
-            other.Damage(new Damage(this.GetDamage(), this.GetDamageType()));
+            other.Damage(new Damage(this.GetDamage().ToString(), this.GetDamageType()));
             if (team == Hittable.Team.PLAYER) {
                 GameManager.Instance.playerStatisticsManager.DamageDealt += this.GetDamage();
             }

@@ -39,7 +39,7 @@ public class GameManager
         {
             GameObject enemy = enemies[0];
             Hittable hp = enemy.GetComponent<EnemyController>().hp;
-            hp.Damage(new Damage(hp.hp, Damage.Type.PHYSICAL));
+            hp.Damage(new Damage(hp.hp.ToString(), Damage.Type.PHYSICAL));
         }
     }
 

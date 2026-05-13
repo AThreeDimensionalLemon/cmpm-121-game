@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Collections.Generic;
+using RPNEvaluator;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,17 +28,39 @@ public class PlayerController : MonoBehaviour
 
     public void StartLevel()
     {
-        spellcaster = new SpellCaster(125, 8, Hittable.Team.PLAYER);
+        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
+
+        spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict), // max mana
+                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict), // mana regen
+                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict), // spell power
+                                      Hittable.Team.PLAYER);
         StartCoroutine(spellcaster.ManaRegeneration());
-        
-        hp = new Hittable(100, Hittable.Team.PLAYER, gameObject);
+
+        hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict),
+                          Hittable.Team.PLAYER, gameObject);
         hp.OnDeath += Die;
         hp.team = Hittable.Team.PLAYER;
+
+        speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
 
         // tell UI elements what to show
         healthui.SetHealth(hp);
         manaui.SetSpellCaster(spellcaster);
         spellui.SetSpell(spellcaster.spell);
+    }
+
+    public void StartWave()
+    {
+        Dictionary<string, int> RPNDict = new Dictionary<string, int>();
+        RPNDict.Add("wave", GameManager.Instance.GetWave());
+        spellcaster.HandleWaveScaling(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict));
+
+        hp.SetMaxHP(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict));
+
+        speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
     }
 
     // Update is called once per frame

@@ -39,7 +39,7 @@ public class EnemyController : MonoBehaviour
         if (last_attack + 2 < Time.time)
         {
             last_attack = Time.time;
-            target.gameObject.GetComponent<PlayerController>().hp.Damage(new Damage(damage, damage_type));
+            target.gameObject.GetComponent<PlayerController>().hp.Damage(new Damage(damage.ToString(), damage_type));
         }
     }
 
