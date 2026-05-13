@@ -105,7 +105,7 @@ public class Spell : ICastable
         return result;
     }
 
-    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
+    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team team, string modifierSpeed = null, Dictionary<string, float> modifierVariables = null, Action<Hittable, Vector3> InHitEvent = null, string inTrajectory = null) {
         this.team = team;
         Dictionary<string, int> RPNDictInt = new Dictionary<string, int>();
         Dictionary<string, float> RPNDictFloat = new Dictionary<string, float>();
@@ -117,6 +117,7 @@ public class Spell : ICastable
         var variables = (modifierVariables != null) ? modifierVariables : RPNDictFloat;
         float speed = RPNEvaluator.RPNEvaluator.Evaluatef(speedEquation, variables);
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
+        string trajectory = ((inTrajectory != null) ? inTrajectory : this.projectile.trajectory);
 
         //prepare multiple projectiles, if applicable
         int intN = RPNEvaluator.RPNEvaluator.Evaluate(this.N, RPNDictInt);
@@ -127,7 +128,7 @@ public class Spell : ICastable
 
         //spawn projectiles
         foreach (Vector3 listedTarget in target) {
-            GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.projectile.trajectory, where, listedTarget - where, speed, HitEvent);
+            GameManager.Instance.projectileManager.CreateProjectile(this.icon, trajectory, where, listedTarget - where, speed, HitEvent);
         }
 
         yield return new WaitForEndOfFrame();

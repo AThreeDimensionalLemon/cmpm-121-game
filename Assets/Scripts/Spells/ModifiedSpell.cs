@@ -107,7 +107,7 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team inTeam, string lastModSpeed = null, Dictionary<string, float> lastModVariables = null, Action<Hittable, Vector3> InHitEvent = null) {
+    public IEnumerator Cast(Vector3 where, List<Vector3> target, Hittable.Team inTeam, string lastModSpeed = null, Dictionary<string, float> lastModVariables = null, Action<Hittable, Vector3> InHitEvent = null, string lastTrajectory = null) {
         this.team = inTeam;
 
         //setting variables that aren't compile-time contants
@@ -127,6 +127,7 @@ public class ModifiedSpell : ICastable
 
         //others
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
+        string trajectory = (modifications.ContainsKey("trajectory")) ? modifications["trajectory"].modification : lastTrajectory;
 
         //handle delay
         if (modifications.ContainsKey("delay")) {
@@ -135,7 +136,7 @@ public class ModifiedSpell : ICastable
             //DelayedSpellCaster.Instance.DelayedCast(this.baseSpell, this.team, delay, where, target, speedModification, variables, HitEvent);
         }
 
-        return baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
+        return baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent, trajectory);
     }
 
     void OnHit(Hittable other, Vector3 impact) {
