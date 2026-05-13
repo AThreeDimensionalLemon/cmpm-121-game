@@ -108,11 +108,14 @@ public class ModifiedSpell : ICastable
         if (lastModSpeed != null && speedModification != null) speedModification += lastModSpeed;
         else if (lastModSpeed != null) speedModification = lastModSpeed;
 
-        //variables
+        //others
         var variables = new Dictionary<string, float> { { "power", 1 } };
-
-        //Hit event
         Action<Hittable, Vector3> HitEvent = (InHitEvent != null) ? InHitEvent : OnHit;
+
+        //handle delay
+        if (modifications.ContainsKey("delay")) { 
+            baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
+        }
 
         return baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
     }
