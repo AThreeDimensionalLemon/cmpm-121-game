@@ -37,7 +37,7 @@ public class RewardScreenManager : MonoBehaviour
     {
         text_list.Add(TextTypes.WIN, "You win!\n\n\nGame Stats:\n");
         text_list.Add(TextTypes.LOSS, "You lose!\n\n\nGame Stats:\n");
-        text_list.Add(TextTypes.POSTWAVE, "Wave destroyed!\n\n\nGame stats so far:\n");
+        text_list.Add(TextTypes.POSTWAVE, "Wave destroyed!");
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class RewardScreenManager : MonoBehaviour
             case GameManager.GameState.WAVEEND:
                 if (!rewardUI.activeSelf)
                 {
-                    //SetRewardScreenText(TextTypes.POSTWAVE);
+                    SetRewardScreenText(TextTypes.POSTWAVE);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(true);
                     restartButton.SetActive(false);
@@ -125,7 +125,11 @@ public class RewardScreenManager : MonoBehaviour
     {
         PlayerStatisticsManager stats = GameManager.Instance.playerStatisticsManager;
         TextMeshProUGUI tmp = statsReadout.GetComponent<TextMeshProUGUI>();
-        tmp.text = text_list[in_text] + stats.GetStatisticsReadout();
+        tmp.text = text_list[in_text];
+        if (in_text != TextTypes.POSTWAVE)
+        {
+            tmp.text += stats.GetStatisticsReadout();
+        }
     }
 
     
