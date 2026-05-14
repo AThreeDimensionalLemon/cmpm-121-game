@@ -25,12 +25,13 @@ public class ProjectileManager : MonoBehaviour
     //    new_projectile.GetComponent<ProjectileController>().OnHit += onHit;
     //}
 
-    public void CreateProjectile(int which, string trajectory, Vector3 where, Vector3 direction, float speed, Action<Hittable, Vector3> onHit, float lifetime = -1, Hittable filter = null)
+    public void CreateProjectile(int which, string trajectory, Vector3 where, Vector3 direction, float speed, Action<Hittable, Vector3, int> onHit, float lifetime = -1, int num_splits = 0, Hittable filter = null)
     {
         GameObject new_projectile = Instantiate(projectiles[which], where + direction.normalized * 1.1f, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg));
         new_projectile.GetComponent<ProjectileController>().movement = MakeMovement(trajectory, speed);
         new_projectile.GetComponent<ProjectileController>().OnHit += onHit;
         if (lifetime >= 0) new_projectile.GetComponent<ProjectileController>().SetLifetime(lifetime);
+        new_projectile.GetComponent<ProjectileController>().splits = num_splits;
         if (filter != null) new_projectile.GetComponent<ProjectileController>().SetFilter(filter);
     }
 

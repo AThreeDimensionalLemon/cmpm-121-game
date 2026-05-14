@@ -20,7 +20,14 @@ public class Damage
     {
         this.amount = damageToken["amount"].ToString();
         this.type = TypeFromString(damageToken["type"].ToString());
-        damage_dict = damageDict;
+        this.damage_dict = damageDict;
+    }
+
+    public Damage(string amount, string type, Dictionary<string, int> damageDict)
+    {
+        this.amount = amount;
+        this.type = TypeFromString(type);
+        this.damage_dict = damageDict;
     }
 
     public static Type TypeFromString(string type)

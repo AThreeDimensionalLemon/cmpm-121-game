@@ -5,7 +5,8 @@ using System.Collections;
 public class ProjectileController : MonoBehaviour
 {
     public float lifetime;
-    public event Action<Hittable,Vector3> OnHit;
+    public int splits;
+    public event Action<Hittable,Vector3, int> OnHit;
     public ProjectileMovement movement;
     private Hittable filter = null;
     
@@ -30,7 +31,7 @@ public class ProjectileController : MonoBehaviour
             var ec = collision.gameObject.GetComponent<EnemyController>();
             if (ec != null)
             {
-                if (ec.hp != filter) OnHit(ec.hp, transform.position);
+                if (ec.hp != filter) OnHit(ec.hp, transform.position, splits);
                 else return;
             }
             else
@@ -38,7 +39,7 @@ public class ProjectileController : MonoBehaviour
                 var pc = collision.gameObject.GetComponent<PlayerController>();
                 if (pc != null)
                 {
-                    OnHit(pc.hp, transform.position);
+                    OnHit(pc.hp, transform.position, splits);
                 }
             }
 

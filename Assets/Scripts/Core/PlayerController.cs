@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
                                       RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict), // spell power
                                       Hittable.Team.PLAYER);
         spellUI.ResetSpellUI();
-        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_blast"));
+        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
         StartCoroutine(spellcaster.ManaRegeneration());
 
         hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict),
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnAttack(InputValue value)

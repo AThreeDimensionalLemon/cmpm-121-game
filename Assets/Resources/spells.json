@@ -22,6 +22,7 @@
        "description": "A bolt that explodes into smaller bolts on impact.",
        "icon": 2,
        "N": "8 power 5 / +",
+       "num_splits": "1",
        "damage": {"amount": "20 power 3 / +", "type": "arcane"},
        "secondary_damage": {"amount": "5 power 10 / +", "type": "arcane"},
        "mana_cost": "15 power 5 / +",
@@ -149,6 +150,16 @@
             "mana": {
                 "type": "multiplier",
                 "modification": "0.75"
+            }
+        }
+   },
+   "exploder": {
+        "name": "exploding",
+        "description": "Explodes into smaller bolts on impact, or on an additional recursive impact.",
+        "modifiers": {
+            "num_splits": {
+                "type": "adder",
+                "modification": "1"
             }
         }
    }
