@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public SpellCaster spellcaster;
     public SpellUIContainer spellUI;
 
+    public List<Relic> relics;
+
     public int speed;
 
     public Unit unit;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
     {
         unit = GetComponent<Unit>();
         GameManager.Instance.player = gameObject;
+        EventBus.Instance.OnRelicPickup += OnRelicPickup;
     }
 
     public void StartLevel()
@@ -121,6 +124,11 @@ public class PlayerController : MonoBehaviour
                 spellcaster.current_spell_index = 0;
             }
         } while (spellcaster.spells[spellcaster.current_spell_index] == null);
+    }
+
+    void OnRelicPickup(Relic r)
+    {
+        relics.Add(r);
     }
 
     void Die()
