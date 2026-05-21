@@ -6,9 +6,11 @@ using System.IO;
 using System.Collections.Generic;
 using RPNEvaluator;
 using System;
+using NUnit.Framework;
 
 public class PlayerController : MonoBehaviour
 {
+    public PlayerClass playerClass;
     public Hittable hp;
     public HealthBar healthui;
     public ManaBar manaui;
@@ -31,21 +33,22 @@ public class PlayerController : MonoBehaviour
     {
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
+        Debug.Assert(playerClass != null, "Player does not have a class");
 
-        spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict), // max mana
-                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict), // mana regen
-                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict), // spell power
+        spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana, RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana_regeneration, RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate(playerClass.spellpower, RPNDict),
                                       Hittable.Team.PLAYER);
         spellUI.ResetSpellUI();
         AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
         StartCoroutine(spellcaster.ManaRegeneration());
 
-        hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict),
+        hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.health, RPNDict),
                           Hittable.Team.PLAYER, gameObject);
         hp.OnDeath += Die;
         hp.team = Hittable.Team.PLAYER;
 
-        speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
+        speed = RPNEvaluator.RPNEvaluator.Evaluate(playerClass.speed, RPNDict);
 
         // tell UI elements what to show
         healthui.SetHealth(hp);

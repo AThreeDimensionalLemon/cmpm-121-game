@@ -12,7 +12,7 @@ public class PlayerClassesManager : MonoBehaviour {
 
     public void SetPlayerClass(string className) {
         string sanitizedClassName = className.ToLower();
-        if (parsedClassesJson.ContainsKey(sanitizedClassName) == false) throw new ArgumentException(className + " is not a valid class");
+        if (parsedClassesJson.ContainsKey(sanitizedClassName) == false) throw new ArgumentException("could not find the \"" + className + "\" class in classes JSON");
         currentPlayerClass =  parsedClassesJson[sanitizedClassName].ToObject<PlayerClass>();
     }
 
@@ -23,6 +23,6 @@ public class PlayerClassesManager : MonoBehaviour {
 
     void Start() {
         GameManager.Instance.playerClassesManager = this;
-        parsedClassesJson = JObject.Parse(Resources.Load<TextAsset>("levels").text);
+        parsedClassesJson = JObject.Parse(Resources.Load<TextAsset>("classes").text);
     }
 }
