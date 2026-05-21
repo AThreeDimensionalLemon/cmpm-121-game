@@ -10,26 +10,29 @@ using UnityEditor.ShaderGraph.Internal;
 using RPNEvaluator;
 using Unity.VisualScripting;
 
-public class EnemySpawner : MonoBehaviour
-{
+//at this point, EnemySpawner has lost its single purpose, so I'm gonna start keeping track of all its purposes here, because I sure as hell don't give a damn about fixing it this late in the quarter
+// - spawning level selector buttons
+// - telling PlayerClassesScreenManager to instantiate its buttons
+// - spawning enemies?
+// - restarting the game
+public class EnemySpawner : MonoBehaviour {
     private string EnemiesJsonPath = "enemies";
 
     public Image level_selector; //background of level selection window
-    public GameObject button; //prefab of buttons
+    public GameObject levelButton; //prefab of level buttons; class buttons are in PlayserClassesScreenManager
     public GameObject enemy;
     public SpawnPoint[] SpawnPoints;
     public Dictionary<string, Enemy> enemy_prototypes;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() { //instantiate buttons for level selection
         float windowHeight = level_selector.GetComponent<RectTransform>().rect.height;
-        float windowBorderSize = button.GetComponent<RectTransform>().offsetMin.x; //how far in the window's borders extend in
+        float windowBorderSize = levelButton.GetComponent<RectTransform>().offsetMin.x; //how far in the window's borders extend in
         float buttonYBuffer = 4;
         JArray levelsJson = GameManager.Instance.levelManager.GetJson();
         int levelsCount = levelsJson.Count();
 
         for (int i = 0; i < levelsCount; ++i) {
-            GameObject selector = Instantiate(button, level_selector.transform);
+            GameObject selector = Instantiate(levelButton, level_selector.transform);
             RectTransform selectorDims = selector.GetComponent<RectTransform>();
             float windowSafeAreaHeight = (windowHeight - windowBorderSize * 2);
 
@@ -37,8 +40,8 @@ public class EnemySpawner : MonoBehaviour
             float selectorHeight = selectorDims.rect.height;
             selector.transform.localPosition = new Vector3(0, windowHeight / 2 - (windowBorderSize + (selectorHeight + buttonYBuffer * 2) * i));
 
-            selector.GetComponent<MenuSelectorController>().spawner = this;
-            selector.GetComponent<MenuSelectorController>().SetLevel(levelsJson[i]["name"].ToObject<string>());
+            selector.GetComponent<LevelSelectorController>().spawner = this;
+            selector.GetComponent<LevelSelectorController>().Setup(levelsJson[i]["name"].ToObject<string>());
         }
 
         enemy_prototypes = new Dictionary<string, Enemy>();
@@ -50,7 +53,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -89,7 +91,6 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(SpawnWave());
         }
     }
-
 
     IEnumerator SpawnWave()
     {
@@ -225,5 +226,9 @@ public class EnemySpawner : MonoBehaviour
         en.damage_type = Damage.Type.PHYSICAL; // leaving this hardcoded for now, because we haven't added enemy damage types into the JSON yet
         GameManager.Instance.AddEnemy(new_enemy);
         yield return new WaitForSeconds(in_delay);
+    }
+
+    void MakeButtons() {
+
     }
 }

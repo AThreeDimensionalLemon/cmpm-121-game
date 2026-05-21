@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     {
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
+        GameManager.Instance.playerClassesManager.SetPlayerClass("mage");
+        this.playerClass = GameManager.Instance.playerClassesManager.GetPlayerClass();
         Debug.Assert(playerClass != null, "Player does not have a class");
 
         spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana, RPNDict),
