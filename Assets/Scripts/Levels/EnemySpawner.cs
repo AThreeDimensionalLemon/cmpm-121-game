@@ -42,6 +42,7 @@ public class EnemySpawner : MonoBehaviour {
 
             selector.GetComponent<LevelSelectorController>().spawner = this;
             selector.GetComponent<LevelSelectorController>().Setup(levelsJson[i]["name"].ToObject<string>());
+            Debug.Log(selector.GetComponent<LevelSelectorController>().spawner.gameObject.name);
         }
 
         enemy_prototypes = new Dictionary<string, Enemy>();
