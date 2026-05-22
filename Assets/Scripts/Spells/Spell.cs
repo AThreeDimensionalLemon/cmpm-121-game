@@ -79,6 +79,12 @@ public class Spell : ICastable
         secondary_damage.amount = inDamage.ToString();
     }
 
+    public void SetDamageDicts(Dictionary<string, int> dict)
+    {
+        damage.damage_dict = dict;
+        secondary_damage.damage_dict = dict;
+    }
+
     public float GetCooldown() {
         return RPNEvaluator.RPNEvaluator.Evaluatef(this.cooldown, new Dictionary<string, float>());
     }

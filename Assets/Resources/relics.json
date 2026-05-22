@@ -8,8 +8,9 @@
         },
         "effect": {
             "description": "you gain 5 mana",
-            "type": "gain-mana",
-            "amount": "5"
+            "type": "adder",
+            "target_stat": "mana",
+            "modification": "5"
         }
     },
     {
@@ -22,8 +23,9 @@
         },
         "effect": {
             "description": "you gain 10 spellpower (+5/wave)",
-            "type": "gain-spellpower",
-            "amount": "10 wave 5 * +",
+            "type": "adder",
+            "target_stat": "spell_power",
+            "modification": "10 wave 5 * +",
             "until": "move"
         }
     },
@@ -36,8 +38,9 @@
         },
         "effect": {
             "description": "your next spell gains 100 additional spellpower.",
-            "type": "gain-spellpower",
-            "amount": "100",
+            "type": "adder",
+            "target_stat": "spell_power",
+            "modification": "100",
             "until": "cast-spell"
         }
     },
@@ -50,8 +53,54 @@
         },
         "effect": {
             "description": "you gain 25 mana.",
-            "type": "gain-mana",
-            "amount": "25"
+            "type": "adder",
+            "target_stat": "mana",
+            "modification": "25"
+        }
+    },
+    {
+        "name": "Winged Boots",
+        "sprite": 4,
+        "trigger": {
+            "description": "Whenever you take damage",
+            "type": "take-damage"
+        },
+        "effect": {
+            "description": "your move speed is doubled for 3 seconds.",
+            "type": "multiplier",
+            "target_stat": "speed",
+            "modification": "2",
+            "until": "time-passed",
+            "amount": "3"
+        }
+    },
+    {
+        "name": "Blood Siphon",
+        "sprite": 5,
+        "trigger": {
+            "description": "When you hit an enemy with a spell",
+            "type": "deal-damage"
+        },
+        "effect": {
+            "description": "your next spell gains 10 additional spellpower.",
+            "type": "adder",
+            "target_stat": "spell_power",
+            "modification": "10",
+            "until": "cast-spell"
+        }
+    },
+    {
+        "name": "Evolving Wand",
+        "sprite": 6,
+        "trigger": {
+            "description": "At the start of each wave",
+            "type": "wave-start"
+        },
+        "effect": {
+            "description": "you gain 5 extra spellpower.",
+            "type": "adder",
+            "target_stat": "spell_power",
+            "modification": "5 wave *",
         }
     }
 ]

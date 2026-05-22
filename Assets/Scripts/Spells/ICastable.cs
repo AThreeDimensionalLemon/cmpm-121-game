@@ -17,6 +17,7 @@ public interface ICastable {
     int GetDamage();
     int GetSecondaryDamage();
     void SetSecondaryDamage(int inDamage);
+    void SetDamageDicts(Dictionary<string, int> dict);
     float GetCooldown();
     int GetN();
     int GetNumSplits();

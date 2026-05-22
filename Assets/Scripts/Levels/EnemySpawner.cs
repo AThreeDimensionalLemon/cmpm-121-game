@@ -142,6 +142,7 @@ public class EnemySpawner : MonoBehaviour {
             manager.countdown--;
         }
         manager.state = GameManager.GameState.INWAVE;
+        EventBus.Instance.DoWaveStart(GameManager.Instance.GetWave());
 
         Level currLevel = manager.levelManager.GetLevel();
         int wave = manager.GetWave();
@@ -155,6 +156,7 @@ public class EnemySpawner : MonoBehaviour {
         if (GameManager.Instance.state != GameManager.GameState.GAMEOVER && GameManager.Instance.state != GameManager.GameState.GAMELOST)
         {
             manager.state = GameManager.GameState.WAVEEND;
+            EventBus.Instance.DoWaveEnd(GameManager.Instance.GetWave() - 1);
         }
     }
 

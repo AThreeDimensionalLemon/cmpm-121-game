@@ -18,7 +18,10 @@ public class PlayerController : MonoBehaviour
     public SpellCaster spellcaster;
     public SpellUIContainer spellUI;
 
-    public int speed;
+    public List<Relic> relics;
+
+    private int Speed;
+    public int speed { get { return EventBus.Instance.GetSpeed(this, Speed); } set { Speed = value; } }
 
     public Unit unit;
 
@@ -27,6 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         unit = GetComponent<Unit>();
         GameManager.Instance.player = gameObject;
+        EventBus.Instance.OnRelicPickup += OnRelicPickup;
     }
 
     public void StartLevel()
@@ -48,6 +52,11 @@ public class PlayerController : MonoBehaviour
                           Hittable.Team.PLAYER, gameObject);
         hp.OnDeath += Die;
         hp.team = Hittable.Team.PLAYER;
+
+        relics = new List<Relic>();
+
+        // Here's how you give a relic to the player. -Iain
+        // EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Jade Elephant"));
 
         speed = RPNEvaluator.RPNEvaluator.Evaluate(playerClass.speed, RPNDict);
 
@@ -89,7 +98,20 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (GameManager.Instance.state == GameManager.GameState.INWAVE) 
+        {
+            foreach (Relic r in relics)
+            {
+                if (r.trigger.type == Relic.TriggerType.stand_still && !r.active && r.lastTriggerTime + r.triggerTimeDelay < Time.time)
+                {
+                    r.Activate();
+                }
+                if (r.effect.until == "time-passed" && r.active && r.lastTriggerTime + r.untilTimeDelay < Time.time)
+                {
+                    r.Deactivate();
+                }
+            }
+        }
     }
 
     void OnAttack(InputValue value)
@@ -125,6 +147,12 @@ public class PlayerController : MonoBehaviour
                 spellcaster.current_spell_index = 0;
             }
         } while (spellcaster.spells[spellcaster.current_spell_index] == null);
+    }
+
+    void OnRelicPickup(Relic r)
+    {
+        relics.Add(r);
+        r.BindToOwner(this);
     }
 
     void Die()
