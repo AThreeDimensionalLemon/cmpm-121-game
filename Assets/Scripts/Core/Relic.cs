@@ -6,6 +6,8 @@ using System.IO;
 using System.Collections.Generic;
 using RPNEvaluator;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
+using System.Buffers;
 
 public class Relic
 {
@@ -63,8 +65,11 @@ public class Relic
 
     public Action<Vector3, Damage, Hittable> OnDamage;
     public Action<Hittable> OnKill;
-    public Action<ICastable> OnSpellReady;
-    public Action<InputValue> OnMove;
+    public Action<SpellCaster> OnSpellCast;
+    public Action<float> OnMove;
+
+
+    Func<int, string> GetValueModifier = null;
 
     public Relic(JToken jsonConfig)
     {
@@ -80,7 +85,6 @@ public class Relic
 
         this.OnDamage = null;
         this.OnKill = null;
-        this.OnSpellReady = null;
         this.OnMove = null;
 
         this.active = false;
@@ -112,32 +116,26 @@ public class Relic
                 return "+";
         }
     }
-    public string GetTargetBaseStat()
-    {
-        switch(this.effect.target_stat)
-        {
-            case "power":
-                return owner.spellcaster.spell_power.ToString();
-            case "mana":
-                return owner.spellcaster.mana.ToString();
-            default:
-                return "";
-        }
-    }
 
-    public Func<Relic, float> GetEffectCall()
+    public void BuildEffectCall()
     {
-        return (relic) => { 
+        this.GetValueModifier = (base_value) => {
             Dictionary<string, float> RPNDict = new Dictionary<string, float>();
             RPNDict.Add("wave", GameManager.Instance.GetWave());
-            string ModExpr = relic.GetTargetBaseStat() + " " + relic.effect.modification + " " + relic.GetOperationType();
-            if (this.effect.until == "")
-            {
-                Debug.Log(this.name + "deactivated");
-                this.active = false;
-            }
-            return RPNEvaluator.RPNEvaluator.Evaluatef(ModExpr, RPNDict);
+            return RPNEvaluator.RPNEvaluator.Evaluatef(this.effect.modification, RPNDict).ToString() + " " + this.GetOperationType();
         };
+
+        switch (this.effect.target_stat)
+        {
+            case "spell_power":
+                EventBus.Instance.OnGetSpellPower += this.GetValueModifier;
+                break;
+            case "mana":
+                EventBus.Instance.OnGetMana += this.GetValueModifier;
+                break;
+            default:
+                break;
+        }
     }
 
     public void BuildListeners()
@@ -149,8 +147,7 @@ public class Relic
                 {
                     if (hittable.team == owner.hp.team)
                     {
-                        Debug.Log(this.name + "activated");
-                        this.active = true;
+                        this.Activate();
                     }
                 };
                 EventBus.Instance.OnDamage += OnDamage;
@@ -160,32 +157,86 @@ public class Relic
                 {
                     if (killed.team != owner.hp.team)
                     {
-                        Debug.Log(this.name + "activated");
-                        this.active = true;
+                        this.Activate();
                     }
                 };
                 EventBus.Instance.OnKill += OnKill;
                 break;
             case TriggerType.stand_still:
                 this.triggerTimeDelay = RPNEvaluator.RPNEvaluator.Evaluate(this.trigger.amount, new Dictionary<string, int>());
+                this.lastTriggerTime = Time.time;
                 break;
-            default:
+            default: // this should never happen
                 break;
         }
         switch(this.effect.until)
         {
             case "cast-spell":
-                OnSpellReady = (spell) => {
-                    Debug.Log(this.name + "deactivated");
-                    this.active = false;
+                OnSpellCast = (spell) => {
+                    this.Deactivate();
                 };
+                EventBus.Instance.OnSpellCast += OnSpellCast;
                 break;
             case "move":
-                OnMove = (value) => { this.lastTriggerTime = Time.time; };
+                OnMove = (value) => {
+                    this.Deactivate();
+                    this.lastTriggerTime = Time.time;
+                };
+                owner.unit.OnMove += OnMove;
+                break;
+            default: // this.effect.until == ""
+                break;
+        }
+    }
+
+    public void DestroyEffectCall()
+    {
+        if (this.GetValueModifier != null)
+        {
+            switch (this.effect.target_stat)
+            {
+                case "spell_power":
+                    EventBus.Instance.OnGetSpellPower -= this.GetValueModifier;
+                    break;
+                case "mana":
+                    EventBus.Instance.OnGetMana -= this.GetValueModifier;
+                    break;
+                default:
+                    break;
+            }
+            this.GetValueModifier = null;
+        }
+    }
+
+    public void Activate()
+    {
+        if (this.active) return;
+        this.BuildEffectCall();
+        this.active = true;
+        if (this.effect.until == "") this.Fire();
+    }
+
+    public void Fire()
+    {
+        switch(this.effect.target_stat)
+        {
+            case "mana":
+                owner.spellcaster.mana = owner.spellcaster.mana;
+                break;
+            case "spell_power":
+                owner.spellcaster.spell_power = owner.spellcaster.spell_power;
                 break;
             default:
                 return;
         }
+        this.Deactivate();
+    }
+
+    public void Deactivate()
+    {
+        if (!this.active) return;
+        this.DestroyEffectCall();
+        this.active = false;
     }
 
     public void BindToOwner(PlayerController owner)

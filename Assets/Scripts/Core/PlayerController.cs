@@ -50,8 +50,8 @@ public class PlayerController : MonoBehaviour
 
         relics = new List<Relic>();
 
-        EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Green Gem"));
-        EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Cursed Scroll"));
+        // Here's how you give a relic to the player. -Iain
+        // EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Jade Elephant"));
 
         speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
 
@@ -93,7 +93,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (GameManager.Instance.state == GameManager.GameState.INWAVE) 
+        {
+            foreach (Relic r in relics)
+            {
+                if (r.triggerTimeDelay > 0 && !r.active && r.lastTriggerTime + r.triggerTimeDelay < Time.time)
+                {
+                    r.Activate();
+                }
+            }
+        }
     }
 
     void OnAttack(InputValue value)
@@ -118,10 +127,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
         unit.movement = value.Get<Vector2>()*speed;
-        foreach (Relic r in relics)
-        {
-            r.OnMove?.Invoke(value);
-        }
     }
 
     void OnChangeSpell(InputValue value)

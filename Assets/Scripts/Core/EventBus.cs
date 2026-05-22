@@ -1,7 +1,10 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using NUnit.Framework;
+using System.Collections.Specialized;
 
-public class EventBus 
+public class EventBus
 {
     private static EventBus theInstance;
     public static EventBus Instance
@@ -17,7 +20,9 @@ public class EventBus
     public event Action<Vector3, Damage, Hittable> OnDamage;
     public event Action<Relic> OnRelicPickup;
     public event Action<Hittable> OnKill;
-    public event Action<ICastable> OnSpellReady;
+    public event Action<SpellCaster> OnSpellCast;
+    public event Func<int, string> OnGetSpellPower;
+    public event Func<int, string> OnGetMana;
     
     public void DoDamage(Vector3 where, Damage dmg, Hittable target)
     {
@@ -34,8 +39,32 @@ public class EventBus
         OnRelicPickup?.Invoke(r);
     }
 
-    public void DoSpellReady(ICastable spell)
+    public void DoSpellCast(SpellCaster caster)
     {
-        OnSpellReady?.Invoke(spell);
+        OnSpellCast?.Invoke(caster);
+    }
+
+    public int GetSpellPower(int spell_power)
+    {
+        List<string> mods = new List<string>();
+        mods.Add(OnGetSpellPower?.Invoke(spell_power));
+        string to_ret = spell_power.ToString();
+        foreach(string mod in mods)
+        {
+            to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
+        }
+        return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
+    }
+
+    public int GetMana(SpellCaster caster, int mana)
+    {
+        List<string> mods = new List<string>();
+        mods.Add(OnGetMana?.Invoke(mana));
+        string to_ret = mana.ToString();
+        foreach(string mod in mods)
+        {
+            to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
+        }
+        return Math.Min(RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), caster.max_mana);
     }
 }

@@ -93,6 +93,11 @@ public class ModifiedSpell : ICastable
         baseSpell.SetSecondaryDamage(inDamage);
     }
 
+    public void SetDamageDicts(Dictionary<string, int> dict)
+    {
+        baseSpell.SetDamageDicts(dict);
+    }
+
     public float GetCooldown() {
         return GetModifiedResult(baseSpell.GetCooldown(), "cooldown");
     }

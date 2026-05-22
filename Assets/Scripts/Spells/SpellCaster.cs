@@ -4,13 +4,15 @@ using System.Collections.Generic;
 
 public class SpellCaster 
 {
-    public int mana;
+    private int Mana;
+    public int mana { get { return EventBus.Instance.GetMana(this, Mana); } set { Mana = value; } }
     public int max_mana;
     public int mana_reg;
     public Hittable.Team team;
     public ICastable[] spells;
     public int current_spell_index;
-    public int spell_power;
+    private int Spell_Power;
+    public int spell_power { get { return EventBus.Instance.GetSpellPower(Spell_Power); } set { Spell_Power = value; } }
 
     public IEnumerator ManaRegeneration()
     {
@@ -101,9 +103,13 @@ public class SpellCaster
         ICastable current_spell = spells[current_spell_index];
         if (mana >= current_spell.GetManaCost() && current_spell.IsReady())
         {
+            Dictionary<string, int> powerDict = new Dictionary<string, int>();
+            powerDict.Add("power", spell_power);
+            current_spell.SetDamageDicts(powerDict);
             mana -= current_spell.GetManaCost();
             Debug.Log(spells[current_spell_index].GetName() + " spent " + current_spell.GetManaCost() + " mana to deal " + current_spell.GetDamage() + " damage");
             yield return current_spell.Cast(where, new List<Vector3> { target }, team);
+            EventBus.Instance.DoSpellCast(this);
         }
         yield break;
     }
