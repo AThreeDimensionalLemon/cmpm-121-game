@@ -124,7 +124,7 @@ public class Relic
         }
         return to_return;
     }
-    public string GetOperationType()
+    string GetOperationType()
     {
         switch(this.effect.type)
         {
@@ -137,7 +137,7 @@ public class Relic
         }
     }
 
-    public void BuildEffectCall()
+    void BuildEffectCall()
     {
         this.GetValueModifier = (base_value) => {
             Dictionary<string, float> RPNDict = new Dictionary<string, float>();
@@ -161,7 +161,7 @@ public class Relic
         }
     }
 
-    public void BuildListeners()
+    void BuildListeners()
     {
         switch(this.trigger.type)
         {
@@ -240,7 +240,7 @@ public class Relic
         }
     }
 
-    public void DestroyEffectCall()
+    void DestroyEffectCall()
     {
         if (this.GetValueModifier != null)
         {
@@ -262,6 +262,22 @@ public class Relic
         }
     }
 
+    void Fire()
+    {
+        switch (this.effect.target_stat)
+        {
+            case "mana":
+                owner.spellcaster.mana = owner.spellcaster.mana;
+                break;
+            case "spell_power":
+                owner.spellcaster.spell_power = owner.spellcaster.spell_power;
+                break;
+            default:
+                return;
+        }
+        this.Deactivate();
+    }
+
     public void Activate()
     {
         if (this.active) return;
@@ -274,22 +290,6 @@ public class Relic
             owner.unit.movement = owner.unit.movement.normalized * owner.speed;
         }
         if (this.effect.until == "") this.Fire();
-    }
-
-    public void Fire()
-    {
-        switch(this.effect.target_stat)
-        {
-            case "mana":
-                owner.spellcaster.mana = owner.spellcaster.mana;
-                break;
-            case "spell_power":
-                owner.spellcaster.spell_power = owner.spellcaster.spell_power;
-                break;
-            default:
-                return;
-        }
-        this.Deactivate();
     }
 
     public void Deactivate()
