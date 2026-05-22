@@ -91,10 +91,14 @@ PrefabInstance:
     - target: {fileID: 1949700200616903927, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 7382187743051889898}
+      objectReference: {fileID: 4224721950880263754}
     - target: {fileID: 1949700200616903927, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: ExecuteTask
+      objectReference: {fileID: 0}
+    - target: {fileID: 1949700200616903927, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ClassSelectorController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_Name
@@ -103,10 +107,27 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4224721950880263754}
   m_SourcePrefab: {fileID: 100100000, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
 --- !u!1 &7382187743051889898 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
   m_PrefabInstance: {fileID: 4049385554991524293}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4224721950880263754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7382187743051889898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283485832bf54d541be67473af9e9c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClassSelectorController
+  label: {fileID: 0}
+  playerClass: 

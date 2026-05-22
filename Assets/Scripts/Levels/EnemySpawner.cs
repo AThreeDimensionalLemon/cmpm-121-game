@@ -11,15 +11,16 @@ using RPNEvaluator;
 using Unity.VisualScripting;
 
 //at this point, EnemySpawner has lost its single purpose, so I'm gonna start keeping track of all its purposes here, because I sure as hell don't give a damn about fixing it this late in the quarter
-// - spawning level selector buttons
-// - telling PlayerClassesScreenManager to instantiate its buttons
+// - spawning level and class selector buttons
 // - spawning enemies?
 // - restarting the game
 public class EnemySpawner : MonoBehaviour {
     private string EnemiesJsonPath = "enemies";
+    private string levelname;
 
     public Image level_selector; //background of level selection window
-    public GameObject levelButton; //prefab of level buttons; class buttons are in PlayserClassesScreenManager
+    public GameObject levelButton; //prefab of level buttons
+    public GameObject classButton;
     public GameObject enemy;
     public SpawnPoint[] SpawnPoints;
     public Dictionary<string, Enemy> enemy_prototypes;
@@ -71,7 +72,11 @@ public class EnemySpawner : MonoBehaviour {
         level_selector.GameObject().SetActive(true);
     }
 
-    public void StartLevel(string levelname)
+    public void StartClassChoosing(string inLevelName) {
+        levelname = inLevelName;
+    }
+
+    public void StartLevel()
     {
         GameManager manager = GameManager.Instance;
         level_selector.gameObject.SetActive(false);

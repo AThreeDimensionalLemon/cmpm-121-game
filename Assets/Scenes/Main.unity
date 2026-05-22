@@ -2067,7 +2067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level_selector: {fileID: 1115058368}
-  button: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+  levelButton: {fileID: 7898538044890968934, guid: d8bdf2412341ab34582b794781fac15a, type: 3}
   enemy: {fileID: 1832418719708313566, guid: bebfa21247182184d92ab200b93e6cf0, type: 3}
   SpawnPoints:
   - {fileID: 956873992}
@@ -2089,6 +2089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330cb1c8d8e9b454fb62270b0bd3f706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerClassesScreenManger
+  button: {fileID: 0}
 --- !u!1 &532755679
 GameObject:
   m_ObjectHideFlags: 0
