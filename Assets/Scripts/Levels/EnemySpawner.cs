@@ -17,9 +17,6 @@ using Unity.VisualScripting;
 public class EnemySpawner : MonoBehaviour {
     private string EnemiesJsonPath = "enemies";
     private string levelname;
-    private float windowHeight;
-    private float windowBorderSize;
-    private float buttonYBuffer = 4;
 
     public Image level_selector; //background of level selection window
     public GameObject levelButton; //prefab of level buttons
@@ -29,12 +26,21 @@ public class EnemySpawner : MonoBehaviour {
     public Dictionary<string, Enemy> enemy_prototypes;
 
     void Start() { //instantiate buttons for level selection
-        windowHeight = level_selector.GetComponent<RectTransform>().rect.height;
-        windowBorderSize = levelButton.GetComponent<RectTransform>().offsetMin.x; //how far in the window's borders extend in
+
+        //instantiate constants
+        float windowHeight = level_selector.GetComponent<RectTransform>().rect.height;
+        float windowBorderSize = levelButton.GetComponent<RectTransform>().offsetMin.x; //how far in the window's borders extend in
+        float buttonYBuffer = 4;
+
+        //get jsons and counts
         JArray levelsJson = GameManager.Instance.levelManager.GetJson();
         int levelsCount = levelsJson.Count();
+        JObject classJson = GameManager.Instance.playerClassesManager.GetJson();
+        int classCount = classJson.Count;
 
-        for (int i = 0; i < levelsCount; ++i) {
+        //level buttons
+        int i = 0;
+        for (i = 0; i < levelsCount; ++i) {
             GameObject selector = Instantiate(levelButton, level_selector.transform);
             RectTransform selectorDims = selector.GetComponent<RectTransform>();
             float windowSafeAreaHeight = (windowHeight - windowBorderSize * 2);
@@ -45,7 +51,24 @@ public class EnemySpawner : MonoBehaviour {
 
             selector.GetComponent<LevelSelectorController>().spawner = this;
             selector.GetComponent<LevelSelectorController>().Setup(levelsJson[i]["name"].ToObject<string>());
-            //Debug.Log(selector.GetComponent<LevelSelectorController>().spawner.gameObject.name);
+        }
+
+        //class buttons
+        i = 0;
+        foreach (var token in classJson) {
+            GameObject selector = Instantiate(classButton, level_selector.transform);
+            RectTransform selectorDims = selector.GetComponent<RectTransform>();
+            float windowSafeAreaHeight = (windowHeight - windowBorderSize * 2);
+
+            selectorDims.sizeDelta = new Vector2(selectorDims.sizeDelta.x, windowSafeAreaHeight / classCount - buttonYBuffer * 2);
+            float selectorHeight = selectorDims.rect.height;
+            selector.transform.localPosition = new Vector3(0, windowHeight / 2 - (windowBorderSize + (selectorHeight + buttonYBuffer * 2) * i));
+
+            selector.GetComponent<ClassSelectorController>().playerController = GameManager.Instance.player.GetComponent<PlayerController>();
+            selector.GetComponent<ClassSelectorController>().Setup(token.Key);
+            selector.GetComponent<ClassSelectorController>().spawner = this;
+            selector.SetActive(false);
+            i++;
         }
 
         enemy_prototypes = new Dictionary<string, Enemy>();
@@ -76,30 +99,9 @@ public class EnemySpawner : MonoBehaviour {
 
     public void StartClassChoosing(string inLevelName) {
         levelname = inLevelName;
-        JObject classJson = GameManager.Instance.playerClassesManager.GetJson();
-        int classCount = classJson.Count;
-
-        //TODO: Figure out mechanism for hiding and re-revealing the level selecting buttons
-        //I think I'll just destroy those suckers
         GameObject selectorContainerObject = level_selector.gameObject;
-        foreach (Transform levelButton in selectorContainerObject.transform) { //a bit of a convoluted way to access the child game objects of a game object, but I couldn't find any other way online
-            Object.Destroy(levelButton.gameObject);
-        }
-
-        int i = 0;
-        foreach (var token in classJson) {
-            GameObject selector = Instantiate(classButton, level_selector.transform);
-            RectTransform selectorDims = selector.GetComponent<RectTransform>();
-            float windowSafeAreaHeight = (windowHeight - windowBorderSize * 2);
-
-            selectorDims.sizeDelta = new Vector2(selectorDims.sizeDelta.x, windowSafeAreaHeight / classCount - buttonYBuffer * 2);
-            float selectorHeight = selectorDims.rect.height;
-            selector.transform.localPosition = new Vector3(0, windowHeight / 2 - (windowBorderSize + (selectorHeight + buttonYBuffer * 2) * i));
-
-            selector.GetComponent<ClassSelectorController>().playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-            selector.GetComponent<ClassSelectorController>().Setup(token.Key);
-            selector.GetComponent<ClassSelectorController>().spawner = this;
-            i++;
+        foreach (Transform buttonTransform in selectorContainerObject.transform) { //a bit of a convoluted way to access the child game objects of a game object, but I couldn't find any other way online
+            buttonTransform.gameObject.SetActive(!buttonTransform.gameObject.activeSelf);
         }
     }
 
@@ -107,8 +109,8 @@ public class EnemySpawner : MonoBehaviour {
     {
         GameManager manager = GameManager.Instance;
         GameObject selectorContainerObject = level_selector.gameObject;
-        foreach (Transform classButton in selectorContainerObject.transform) {
-            Object.Destroy(classButton.gameObject);
+        foreach (Transform buttonTransform in selectorContainerObject.transform) {
+            buttonTransform.gameObject.SetActive(!buttonTransform.gameObject.activeSelf);
         }
         level_selector.gameObject.SetActive(false);
         // this is not nice: we should not have to be required to tell the player directly that the level is starting
