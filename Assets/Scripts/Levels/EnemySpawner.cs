@@ -93,6 +93,7 @@ public class EnemySpawner : MonoBehaviour {
 
             selector.GetComponent<ClassSelectorController>().playerController = GameManager.Instance.player.GetComponent<PlayerController>();
             selector.GetComponent<ClassSelectorController>().Setup(token.Key);
+            selector.GetComponent<ClassSelectorController>().spawner = this;
             i++;
         }
     }

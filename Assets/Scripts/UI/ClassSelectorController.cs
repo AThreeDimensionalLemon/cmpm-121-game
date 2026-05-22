@@ -5,6 +5,7 @@ using System.Text;
 public class ClassSelectorController : MenuSelectorController {
     public string playerClass;
     public PlayerController playerController;
+    public EnemySpawner spawner;
 
     public override void Setup(string text) {
         playerClass = text;
@@ -12,7 +13,8 @@ public class ClassSelectorController : MenuSelectorController {
     }
 
     public override void ExecuteTask() {
-        GameManager.Instance.playerClassesManager.SetPlayerClass(playerClass); //maybe I should get rid of this boilerplate after all?
+        GameManager.Instance.playerClassesManager.SetPlayerClass(playerClass);
         playerController.playerClass = GameManager.Instance.playerClassesManager.GetPlayerClass();
+        spawner.StartLevel();
     }
 }
