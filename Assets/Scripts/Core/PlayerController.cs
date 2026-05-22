@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         relics = new List<Relic>();
 
         // Here's how you give a relic to the player. -Iain
-        // EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Jade Elephant"));
+        // EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Green Gem"));
 
         speed = RPNEvaluator.RPNEvaluator.Evaluate(playerClass.speed, RPNDict);
 
