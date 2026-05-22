@@ -14,7 +14,6 @@ public class ClassSelectorController : MenuSelectorController {
 
     public override void ExecuteTask() {
         GameManager.Instance.playerClassesManager.SetPlayerClass(playerClass);
-        playerController.playerClass = GameManager.Instance.playerClassesManager.GetPlayerClass();
         spawner.StartLevel();
     }
 }

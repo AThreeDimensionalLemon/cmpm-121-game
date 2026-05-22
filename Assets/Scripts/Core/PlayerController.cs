@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
     {
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
-        GameManager.Instance.playerClassesManager.SetPlayerClass("mage");
         this.playerClass = GameManager.Instance.playerClassesManager.GetPlayerClass();
         Debug.Assert(playerClass != null, "Player does not have a class");
 
@@ -61,13 +60,13 @@ public class PlayerController : MonoBehaviour
     {
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
-        spellcaster.HandleWaveScaling(RPNEvaluator.RPNEvaluator.Evaluate("90 wave 10 * +", RPNDict),
-                                      RPNEvaluator.RPNEvaluator.Evaluate("10 wave +", RPNDict),
-                                      RPNEvaluator.RPNEvaluator.Evaluate("wave 10 *", RPNDict));
+        spellcaster.HandleWaveScaling(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana, RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana_regeneration, RPNDict),
+                                      RPNEvaluator.RPNEvaluator.Evaluate(playerClass.spellpower, RPNDict));
 
-        hp.SetMaxHP(RPNEvaluator.RPNEvaluator.Evaluate("95 wave 5 * +", RPNDict));
+        hp.SetMaxHP(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.health, RPNDict));
 
-        speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
+        speed = RPNEvaluator.RPNEvaluator.Evaluate(playerClass.speed, RPNDict);
     }
 
     public bool AddNewSpell(ICastable spell)
