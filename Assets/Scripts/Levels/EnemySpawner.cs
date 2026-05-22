@@ -80,6 +80,11 @@ public class EnemySpawner : MonoBehaviour {
         int classCount = classJson.Count;
 
         //TODO: Figure out mechanism for hiding and re-revealing the level selecting buttons
+        //I think I'll just destroy those suckers
+        GameObject selectorContainerObject = level_selector.gameObject;
+        foreach (Transform levelButton in selectorContainerObject.transform) { //a bit of a convoluted way to access the child game objects of a game object, but I couldn't find any other way online
+            Object.Destroy(levelButton.gameObject);
+        }
 
         int i = 0;
         foreach (var token in classJson) {
@@ -101,6 +106,10 @@ public class EnemySpawner : MonoBehaviour {
     public void StartLevel()
     {
         GameManager manager = GameManager.Instance;
+        GameObject selectorContainerObject = level_selector.gameObject;
+        foreach (Transform classButton in selectorContainerObject.transform) {
+            Object.Destroy(classButton.gameObject);
+        }
         level_selector.gameObject.SetActive(false);
         // this is not nice: we should not have to be required to tell the player directly that the level is starting
         manager.player.GetComponent<PlayerController>().StartLevel();
