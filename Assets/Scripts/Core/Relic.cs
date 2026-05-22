@@ -4,6 +4,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Collections.Generic;
+using RPNEvaluator;
+using UnityEngine.InputSystem;
 
 public class Relic
 {
@@ -52,15 +54,36 @@ public class Relic
     }
     public string name { get; }
     public int sprite { get; }
+    public float triggerTimeDelay { get; set; }
+    public float lastTriggerTime { get; set; }
     public Trigger trigger { get; }
     public Effect effect { get; }
+    private PlayerController owner { get; set; }
+    public bool active { get; set; }
+
+    public Action<Vector3, Damage, Hittable> OnDamage;
+    public Action<Hittable> OnKill;
+    public Action<ICastable> OnSpellReady;
+    public Action<InputValue> OnMove;
 
     public Relic(JToken jsonConfig)
     {
+        this.owner = null;
+
         this.name = jsonConfig["name"].ToString();
         this.sprite = (int)jsonConfig["sprite"];
         this.trigger = new Trigger(jsonConfig["trigger"]);
         this.effect = new Effect(jsonConfig["effect"]);
+
+        this.triggerTimeDelay = -1.0f;
+        this.lastTriggerTime = 0.0f;
+
+        this.OnDamage = null;
+        this.OnKill = null;
+        this.OnSpellReady = null;
+        this.OnMove = null;
+
+        this.active = false;
     }
 
     public static TriggerType TriggerTypeFromString(string str)
@@ -79,6 +102,100 @@ public class Relic
                 break;
         }
         return to_return;
+    }
+    public string GetOperationType()
+    {
+        switch(this.effect.type)
+        {
+            // add more cases in here if we add relics that do something other than addition
+            default:
+                return "+";
+        }
+    }
+    public string GetTargetBaseStat()
+    {
+        switch(this.effect.target_stat)
+        {
+            case "power":
+                return owner.spellcaster.spell_power.ToString();
+            case "mana":
+                return owner.spellcaster.mana.ToString();
+            default:
+                return "";
+        }
+    }
+
+    public Func<Relic, float> GetEffectCall()
+    {
+        return (relic) => { 
+            Dictionary<string, float> RPNDict = new Dictionary<string, float>();
+            RPNDict.Add("wave", GameManager.Instance.GetWave());
+            string ModExpr = relic.GetTargetBaseStat() + " " + relic.effect.modification + " " + relic.GetOperationType();
+            if (this.effect.until == "")
+            {
+                Debug.Log(this.name + "deactivated");
+                this.active = false;
+            }
+            return RPNEvaluator.RPNEvaluator.Evaluatef(ModExpr, RPNDict);
+        };
+    }
+
+    public void BuildListeners()
+    {
+        switch(this.trigger.type)
+        {
+            case TriggerType.take_damage:
+                this.OnDamage = (where, damage, hittable) =>
+                {
+                    if (hittable.team == owner.hp.team)
+                    {
+                        Debug.Log(this.name + "activated");
+                        this.active = true;
+                    }
+                };
+                EventBus.Instance.OnDamage += OnDamage;
+                break;
+            case TriggerType.on_kill:
+                this.OnKill = (killed) =>
+                {
+                    if (killed.team != owner.hp.team)
+                    {
+                        Debug.Log(this.name + "activated");
+                        this.active = true;
+                    }
+                };
+                EventBus.Instance.OnKill += OnKill;
+                break;
+            case TriggerType.stand_still:
+                this.triggerTimeDelay = RPNEvaluator.RPNEvaluator.Evaluate(this.trigger.amount, new Dictionary<string, int>());
+                break;
+            default:
+                break;
+        }
+        switch(this.effect.until)
+        {
+            case "cast-spell":
+                OnSpellReady = (spell) => {
+                    Debug.Log(this.name + "deactivated");
+                    this.active = false;
+                };
+                break;
+            case "move":
+                OnMove = (value) => { this.lastTriggerTime = Time.time; };
+                break;
+            default:
+                return;
+        }
+    }
+
+    public void BindToOwner(PlayerController owner)
+    {
+        this.owner = owner;
+        this.BuildListeners();
+        if (this.OnDamage != null) EventBus.Instance.OnDamage += OnDamage;
+        if (this.OnKill != null) EventBus.Instance.OnKill += OnKill;
+        if (this.OnSpellReady != null) EventBus.Instance.OnSpellReady += OnSpellReady;
+        // OnMove is bound by the owner
     }
 
     public override String ToString()

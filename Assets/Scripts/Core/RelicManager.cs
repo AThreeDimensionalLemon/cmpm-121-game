@@ -7,17 +7,21 @@ using System.Collections.Generic;
 public class RelicManager
 {
 	private Dictionary<string, Relic> relics;
+	private Dictionary<string, Relic> unownedRelics;
 	private static RelicManager theInstance;
-	// Use this for initialization
-	void Start()
+
+	public Relic GetRelic(string name)
 	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
+		Relic to_give = unownedRelics[name];
+		unownedRelics.Remove(name);
+		if (unownedRelics.Count == 0)
+		{
+			foreach(Relic relic in relics.Values)
+			{
+				unownedRelics.Add(relic.name, relic);
+			}
+		}
+		return to_give;
 	}
 
 	public static RelicManager Instance {
@@ -30,15 +34,12 @@ public class RelicManager
     private RelicManager()
     {
 		relics = new Dictionary<string, Relic>();
+		unownedRelics = new Dictionary<string, Relic>();
         JToken parsedRelicsJson = JToken.Parse(Resources.Load<TextAsset>("relics").text);
 		foreach (JToken in_relic in parsedRelicsJson) {
 			Relic relic = new Relic(in_relic);
 			relics.Add(relic.name, relic);
-		}
-		foreach(string relic in relics.Keys)
-		{
-			Debug.Log(relic);
-			Debug.Log(relics[relic].ToString());
+			unownedRelics.Add(relic.name, relic);
 		}
     }
 }

@@ -48,6 +48,11 @@ public class PlayerController : MonoBehaviour
         hp.OnDeath += Die;
         hp.team = Hittable.Team.PLAYER;
 
+        relics = new List<Relic>();
+
+        EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Green Gem"));
+        EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Cursed Scroll"));
+
         speed = RPNEvaluator.RPNEvaluator.Evaluate("5", RPNDict);
 
         // tell UI elements what to show
@@ -113,6 +118,10 @@ public class PlayerController : MonoBehaviour
             return;
         }
         unit.movement = value.Get<Vector2>()*speed;
+        foreach (Relic r in relics)
+        {
+            r.OnMove?.Invoke(value);
+        }
     }
 
     void OnChangeSpell(InputValue value)
@@ -129,6 +138,7 @@ public class PlayerController : MonoBehaviour
     void OnRelicPickup(Relic r)
     {
         relics.Add(r);
+        r.BindToOwner(this);
     }
 
     void Die()
