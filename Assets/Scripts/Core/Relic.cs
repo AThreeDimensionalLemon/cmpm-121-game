@@ -14,8 +14,11 @@ public class Relic
     public enum TriggerType
     {
         take_damage,
+        deal_damage,
         stand_still,
-        on_kill
+        on_kill,
+        wave_end,
+        wave_start
     }
     public struct Trigger
     {
@@ -42,12 +45,14 @@ public class Relic
             this.target_stat = jsonConfig["target_stat"].ToString();
             this.modification = jsonConfig["modification"].ToString();
             this.until = (jsonConfig["until"] != null) ? jsonConfig["until"].ToString() : "";
+            this.amount = (jsonConfig["amount"] != null) ? jsonConfig["amount"].ToString() : "";
         }
         public string description { get; }
         public string type { get; }
         public string target_stat { get; }
         public string modification { get; }
         public string until { get; }
+        public string amount { get; }
 
         public override string ToString()
         {
@@ -58,6 +63,7 @@ public class Relic
     public int sprite { get; }
     public float triggerTimeDelay { get; set; }
     public float lastTriggerTime { get; set; }
+    public float untilTimeDelay { get; set; }
     public Trigger trigger { get; }
     public Effect effect { get; }
     private PlayerController owner { get; set; }
@@ -67,6 +73,8 @@ public class Relic
     public Action<Hittable> OnKill;
     public Action<SpellCaster> OnSpellCast;
     public Action<float> OnMove;
+    public Action<int> OnWaveEnd;
+    public Action<int> OnWaveStart;
 
     Func<int, string> GetValueModifier = null;
 
@@ -81,6 +89,7 @@ public class Relic
 
         this.triggerTimeDelay = -1.0f;
         this.lastTriggerTime = 0.0f;
+        this.untilTimeDelay = -1.0f;
 
         this.OnDamage = null;
         this.OnKill = null;
@@ -97,11 +106,20 @@ public class Relic
             case "take-damage":
                 to_return = TriggerType.take_damage;
                 break;
+            case "deal-damage":
+                to_return = TriggerType.deal_damage;
+                break;
             case "stand-still":
                 to_return = TriggerType.stand_still;
                 break;
-            default:
+            case "on-kill":
                 to_return = TriggerType.on_kill;
+                break;
+            case "wave-end":
+                to_return = TriggerType.wave_end;
+                break;
+            default:
+                to_return = TriggerType.wave_start;
                 break;
         }
         return to_return;
@@ -110,9 +128,12 @@ public class Relic
     {
         switch(this.effect.type)
         {
-            // add more cases in here if we add relics that do something other than addition
-            default:
+            case "adder":
                 return "+";
+            case "multiplier":
+                return "*";
+            default: // this should never happen
+                return "";
         }
     }
 
@@ -131,6 +152,9 @@ public class Relic
                 break;
             case "mana":
                 EventBus.Instance.OnGetMana += this.GetValueModifier;
+                break;
+            case "speed":
+                EventBus.Instance.OnGetSpeed += this.GetValueModifier;
                 break;
             default:
                 break;
@@ -151,6 +175,16 @@ public class Relic
                 };
                 EventBus.Instance.OnDamage += OnDamage;
                 break;
+            case TriggerType.deal_damage:
+                this.OnDamage = (where, damage, hittable) =>
+                {
+                    if (hittable.team != owner.hp.team)
+                    {
+                        this.Activate();
+                    }
+                };
+                EventBus.Instance.OnDamage += OnDamage;
+                break;
             case TriggerType.on_kill:
                 this.OnKill = (killed) =>
                 {
@@ -164,6 +198,20 @@ public class Relic
             case TriggerType.stand_still:
                 this.triggerTimeDelay = RPNEvaluator.RPNEvaluator.Evaluate(this.trigger.amount, new Dictionary<string, int>());
                 this.lastTriggerTime = Time.time;
+                break;
+            case TriggerType.wave_end:
+                this.OnWaveEnd = (wave) =>
+                {
+                    this.Activate();
+                };
+                EventBus.Instance.OnWaveEnd += OnWaveEnd;
+                break;
+            case TriggerType.wave_start:
+                this.OnWaveStart = (wave) =>
+                {
+                    this.Activate();
+                };
+                EventBus.Instance.OnWaveStart += OnWaveStart;
                 break;
             default: // this should never happen
                 break;
@@ -183,6 +231,10 @@ public class Relic
                 };
                 owner.unit.OnMove += OnMove;
                 break;
+            case "time-passed":
+                this.untilTimeDelay = RPNEvaluator.RPNEvaluator.Evaluate(this.effect.amount, new Dictionary<string, int>());
+                this.lastTriggerTime = Time.time - this.triggerTimeDelay;
+                break;
             default: // this.effect.until == ""
                 break;
         }
@@ -200,6 +252,9 @@ public class Relic
                 case "mana":
                     EventBus.Instance.OnGetMana -= this.GetValueModifier;
                     break;
+                case "speed":
+                    EventBus.Instance.OnGetSpeed -= this.GetValueModifier;
+                    break;
                 default:
                     break;
             }
@@ -210,8 +265,14 @@ public class Relic
     public void Activate()
     {
         if (this.active) return;
+        Debug.Log(this.name + " activated");
         this.BuildEffectCall();
         this.active = true;
+        this.lastTriggerTime = Time.time;
+        if (this.effect.target_stat == "speed")
+        {
+            owner.unit.movement = owner.unit.movement.normalized * owner.speed;
+        }
         if (this.effect.until == "") this.Fire();
     }
 
@@ -234,7 +295,12 @@ public class Relic
     public void Deactivate()
     {
         if (!this.active) return;
+        Debug.Log(this.name + " deactivated");
         this.DestroyEffectCall();
+        if (this.effect.target_stat == "speed")
+        {
+            owner.unit.movement = owner.unit.movement.normalized * owner.speed;
+        }
         this.active = false;
     }
 

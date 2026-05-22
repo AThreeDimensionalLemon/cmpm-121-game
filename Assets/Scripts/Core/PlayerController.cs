@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviour
 
     public List<Relic> relics;
 
-    public int speed;
+    private int Speed;
+    public int speed { get { return EventBus.Instance.GetSpeed(this, Speed); } set { Speed = value; } }
 
     public Unit unit;
 
@@ -97,9 +98,13 @@ public class PlayerController : MonoBehaviour
         {
             foreach (Relic r in relics)
             {
-                if (r.triggerTimeDelay > 0 && !r.active && r.lastTriggerTime + r.triggerTimeDelay < Time.time)
+                if (r.trigger.type == Relic.TriggerType.stand_still && !r.active && r.lastTriggerTime + r.triggerTimeDelay < Time.time)
                 {
                     r.Activate();
+                }
+                if (r.effect.until == "time-passed" && r.active && r.lastTriggerTime + r.untilTimeDelay < Time.time)
+                {
+                    r.Deactivate();
                 }
             }
         }

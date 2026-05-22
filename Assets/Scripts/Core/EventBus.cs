@@ -1,8 +1,6 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using System.Collections.Specialized;
 
 public class EventBus
 {
@@ -23,6 +21,9 @@ public class EventBus
     public event Action<SpellCaster> OnSpellCast;
     public event Func<int, string> OnGetSpellPower;
     public event Func<int, string> OnGetMana;
+    public event Func<int, string> OnGetSpeed;
+    public event Action<int> OnWaveEnd;
+    public event Action<int> OnWaveStart;
     
     public void DoDamage(Vector3 where, Damage dmg, Hittable target)
     {
@@ -42,6 +43,16 @@ public class EventBus
     public void DoSpellCast(SpellCaster caster)
     {
         OnSpellCast?.Invoke(caster);
+    }
+
+    public void DoWaveEnd(int wave)
+    {
+        OnWaveEnd?.Invoke(wave);
+    }
+
+    public void DoWaveStart(int wave)
+    {
+        OnWaveStart?.Invoke(wave);
     }
 
     public int GetSpellPower(int spell_power)
@@ -66,5 +77,17 @@ public class EventBus
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
         return Math.Min(RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), caster.max_mana);
+    }
+
+    public int GetSpeed(PlayerController player, int speed)
+    {
+        List<string> mods = new List<string>();
+        mods.Add(OnGetSpeed?.Invoke(speed));
+        string to_ret = speed.ToString();
+        foreach (string mod in mods)
+        {
+            to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
+        }
+        return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
     }
 }
