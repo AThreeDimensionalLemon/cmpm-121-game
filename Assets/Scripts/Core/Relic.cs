@@ -68,7 +68,6 @@ public class Relic
     public Action<SpellCaster> OnSpellCast;
     public Action<float> OnMove;
 
-
     Func<int, string> GetValueModifier = null;
 
     public Relic(JToken jsonConfig)
