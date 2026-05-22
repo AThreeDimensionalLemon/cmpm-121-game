@@ -66,6 +66,7 @@ public class GameManager
     public RelicIconManager relicIconManager;
     public LevelManager levelManager;
     public PlayerStatisticsManager playerStatisticsManager;
+    public PlayerClassesManager playerClassesManager;
 
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }

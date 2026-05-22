@@ -2066,7 +2066,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level_selector: {fileID: 1115058368}
-  button: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+  levelButton: {fileID: 7898538044890968934, guid: d8bdf2412341ab34582b794781fac15a, type: 3}
+  classButton: {fileID: 7382187743051889898, guid: 692a36e76bb978b48bc88682e72fcab8, type: 3}
   enemy: {fileID: 1832418719708313566, guid: bebfa21247182184d92ab200b93e6cf0, type: 3}
   SpawnPoints:
   - {fileID: 956873992}
