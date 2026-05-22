@@ -4,7 +4,6 @@ using System.Text;
 
 public class LevelSelectorController : MenuSelectorController {
     public string level;
-    public EnemySpawner spawner;
 
     public override void Setup(string text) {
         level = text;
