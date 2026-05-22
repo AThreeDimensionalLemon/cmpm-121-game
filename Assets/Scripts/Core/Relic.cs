@@ -192,9 +192,6 @@ public class Relic
     {
         this.owner = owner;
         this.BuildListeners();
-        if (this.OnDamage != null) EventBus.Instance.OnDamage += OnDamage;
-        if (this.OnKill != null) EventBus.Instance.OnKill += OnKill;
-        if (this.OnSpellReady != null) EventBus.Instance.OnSpellReady += OnSpellReady;
         // OnMove is bound by the owner
     }
 
