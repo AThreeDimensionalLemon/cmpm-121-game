@@ -12,6 +12,6 @@ public class LevelSelectorController : MenuSelectorController {
     }
 
     public override void ExecuteTask() {
-        spawner.StartLevel(level);
+        spawner.StartClassChoosing(level);
     }
 }

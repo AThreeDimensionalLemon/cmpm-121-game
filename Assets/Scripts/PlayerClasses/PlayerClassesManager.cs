@@ -10,6 +10,10 @@ public class PlayerClassesManager : MonoBehaviour {
     JObject parsedClassesJson;
     PlayerClass currentPlayerClass;
 
+    public JObject GetJson() {
+        return parsedClassesJson;
+    }
+
     public void SetPlayerClass(string className) {
         string sanitizedClassName = className.ToLower();
         if (parsedClassesJson.ContainsKey(sanitizedClassName) == false) throw new ArgumentException("could not find the \"" + className + "\" class in classes JSON");

@@ -112,6 +112,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4224721950880263754}
   m_SourcePrefab: {fileID: 100100000, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+--- !u!114 &842502411846473459 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+  m_PrefabInstance: {fileID: 4049385554991524293}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7382187743051889898 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
@@ -129,5 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283485832bf54d541be67473af9e9c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClassSelectorController
-  label: {fileID: 0}
+  label: {fileID: 842502411846473459}
   playerClass: 
+  playerController: {fileID: 0}
