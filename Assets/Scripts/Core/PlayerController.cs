@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
@@ -11,6 +12,7 @@ using NUnit.Framework;
 public class PlayerController : MonoBehaviour
 {
     public PlayerClass playerClass;
+    public SpriteRenderer spriteRenderer;
     public Hittable hp;
     public HealthBar healthui;
     public ManaBar manaui;
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
         this.playerClass = GameManager.Instance.playerClassesManager.GetPlayerClass();
+        spriteRenderer.sprite = GameManager.Instance.playerSpriteManager.Get(this.playerClass.sprite);
         Debug.Assert(playerClass != null, "Player does not have a class");
 
         spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana, RPNDict),

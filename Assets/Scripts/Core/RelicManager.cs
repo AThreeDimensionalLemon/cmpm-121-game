@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 public class RelicManager
 {
 	private Dictionary<string, Relic> relics;
@@ -22,6 +23,24 @@ public class RelicManager
 			}
 		}
 		return to_give;
+	}
+
+	public Relic GetRandomRelic()
+	{
+		System.Random rand = new System.Random();
+		Relic to_give = unownedRelics.ElementAt(rand.Next(unownedRelics.Count)).Value;
+		unownedRelics.Remove(to_give.name);
+		return to_give;
+	}
+
+	public void ReturnRelic(string name)
+	{
+		if (!relics.ContainsKey(name))
+		{
+			Debug.Log("Bad relic name requested in ReturnRelic");
+			return;
+		}
+		unownedRelics.Add(name, relics[name]);
 	}
 
 	public static RelicManager Instance {

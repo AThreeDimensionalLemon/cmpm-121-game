@@ -27,11 +27,9 @@ public class RelicUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Relics could have labels and/or an active-status
-        /*
-        Relic r = player.relics[index];
-        label.text = r.GetLabel();
-        highlight.SetActive(r.IsActive());
-        */
+        if (player != null && player.relics.Count > index)
+        {
+            highlight.SetActive(player.relics[index].active);
+        }
     }
 }

@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -18,6 +19,10 @@ public class RewardScreenManager : MonoBehaviour
     public GameObject spellIcon;
     public GameObject spellDescription;
     public GameObject takeSpellButton;
+    private List<Relic> rewardRelics;
+    public List<GameObject> rewardRelicUIs;
+    public List<GameObject> rewardRelicDescriptions;
+    public List<GameObject> takeRelicButtons;
     public SpellUIContainer spellUI;
 
 
@@ -62,6 +67,17 @@ public class RewardScreenManager : MonoBehaviour
                     spellIcon.SetActive(true);
                     spellDescription.SetActive(true);
                     takeSpellButton.SetActive(true);
+                    if (GameManager.Instance.GetWave() % 3 == 0)
+                    {
+                        GenerateRelicRewards();
+                    }
+                    else
+                    {
+                        for (int i = 0; i < rewardRelicUIs.Count; i++)
+                        {
+                            rewardRelicUIs.ElementAt(i).transform.parent.GameObject().SetActive(false);
+                        }
+                    }
                 }
                 break;
             case GameManager.GameState.GAMEOVER:
@@ -119,6 +135,34 @@ public class RewardScreenManager : MonoBehaviour
             takeSpellButton.SetActive(false);
             spellUI.DeactivateDropButtons();
         }
+    }
+
+    void GenerateRelicRewards()
+    {
+        rewardRelics = new();
+        for(int i = 0; i < rewardRelicUIs.Count; i++)
+        {
+            Relic reward = RelicManager.Instance.GetRandomRelic();
+            Debug.Log(reward.ToString());
+            rewardRelics.Add(reward);
+            rewardRelicUIs.ElementAt(i).GetComponent<RelicUI>().Instantiate(reward);
+            rewardRelicDescriptions.ElementAt(i).GetComponent<TextMeshProUGUI>().text = "\t\t" + reward.name + "\n\n\n\n" + reward.trigger.description + ",\n" + reward.effect.description;
+            rewardRelicUIs.ElementAt(i).transform.parent.GameObject().SetActive(true);
+        }
+    }
+
+    public void GiveRelicToPlayer(int index)
+    {
+        for (int i = 0; i < rewardRelicUIs.Count; i++)
+        {
+            rewardRelicUIs.ElementAt(i).transform.parent.GameObject().SetActive(false);
+            RelicManager.Instance.ReturnRelic(rewardRelics.ElementAt(i).name);
+            if (i == index)
+            {
+                EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic(rewardRelics.ElementAt(i).name));
+            }
+        }
+        rewardRelics.Clear();
     }
 
     void SetRewardScreenText(TextTypes in_text)
