@@ -33,7 +33,7 @@ public class RelicManager
 		return to_give;
 	}
 
-	public void ReturnRelic(string name)
+	public void AddRelicToUnowned(string name)
 	{
 		if (!relics.ContainsKey(name))
 		{

@@ -156,7 +156,7 @@ public class RewardScreenManager : MonoBehaviour
         for (int i = 0; i < rewardRelicUIs.Count; i++)
         {
             rewardRelicUIs.ElementAt(i).transform.parent.GameObject().SetActive(false);
-            RelicManager.Instance.ReturnRelic(rewardRelics.ElementAt(i).name);
+            RelicManager.Instance.AddRelicToUnowned(rewardRelics.ElementAt(i).name);
             if (i == index)
             {
                 EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic(rewardRelics.ElementAt(i).name));
