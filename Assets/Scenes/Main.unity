@@ -4721,6 +4721,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: relic 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8318713314111479034, guid: 0fc6ca25fb4ca524ab2a9d7d17db72de, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7133,6 +7137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4ef5265fce1b544c872205988919fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 232596022}
   healthui: {fileID: 765025204}
   manaui: {fileID: 71109453}
   spellUI: {fileID: 1982188287}
@@ -7714,6 +7719,10 @@ PrefabInstance:
     - target: {fileID: 7557543120329724951, guid: 0fc6ca25fb4ca524ab2a9d7d17db72de, type: 3}
       propertyPath: m_Name
       value: relic 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8318713314111479034, guid: 0fc6ca25fb4ca524ab2a9d7d17db72de, type: 3}
+      propertyPath: player
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -59227,6 +59236,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GFXManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2963255102610807039, guid: b531ed09aa5f5a847918ddac98e4bf16, type: 3}
+      propertyPath: 'sprites.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1500572800, guid: e0ba5a7a2ca92e643ad58fc85d241001, type: 3}
+    - target: {fileID: 2963255102610807039, guid: b531ed09aa5f5a847918ddac98e4bf16, type: 3}
+      propertyPath: 'sprites.Array.data[1]'
+      value: 
+      objectReference: {fileID: 502574008, guid: e0ba5a7a2ca92e643ad58fc85d241001, type: 3}
+    - target: {fileID: 2963255102610807039, guid: b531ed09aa5f5a847918ddac98e4bf16, type: 3}
+      propertyPath: 'sprites.Array.data[2]'
+      value: 
+      objectReference: {fileID: -355307570, guid: e0ba5a7a2ca92e643ad58fc85d241001, type: 3}
     - target: {fileID: 5489274343212671176, guid: b531ed09aa5f5a847918ddac98e4bf16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.2238593
