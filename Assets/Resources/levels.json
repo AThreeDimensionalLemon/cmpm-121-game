@@ -130,5 +130,21 @@
             "location": "random red"
         }
     ]
+   },
+   {
+       "name": "Fast Test",
+       "waves": 15,
+       "spawns": [
+            {
+                "enemy": "zombie",
+                "count": "1",
+                "hp": "1",
+                "delay": "0",
+                "damage": "1",
+                "speed" : "100",
+                "sequence": [1,2,3],
+                "location": "random green"
+            }
+        ]
    }
 ]

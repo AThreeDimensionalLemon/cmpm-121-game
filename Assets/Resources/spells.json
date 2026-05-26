@@ -162,6 +162,37 @@
                 "modification": "1"
             }
         }
+   },
+   "fast but light": {
+        "name": "fast but light",
+        "description": "moves very fast, but does half the damage.",
+        "modifiers": {
+            "damage": {
+                "type": "multiplier",
+                "modification": 0.5
+            },
+            "speed": {
+                "type": "multiplier",
+                "modification": "2"
+            }
+        }
+   },
+   "whirlwind": {
+        "name": "whirlwind",
+        "description": "shoots 10 spiraling projectiles with a short delay (each projectile does 20% damage).",
+        "modifiers": {
+            "damage": {
+                "type": "multiplier",
+                "modification": "0.2"
+            },
+            "trajectory": {
+                "type": "own",
+                "modification": "spiraling"
+            },
+            "delay": {
+                "type": "own",
+                "modification": "0.1"
+            }
+        }
    }
-
 }

@@ -172,7 +172,15 @@ public class ModifiedSpell : ICastable
         //handle delay
         if (modifications.ContainsKey("delay")) {
             float delay = RPNEvaluator.RPNEvaluator.Evaluatef(modifications["delay"].modification, variables);
-            CoroutineManager.Instance.Run(DelayedCast(delay, speedModification, variables, HitEvent));
+            if (this.spellName == "whirlwind")
+            {
+                for (int i = 1; i < 10; i++)
+                {
+                    CoroutineManager.Instance.Run(DelayedCast(delay * i, speedModification, variables, HitEvent, trajectory));
+                }
+            } else {
+                CoroutineManager.Instance.Run(DelayedCast(delay, speedModification, variables, HitEvent, trajectory));
+            }
             //DelayedSpellCaster.Instance.DelayedCast(this.baseSpell, this.team, delay, where, target, speedModification, variables, HitEvent);
         }
 
@@ -231,7 +239,7 @@ public class ModifiedSpell : ICastable
         }
     }
 
-    IEnumerator DelayedCast(float delay, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3, int> HitEvent) {
+    IEnumerator DelayedCast(float delay, string speedModification, Dictionary<string, float> variables, Action<Hittable, Vector3, int> HitEvent, string trajectory) {
         Debug.Log("beginning delayed cast");
         yield return new WaitForSeconds(delay);
         Debug.Log("casting delayed spell");
@@ -240,6 +248,6 @@ public class ModifiedSpell : ICastable
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0;
         List<Vector3> target = new List<Vector3> { mouseWorld }; 
-        yield return this.baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent);
+        yield return this.baseSpell.Cast(where, target, this.team, speedModification, variables, HitEvent, trajectory);
     }
 }
