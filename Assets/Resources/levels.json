@@ -29,6 +29,24 @@
                 "count": "wave 5 / 1 wave 5 % - *",
                 "hp": "100 25 wave * +",
                 "location": "random bone"
+            },
+            {
+                "enemy": "the Green Knight",
+                "count": "wave 4 / 1 wave 4 % - *",
+                "hp": "base 5 wave * +",
+                "speed" : "base wave +",
+                "sequence": [1, 2],
+                "damage": "base 2 /",
+                "location": "random green"
+            },
+            {
+                "enemy": "Amanita",
+                "count": "wave 2 / 1 wave 2 % - *",
+                "hp": "base 5 wave * +",
+                "speed" : "base wave +",
+                "sequence": [1, 2],
+                "damage": "base 2 /",
+                "location": "random green"
             }
         ]
    },
@@ -64,6 +82,24 @@
                 "hp": "75 50 wave * +",
                 "damage": "base 10 +",
                 "location": "random bone"
+            },
+            {
+                "enemy": "the Green Knight",
+                "count": "wave 4 / 1 wave 4 % - *",
+                "hp": "base 10 wave * +",
+                "speed" : "base wave +",
+                "sequence": [1, 2],
+                "damage": "base",
+                "location": "random green"
+            },
+            {
+                "enemy": "Amanita",
+                "count": "wave 2 /",
+                "hp": "base 5 wave * +",
+                "speed" : "base wave +",
+                "sequence": [1, 2],
+                "damage": "base 2 /",
+                "location": "random green"
             }
         ]
    },
@@ -98,6 +134,24 @@
                 "hp": "75 50 wave * +",
                 "damage": "base 10 +",
                 "location": "random bone"
+            },
+            {
+                "enemy": "the Green Knight",
+                "count": "wave",
+                "hp": "base 10 wave * +",
+                "speed" : "base wave +",
+                "sequence": [1, 2],
+                "damage": "base",
+                "location": "random green"
+            },
+            {
+                "enemy": "Amanita",
+                "count": "wave 2 /",
+                "hp": "base 5 wave * +",
+                "speed" : "base wave +",
+                "sequence": [1, 2],
+                "damage": "base 2 /",
+                "location": "random green"
             }
         ]
    },
