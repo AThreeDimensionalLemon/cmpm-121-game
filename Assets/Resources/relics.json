@@ -100,7 +100,7 @@
             "description": "you gain 5 extra spellpower per cleared wave.",
             "type": "adder",
             "target_stat": "spell_power",
-            "modification": "5 wave *",
+            "modification": "5 wave *"
         }
     }
 ]
