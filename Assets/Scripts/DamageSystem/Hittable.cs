@@ -13,7 +13,7 @@ public class Hittable
         get { 
             if (this.team == Team.PLAYER)
             {
-                return EventBus.Instance.GetPlayerHP(Hp);
+                return EventBus.Instance.GetPlayerHP(this, Hp);
             }
             else
             {

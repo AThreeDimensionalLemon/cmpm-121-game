@@ -92,7 +92,7 @@ public class EventBus
         return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
     }
 
-    public int GetPlayerHP(int hp)
+    public int GetPlayerHP(Hittable hittable, int hp)
     {
         List<string> mods = new List<string>();
         mods.Add(OnGetPlayerHP?.Invoke(hp));
@@ -101,6 +101,6 @@ public class EventBus
         {
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
-        return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
+        return Math.Min(RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), hittable.max_hp);
     }
 }
