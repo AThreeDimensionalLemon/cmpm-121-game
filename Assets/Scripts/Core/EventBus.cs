@@ -22,6 +22,7 @@ public class EventBus
     public event Func<int, string> OnGetSpellPower;
     public event Func<int, string> OnGetMana;
     public event Func<int, string> OnGetSpeed;
+    public event Func<int, string> OnGetPlayerHP;
     public event Action<int> OnWaveEnd;
     public event Action<int> OnWaveStart;
     
@@ -79,11 +80,23 @@ public class EventBus
         return Math.Min(RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), caster.max_mana);
     }
 
-    public int GetSpeed(PlayerController player, int speed)
+    public int GetSpeed(int speed)
     {
         List<string> mods = new List<string>();
         mods.Add(OnGetSpeed?.Invoke(speed));
         string to_ret = speed.ToString();
+        foreach (string mod in mods)
+        {
+            to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
+        }
+        return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
+    }
+
+    public int GetPlayerHP(int hp)
+    {
+        List<string> mods = new List<string>();
+        mods.Add(OnGetPlayerHP?.Invoke(hp));
+        string to_ret = hp.ToString();
         foreach (string mod in mods)
         {
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
