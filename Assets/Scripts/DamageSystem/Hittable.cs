@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class Hittable
 {
@@ -13,6 +14,7 @@ public class Hittable
         get { 
             if (this.team == Team.PLAYER)
             {
+                UnityEngine.Debug.Log("player hp: " + EventBus.Instance.GetPlayerHP(this, Hp));
                 return EventBus.Instance.GetPlayerHP(this, Hp);
             }
             else

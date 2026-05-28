@@ -102,5 +102,34 @@
             "target_stat": "spell_power",
             "modification": "5 wave *"
         }
+    },
+    {
+        "name": "Tastee Wheat",
+        "sprite": 11,
+        "trigger": {
+            "description": "When you kill an enemy",
+            "type": "on-kill"
+        },
+        "effect": {
+            "description": "you heal 5 hp (+5/wave).",
+            "type": "adder",
+            "target_stat": "player_hp",
+            "modification": "5 wave 5 * +"
+        }
+    },
+    {
+        "name": "Royal Crown",
+        "sprite": 9,
+        "trigger": {
+            "description": "When you are at max health",
+            "type": "maxed-health"
+        },
+        "effect": {
+            "description": "you gain 10 extra spellpower (+5/wave).",
+            "type": "adder",
+            "target_stat": "spell_power",
+            "modification": "10 wave 5 * +",
+            "until": "take-damage"
+        }
     }
 ]

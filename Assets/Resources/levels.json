@@ -191,10 +191,10 @@
        "spawns": [
             {
                 "enemy": "zombie",
-                "count": "1",
+                "count": "3",
                 "hp": "1",
                 "delay": "0",
-                "damage": "1",
+                "damage": "5",
                 "speed" : "100",
                 "sequence": [1,2,3],
                 "location": "random green"

@@ -18,7 +18,8 @@ public class Relic
         stand_still,
         on_kill,
         wave_end,
-        wave_start
+        wave_start,
+        max_health
     }
     public struct Trigger
     {
@@ -118,6 +119,9 @@ public class Relic
             case "wave-end":
                 to_return = TriggerType.wave_end;
                 break;
+            case "maxed-health":
+                to_return = TriggerType.max_health;
+                break;
             default:
                 to_return = TriggerType.wave_start;
                 break;
@@ -216,6 +220,9 @@ public class Relic
                 };
                 EventBus.Instance.OnWaveStart += OnWaveStart;
                 break;
+            case TriggerType.max_health:
+                // nothing here, player checks own hp in update()
+                break;
             default: // this should never happen
                 break;
         }
@@ -238,6 +245,16 @@ public class Relic
                 this.untilTimeDelay = RPNEvaluator.RPNEvaluator.Evaluate(this.effect.amount, new Dictionary<string, int>());
                 this.lastTriggerTime = Time.time - this.triggerTimeDelay;
                 break;
+            case "take-damage":
+                OnDamage = (where, damage, hittable) =>
+                {
+                    if (hittable.team == owner.hp.team)
+                    {
+                        this.Deactivate();
+                    }
+                };
+                EventBus.Instance.OnDamage += OnDamage;
+                break;
             default: // this.effect.until == ""
                 break;
         }
@@ -257,6 +274,9 @@ public class Relic
                     break;
                 case "speed":
                     EventBus.Instance.OnGetSpeed -= this.GetValueModifier;
+                    break;
+                case "player_hp":
+                    EventBus.Instance.OnGetPlayerHP -= this.GetValueModifier;
                     break;
                 default:
                     break;
