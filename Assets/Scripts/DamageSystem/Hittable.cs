@@ -8,7 +8,23 @@ public class Hittable
     public enum Team { PLAYER, MONSTERS }
     public Team team;
 
-    public int hp;
+    private int Hp;
+    public int hp {
+        get { 
+            if (this.team == Team.PLAYER)
+            {
+                return EventBus.Instance.GetPlayerHP(this, Hp);
+            }
+            else
+            {
+                return Hp;
+            }
+        } 
+        set { 
+            Hp = value; 
+        } 
+    }
+
     public int max_hp;
 
     public GameObject owner;

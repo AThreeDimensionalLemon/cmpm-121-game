@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     public List<Relic> relics;
 
     private int Speed;
-    public int speed { get { return EventBus.Instance.GetSpeed(this, Speed); } set { Speed = value; } }
+    public int speed { get { return EventBus.Instance.GetSpeed(Speed); } set { Speed = value; } }
 
     public Unit unit;
 

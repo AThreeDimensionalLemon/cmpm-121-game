@@ -156,6 +156,9 @@ public class Relic
             case "speed":
                 EventBus.Instance.OnGetSpeed += this.GetValueModifier;
                 break;
+            case "player_hp":
+                EventBus.Instance.OnGetPlayerHP += this.GetValueModifier;
+                break;
             default:
                 break;
         }
@@ -272,6 +275,9 @@ public class Relic
             case "spell_power":
                 owner.spellcaster.spell_power = owner.spellcaster.spell_power;
                 break;
+            case "player_hp":
+                owner.hp.hp = owner.hp.hp;
+                break;
             default:
                 return;
         }
@@ -280,11 +286,11 @@ public class Relic
 
     public void Activate()
     {
-        if (this.active) return;
+        this.lastTriggerTime = Time.time;
         Debug.Log(this.name + " activated");
+        if (this.active) return;
         this.BuildEffectCall();
         this.active = true;
-        this.lastTriggerTime = Time.time;
         if (this.effect.target_stat == "speed")
         {
             owner.unit.movement = owner.unit.movement.normalized * owner.speed;
