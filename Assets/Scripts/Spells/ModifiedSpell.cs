@@ -124,6 +124,11 @@ public class ModifiedSpell : ICastable
         return baseSpell.GetLastCast();
     }
 
+    public void SetLastCast(float in_last_cast)
+    {
+        baseSpell.SetLastCast(in_last_cast);
+    }
+
     public Damage.Type GetDamageType() {
         if (modifications.ContainsKey("damage_type")) return Damage.TypeFromString(modifications["damage_type"].ToString());
         else return baseSpell.GetDamageType();

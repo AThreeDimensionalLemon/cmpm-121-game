@@ -26,7 +26,8 @@ public class Spell : ICastable
     private Projectile secondary_projectile;
 
     //other stuff
-    public float last_cast;
+    private float Last_Cast;
+    public float last_cast { get { return EventBus.Instance.GetLastCast(Last_Cast); } private set { Last_Cast = value; } }
     public SpellCaster owner;
     public Hittable.Team team;
 
@@ -120,6 +121,11 @@ public class Spell : ICastable
     //ICastable requires this implementation so that SpellUI can store ICastables instead
     public float GetLastCast() {
         return last_cast;
+    }
+
+    public void SetLastCast(float in_last_cast)
+    {
+        last_cast = in_last_cast;
     }
 
     public List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount) {

@@ -19,10 +19,11 @@ public class EventBus
     public event Action<Relic> OnRelicPickup;
     public event Action<Hittable> OnKill;
     public event Action<SpellCaster> OnSpellCast;
-    public event Func<int, string> OnGetSpellPower;
-    public event Func<int, string> OnGetMana;
-    public event Func<int, string> OnGetSpeed;
-    public event Func<int, string> OnGetPlayerHP;
+    public event Func<float, string> OnGetSpellPower;
+    public event Func<float, string> OnGetMana;
+    public event Func<float, string> OnGetSpeed;
+    public event Func<float, string> OnGetPlayerHP;
+    public event Func<float, string> OnGetLastCast;
     public event Action<int> OnWaveEnd;
     public event Action<int> OnWaveStart;
     
@@ -65,7 +66,7 @@ public class EventBus
         {
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
-        return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
+        return (int)RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
     }
 
     public int GetMana(SpellCaster caster, int mana)
@@ -77,7 +78,7 @@ public class EventBus
         {
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
-        return Math.Min(RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), caster.max_mana);
+        return Math.Min((int)RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), caster.max_mana);
     }
 
     public int GetSpeed(int speed)
@@ -89,7 +90,7 @@ public class EventBus
         {
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
-        return RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
+        return (int)RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>());
     }
 
     public int GetPlayerHP(Hittable hittable, int hp)
@@ -101,6 +102,18 @@ public class EventBus
         {
             to_ret = RPNEvaluator.RPNEvaluator.Evaluate(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
-        return Math.Min(RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), hittable.max_hp);
+        return Math.Min((int)RPNEvaluator.RPNEvaluator.Evaluate(to_ret, new Dictionary<string, int>()), hittable.max_hp);
+    }
+
+    public float GetLastCast(float last_cast)
+    {
+        List<string> mods = new List<string>();
+        mods.Add(OnGetLastCast?.Invoke(last_cast));
+        string to_ret = last_cast.ToString();
+        foreach (string mod in mods)
+        {
+            to_ret = RPNEvaluator.RPNEvaluator.Evaluatef(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
+        }
+        return RPNEvaluator.RPNEvaluator.Evaluatef(to_ret, new Dictionary<string, int>());
     }
 }

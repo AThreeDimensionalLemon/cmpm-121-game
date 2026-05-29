@@ -8,6 +8,7 @@ using RPNEvaluator;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using System.Buffers;
+using NUnit.Framework.Internal;
 
 public class Relic
 {
@@ -76,7 +77,7 @@ public class Relic
     public Action<int> OnWaveEnd;
     public Action<int> OnWaveStart;
 
-    Func<int, string> GetValueModifier = null;
+    Func<float, string> GetValueModifier = null;
 
     public Relic(JToken jsonConfig)
     {
@@ -158,6 +159,9 @@ public class Relic
                 break;
             case "player_hp":
                 EventBus.Instance.OnGetPlayerHP += this.GetValueModifier;
+                break;
+            case "last_cast":
+                EventBus.Instance.OnGetLastCast += this.GetValueModifier;
                 break;
             default:
                 break;
@@ -258,6 +262,12 @@ public class Relic
                 case "speed":
                     EventBus.Instance.OnGetSpeed -= this.GetValueModifier;
                     break;
+                case "player_hp":
+                    EventBus.Instance.OnGetPlayerHP -= this.GetValueModifier;
+                    break;
+                case "last_cast":
+                    EventBus.Instance.OnGetLastCast -= this.GetValueModifier;
+                    break;
                 default:
                     break;
             }
@@ -277,6 +287,9 @@ public class Relic
                 break;
             case "player_hp":
                 owner.hp.hp = owner.hp.hp;
+                break;
+            case "last_cast":
+                owner.spellcaster.spells[owner.spellcaster.current_spell_index].SetLastCast(owner.spellcaster.spells[owner.spellcaster.current_spell_index].GetLastCast());
                 break;
             default:
                 return;
