@@ -24,6 +24,7 @@ public interface ICastable {
     int GetIcon();
     bool IsReady();
     float GetLastCast();
+    void SetLastCast(float in_last_cast);
     Damage.Type GetDamageType();
     List<Projectile> GetProjectiles();
     List<Vector3> GetTargetList(Vector3 origin, Vector3 direction, float angleRange, int targetAmount);
