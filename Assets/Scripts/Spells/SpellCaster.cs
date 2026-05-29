@@ -119,14 +119,14 @@ public class SpellCaster
     {
         spell_power = p;
 
-        foreach (Spell s in spells) // could refactor so that spell RPN is just one dictionary in the caster, instead of them needing their own
+        for (int i = 0; i < spells.Length; i++) // could refactor so that spell RPN is just one dictionary in the caster, instead of them needing their own
         {
-            if (s != null)
+            if (spells[i] != null)
             {
                 Dictionary<string, int> powerDict = new Dictionary<string, int>();
                 powerDict.Add("power", spell_power);
                 powerDict.Add("wave", GameManager.Instance.GetWave());
-                s.SetDamageDicts(powerDict);
+                spells[i].SetDamageDicts(powerDict);
             }
         }
     }

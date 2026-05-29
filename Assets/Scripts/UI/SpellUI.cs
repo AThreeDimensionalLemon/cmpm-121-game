@@ -12,7 +12,7 @@ public class SpellUI : MonoBehaviour
     public GameObject highlight;
     public ICastable spell;
     float last_text_update;
-    const float UPDATE_DELAY = 1;
+    const float UPDATE_DELAY = 0.5f;
     public GameObject dropbutton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -131,5 +131,19 @@
             "modification": "10 wave 5 * +",
             "until": "take-damage"
         }
+    },
+    {
+        "name": "Glass Sphere",
+        "sprite": 13,
+        "trigger": {
+            "description": "Whenever you take damage",
+            "type": "take-damage"
+        },
+        "effect": {
+            "description": "your spell cooldown ends.",
+            "type": "multiplier",
+            "target_stat": "last_cast",
+            "modification": "0"
+        }
     }
 ]

@@ -86,6 +86,7 @@ public class Relic
 
         this.name = jsonConfig["name"].ToString();
         this.sprite = (int)jsonConfig["sprite"];
+        UnityEngine.Debug.Log("relic " + this.name + " has sprite " + this.sprite);
         this.trigger = new Trigger(jsonConfig["trigger"]);
         this.effect = new Effect(jsonConfig["effect"]);
 
