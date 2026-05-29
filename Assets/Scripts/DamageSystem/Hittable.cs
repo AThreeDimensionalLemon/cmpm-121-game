@@ -14,7 +14,7 @@ public class Hittable
         get { 
             if (this.team == Team.PLAYER)
             {
-                UnityEngine.Debug.Log("player hp: " + EventBus.Instance.GetPlayerHP(this, Hp));
+                // UnityEngine.Debug.Log("player hp: " + EventBus.Instance.GetPlayerHP(this, Hp));
                 return EventBus.Instance.GetPlayerHP(this, Hp);
             }
             else

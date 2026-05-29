@@ -293,7 +293,7 @@ public class Relic
                 owner.spellcaster.mana = owner.spellcaster.mana;
                 break;
             case "spell_power":
-                owner.spellcaster.spell_power = owner.spellcaster.spell_power;
+                owner.spellcaster.SetSpellpower(owner.spellcaster.spell_power);
                 break;
             case "player_hp":
                 owner.hp.hp = owner.hp.hp;

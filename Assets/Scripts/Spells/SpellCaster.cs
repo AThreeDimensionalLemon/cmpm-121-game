@@ -95,7 +95,7 @@ public class SpellCaster
     {
         this.mana = mana;
         this.mana_reg = mana_reg;
-        this.spell_power = spell_power;
+        SetSpellpower(spell_power);
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target)
@@ -114,4 +114,20 @@ public class SpellCaster
         yield break;
     }
 
+    // made because otherwise dictionaries were only set on cast, and so spell ui damage was only updating on cast and not on relic effect, etc.
+    public void SetSpellpower(int p)
+    {
+        spell_power = p;
+
+        foreach (Spell s in spells) // could refactor so that spell RPN is just one dictionary in the caster, instead of them needing their own
+        {
+            if (s != null)
+            {
+                Dictionary<string, int> powerDict = new Dictionary<string, int>();
+                powerDict.Add("power", spell_power);
+                powerDict.Add("wave", GameManager.Instance.GetWave());
+                s.SetDamageDicts(powerDict);
+            }
+        }
+    }
 }
