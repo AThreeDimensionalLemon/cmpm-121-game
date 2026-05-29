@@ -169,7 +169,7 @@
         "modifiers": {
             "damage": {
                 "type": "multiplier",
-                "modification": 0.5
+                "modification": "0.5"
             },
             "speed": {
                 "type": "multiplier",
