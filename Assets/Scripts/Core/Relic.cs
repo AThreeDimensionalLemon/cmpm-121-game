@@ -19,7 +19,8 @@ public class Relic
         stand_still,
         on_kill,
         wave_end,
-        wave_start
+        wave_start,
+        max_health
     }
     public struct Trigger
     {
@@ -85,6 +86,7 @@ public class Relic
 
         this.name = jsonConfig["name"].ToString();
         this.sprite = (int)jsonConfig["sprite"];
+        UnityEngine.Debug.Log("relic " + this.name + " has sprite " + this.sprite);
         this.trigger = new Trigger(jsonConfig["trigger"]);
         this.effect = new Effect(jsonConfig["effect"]);
 
@@ -118,6 +120,9 @@ public class Relic
                 break;
             case "wave-end":
                 to_return = TriggerType.wave_end;
+                break;
+            case "maxed-health":
+                to_return = TriggerType.max_health;
                 break;
             default:
                 to_return = TriggerType.wave_start;
@@ -220,6 +225,9 @@ public class Relic
                 };
                 EventBus.Instance.OnWaveStart += OnWaveStart;
                 break;
+            case TriggerType.max_health:
+                // nothing here, player checks own hp in update()
+                break;
             default: // this should never happen
                 break;
         }
@@ -241,6 +249,16 @@ public class Relic
             case "time-passed":
                 this.untilTimeDelay = RPNEvaluator.RPNEvaluator.Evaluate(this.effect.amount, new Dictionary<string, int>());
                 this.lastTriggerTime = Time.time - this.triggerTimeDelay;
+                break;
+            case "take-damage":
+                OnDamage = (where, damage, hittable) =>
+                {
+                    if (hittable.team == owner.hp.team)
+                    {
+                        this.Deactivate();
+                    }
+                };
+                EventBus.Instance.OnDamage += OnDamage;
                 break;
             default: // this.effect.until == ""
                 break;
@@ -283,7 +301,7 @@ public class Relic
                 owner.spellcaster.mana = owner.spellcaster.mana;
                 break;
             case "spell_power":
-                owner.spellcaster.spell_power = owner.spellcaster.spell_power;
+                owner.spellcaster.SetSpellpower(owner.spellcaster.spell_power);
                 break;
             case "player_hp":
                 owner.hp.hp = owner.hp.hp;

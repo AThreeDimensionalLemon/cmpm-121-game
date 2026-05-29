@@ -113,6 +113,11 @@ public class PlayerController : MonoBehaviour
                 {
                     r.Deactivate();
                 }
+
+                if (r.trigger.type == Relic.TriggerType.max_health  && !r.active && hp.hp == hp.max_hp)
+                {
+                    r.Activate();
+                }
             }
         }
     }
