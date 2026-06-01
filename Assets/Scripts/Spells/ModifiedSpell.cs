@@ -167,7 +167,7 @@ public class ModifiedSpell : ICastable
 
         //speed mod
         string speedModification = (modifications.ContainsKey("speed")) ? modifications["speed"].modification + " " + TypeToOperation(modifications["speed"].type) : null;
-        if (lastModSpeed != null && speedModification != null) speedModification += lastModSpeed;
+        if (lastModSpeed != null && speedModification != null) speedModification += " " + lastModSpeed;
         else if (lastModSpeed != null) speedModification = lastModSpeed;
 
         //others
