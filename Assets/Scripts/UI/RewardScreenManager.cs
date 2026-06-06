@@ -24,7 +24,7 @@ public class RewardScreenManager : MonoBehaviour
     //public List<GameObject> rewardRelicDescriptions;
     //public List<GameObject> takeRelicButtons;
     public SpellUIContainer spellUI;
-    [SerializeField] GameObject skillTree;
+    public GameObject skillTree;
 
 
     //private ICastable rewardSpell;
@@ -57,6 +57,7 @@ public class RewardScreenManager : MonoBehaviour
                     SetRewardScreenText(TextTypes.POSTWAVE);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(true);
+                    skillTree.SetActive(true);
                     restartButton.SetActive(false);
 
                     //GenerateSpellReward();
@@ -87,6 +88,7 @@ public class RewardScreenManager : MonoBehaviour
                     SetRewardScreenText(TextTypes.WIN);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(false);
+                    skillTree.SetActive(false);
                     restartButton.SetActive(true);
 
                     //spellIconFrame.SetActive(false);
@@ -101,6 +103,7 @@ public class RewardScreenManager : MonoBehaviour
                     SetRewardScreenText(TextTypes.LOSS);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(false);
+                    skillTree.SetActive(false);
                     restartButton.SetActive(true);
                     GameManager.Instance.KillAllEnemies();
 
@@ -169,9 +172,10 @@ public class RewardScreenManager : MonoBehaviour
         PlayerStatisticsManager stats = GameManager.Instance.playerStatisticsManager;
         TextMeshProUGUI tmp = statsReadout.GetComponent<TextMeshProUGUI>();
         tmp.text = text_list[in_text];
-        if (in_text != TextTypes.POSTWAVE)
-        {
+        if (in_text != TextTypes.POSTWAVE) {
+            statsReadout.SetActive(true);
             tmp.text += stats.GetStatisticsReadout();
         }
+        else statsReadout.SetActive(false);
     }
 }
