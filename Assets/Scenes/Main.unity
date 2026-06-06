@@ -709,23 +709,8 @@ MonoBehaviour:
   statsReadout: {fileID: 1751562982}
   nextWaveButton: {fileID: 284566016}
   restartButton: {fileID: 1259289756}
-  spellIconFrame: {fileID: 0}
-  spellIcon: {fileID: 0}
-  spellDescription: {fileID: 0}
-  takeSpellButton: {fileID: 0}
-  rewardRelicUIs:
-  - {fileID: 970667040}
-  - {fileID: 233920498}
-  - {fileID: 979755668}
-  rewardRelicDescriptions:
-  - {fileID: 284841983}
-  - {fileID: 1692007371}
-  - {fileID: 1535573486}
-  takeRelicButtons:
-  - {fileID: 810439786}
-  - {fileID: 963229656}
-  - {fileID: 1913236792}
   spellUI: {fileID: 1982188287}
+  skillTree: {fileID: 1662566404}
   text: 0
 --- !u!4 &220180078
 Transform:
@@ -833,11 +818,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &233920498 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7557543120329724951, guid: 0fc6ca25fb4ca524ab2a9d7d17db72de, type: 3}
-  m_PrefabInstance: {fileID: 1786142899}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &254615548
 GameObject:
   m_ObjectHideFlags: 0
@@ -4308,16 +4288,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &970667040 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7557543120329724951, guid: 0fc6ca25fb4ca524ab2a9d7d17db72de, type: 3}
-  m_PrefabInstance: {fileID: 1024284958}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &979755668 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7557543120329724951, guid: 0fc6ca25fb4ca524ab2a9d7d17db72de, type: 3}
-  m_PrefabInstance: {fileID: 454268096}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &982783694
 GameObject:
   m_ObjectHideFlags: 0
