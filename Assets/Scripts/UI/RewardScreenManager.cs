@@ -25,6 +25,7 @@ public class RewardScreenManager : MonoBehaviour
     //public List<GameObject> takeRelicButtons;
     public SpellUIContainer spellUI;
     public GameObject skillTree;
+    private SkillTree skillTreeData;
 
 
     //private ICastable rewardSpell;
@@ -44,6 +45,10 @@ public class RewardScreenManager : MonoBehaviour
         text_list.Add(TextTypes.WIN, "You win!\n\n\nGame Stats:\n");
         text_list.Add(TextTypes.LOSS, "You lose!\n\n\nGame Stats:\n");
         text_list.Add(TextTypes.POSTWAVE, "Wave destroyed!");
+
+        // make skilltree object
+        skillTreeData = new SkillTree();
+        Debug.Log(skillTreeData.ToString());
     }
 
     // Update is called once per frame

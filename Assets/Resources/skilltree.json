@@ -1,0 +1,20 @@
+{
+    "arcane_bolt": [
+        ["damage_amp", "speed_amp", "cheap"],
+        ["Green Gem"],
+        ["cheap", "fast but light", "slowed"],
+        ["Jade Elephant"],
+        ["doubler", "splitter", "chaos", "homing"],
+        ["Glass Sphere"],
+        ["exploder", "whirlwind"]
+    ],
+    "magic_missile": [
+        ["damage_amp", "speed_amp", "cheap"],
+        ["Golden Mask"],
+        ["cheap", "fast but light", "slowed"],
+        ["Cursed Scroll"],
+        ["doubler", "splitter", "chaos", "homing"],
+        ["Fleetfoot Boots"],
+        ["exploder", "whirlwind"]
+    ]
+}
