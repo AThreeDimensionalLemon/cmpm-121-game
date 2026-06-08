@@ -16,7 +16,9 @@ public class SkillTree
         foreach(KeyValuePair<string, JToken> obj in parsedSkillTreeJson)
         {
             SkillTreeNode baseSpellNode = new SkillTreeNode(obj.Key);
-            baseNode.addNext(baseSpellNode);
+            baseNode.AddNext(baseSpellNode);
+            baseSpellNode.AddPrev(baseNode);
+            baseSpellNode.SetIsExclusiveInBranchLevel(false);
             
             // initialize the previous branch level list of nodes to just have the base spell node
             List<SkillTreeNode> previousBranchLevel = new List<SkillTreeNode>();
@@ -32,26 +34,42 @@ public class SkillTree
                 {
                     SkillTreeNode newNode = new SkillTreeNode(branchItem.ToString());
                     thisBranchLevel.Add(newNode);
+                    // set the new node's previous nodes list
+                    newNode.SetPrev(previousBranchLevel);
+                    // make this node exclusive in branch level
+                    newNode.SetIsExclusiveInBranchLevel(true);
+
+                    // string str = newNode.GetName() + " previous nodes: [";
+                    // foreach(SkillTreeNode n in newNode.GetPrevNodes())
+                    // {
+                    //     str += n.GetName() + ", ";
+                    // }
+                    // str += "]";
+                    // Debug.Log(str);
                 }
                 // set the 'next node' list for all nodes in previous level to be thisBranchLevel
                 foreach(SkillTreeNode prevNode in previousBranchLevel)
                 {
-                    prevNode.setNext(thisBranchLevel);
+                    prevNode.SetNext(thisBranchLevel);
                 }
                 // set prevousBranchLevel list to be thisBranchLevel so the next level has the proper items in previousBranchLevel
                 previousBranchLevel = thisBranchLevel;
             }
         }
+
+        // take base node and take arcane bolt base spell for starters
+        baseNode.Take();
+        baseNode.GetNextNodes()[0].Take();
     }
 
     public override string ToString()
     {
         string str = "";
         // go over the base spell nodes
-        foreach(SkillTreeNode node in baseNode.getNextNodes())
+        foreach(SkillTreeNode node in baseNode.GetNextNodes())
         {
-            str += node.getName() + ": [\n";
-            List<SkillTreeNode> nextNodes = node.getNextNodes();
+            str += node.GetName() + ": [\n";
+            List<SkillTreeNode> nextNodes = node.GetNextNodes();
             // go over each branch level for this base spell's branch
             while (nextNodes != null)
             {
@@ -59,10 +77,10 @@ public class SkillTree
                 str += "[";
                 foreach(SkillTreeNode nextNode in nextNodes)
                 {
-                    str += nextNode.getName() + ", ";
+                    str += nextNode.GetName() + ", ";
                 }
                 str += "]\n";
-                nextNodes = nextNodes[0].getNextNodes(); // same for all nodes in list
+                nextNodes = nextNodes[0].GetNextNodes(); // same for all nodes in list
             }
             str += "]\n";
         }

@@ -48,7 +48,7 @@ public class RewardScreenManager : MonoBehaviour
 
         // make skilltree object
         skillTreeData = new SkillTree();
-        Debug.Log(skillTreeData.ToString());
+        // Debug.Log(skillTreeData.ToString());
     }
 
     // Update is called once per frame
