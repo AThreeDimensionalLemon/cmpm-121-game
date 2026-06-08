@@ -6,7 +6,8 @@ public class SkillTreeNode
 {
     private string name;
     private bool isTaken;
-    private List<SkillTreeNode> nextNodes; // only rly need to parse in one direction for now, probably?
+    private List<SkillTreeNode> nextNodes; 
+    private List<SkillTreeNode> prevNodes; 
     public SkillTreeNode(string name)
     {
         this.name = name;
@@ -26,6 +27,19 @@ public class SkillTreeNode
         nextNodes.Add(newNode);
     }
 
+    public void setPrev(List<SkillTreeNode> nodeList)
+    {
+        prevNodes = nodeList;
+    }
+    public void addPrev(SkillTreeNode newNode)
+    {
+        if (prevNodes == null)
+        {
+            prevNodes = new List<SkillTreeNode>();
+        }
+        prevNodes.Add(newNode);
+    }
+
     public string getName()
     {
         return name;
@@ -33,5 +47,9 @@ public class SkillTreeNode
     public List<SkillTreeNode> getNextNodes()
     {
         return nextNodes;
+    }
+    public List<SkillTreeNode> getPrevNodes()
+    {
+        return prevNodes;
     }
 }

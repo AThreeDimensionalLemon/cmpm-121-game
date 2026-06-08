@@ -17,6 +17,7 @@ public class SkillTree
         {
             SkillTreeNode baseSpellNode = new SkillTreeNode(obj.Key);
             baseNode.addNext(baseSpellNode);
+            baseSpellNode.addPrev(baseNode);
             
             // initialize the previous branch level list of nodes to just have the base spell node
             List<SkillTreeNode> previousBranchLevel = new List<SkillTreeNode>();
@@ -32,6 +33,8 @@ public class SkillTree
                 {
                     SkillTreeNode newNode = new SkillTreeNode(branchItem.ToString());
                     thisBranchLevel.Add(newNode);
+                    // set the new node's previous nodes list
+                    newNode.setPrev(previousBranchLevel);
                 }
                 // set the 'next node' list for all nodes in previous level to be thisBranchLevel
                 foreach(SkillTreeNode prevNode in previousBranchLevel)
