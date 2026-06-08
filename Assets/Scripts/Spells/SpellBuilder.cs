@@ -16,6 +16,14 @@ public class SpellBuilder
     private Dictionary<string, JToken> spell_modifiers;
     private static SpellBuilder theInstance;
 
+    public Dictionary<string, JToken> BaseSpells {
+        get { return base_spells; }
+    }
+
+    public Dictionary<string, JToken> SpellModifiers {
+        get { return spell_modifiers; }
+    }
+
     public Spell BuildSpell(SpellCaster owner, string name)
     {
         return new Spell(owner, base_spells[name]);

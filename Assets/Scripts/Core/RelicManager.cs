@@ -11,6 +11,10 @@ public class RelicManager
 	private Dictionary<string, Relic> unownedRelics;
 	private static RelicManager theInstance;
 
+	public Dictionary<string, Relic> UnownedRelics {
+		get { return unownedRelics; }
+	}
+
 	public Relic GetRelic(string name)
 	{
 		Relic to_give = unownedRelics[name];
