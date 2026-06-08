@@ -1,6 +1,3 @@
-using UnityEngine;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 public class SkillTreeNode
 {
@@ -15,9 +12,25 @@ public class SkillTreeNode
         isTaken = false;
     }
 
+    // will set isTaken to true, and also update the availability of nodes:
+    //  - all nodes in the same branch level are no longer available
+    //  - all nodes in the next branch level are now available
     public void Take()
     {
         isTaken = true;
+        if (prevNodes != null)
+        {
+            // iterate over all nodes in the same node branch as this one
+            foreach(SkillTreeNode n in prevNodes[0].GetNextNodes())
+            {
+                n.SetIsAvailable(false);
+            }
+            foreach(SkillTreeNode n in nextNodes)
+            {
+                n.SetIsAvailable(true);
+            }
+        }
+
     }
 
 
