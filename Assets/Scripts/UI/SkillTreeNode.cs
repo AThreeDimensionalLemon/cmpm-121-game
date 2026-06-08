@@ -6,6 +6,7 @@ public class SkillTreeNode
 {
     private string name;
     private bool isTaken;
+    private bool isAvailable;
     private List<SkillTreeNode> nextNodes; 
     private List<SkillTreeNode> prevNodes; 
     public SkillTreeNode(string name)
@@ -14,11 +15,39 @@ public class SkillTreeNode
         isTaken = false;
     }
 
-    public void setNext(List<SkillTreeNode> nodeList)
+    public void Take()
+    {
+        isTaken = true;
+    }
+
+
+    // -- getters and setters --
+
+    public string GetName()
+    {
+        return name;
+    }
+
+    public bool GetIsTaken()
+    {
+        return isTaken;
+    }
+
+    public bool GetIsAvailable()
+    {
+        return isAvailable;
+    }
+
+    public void SetIsAvailable(bool available)
+    {
+        isAvailable = available;
+    }
+
+    public void SetNext(List<SkillTreeNode> nodeList)
     {
         nextNodes = nodeList;
     }
-    public void addNext(SkillTreeNode newNode)
+    public void AddNext(SkillTreeNode newNode)
     {
         if (nextNodes == null)
         {
@@ -27,11 +56,11 @@ public class SkillTreeNode
         nextNodes.Add(newNode);
     }
 
-    public void setPrev(List<SkillTreeNode> nodeList)
+    public void SetPrev(List<SkillTreeNode> nodeList)
     {
         prevNodes = nodeList;
     }
-    public void addPrev(SkillTreeNode newNode)
+    public void AddPrev(SkillTreeNode newNode)
     {
         if (prevNodes == null)
         {
@@ -40,15 +69,11 @@ public class SkillTreeNode
         prevNodes.Add(newNode);
     }
 
-    public string getName()
-    {
-        return name;
-    }
-    public List<SkillTreeNode> getNextNodes()
+    public List<SkillTreeNode> GetNextNodes()
     {
         return nextNodes;
     }
-    public List<SkillTreeNode> getPrevNodes()
+    public List<SkillTreeNode> GetPrevNodes()
     {
         return prevNodes;
     }

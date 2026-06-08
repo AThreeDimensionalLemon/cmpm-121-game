@@ -16,8 +16,8 @@ public class SkillTree
         foreach(KeyValuePair<string, JToken> obj in parsedSkillTreeJson)
         {
             SkillTreeNode baseSpellNode = new SkillTreeNode(obj.Key);
-            baseNode.addNext(baseSpellNode);
-            baseSpellNode.addPrev(baseNode);
+            baseNode.AddNext(baseSpellNode);
+            baseSpellNode.AddPrev(baseNode);
             
             // initialize the previous branch level list of nodes to just have the base spell node
             List<SkillTreeNode> previousBranchLevel = new List<SkillTreeNode>();
@@ -34,12 +34,12 @@ public class SkillTree
                     SkillTreeNode newNode = new SkillTreeNode(branchItem.ToString());
                     thisBranchLevel.Add(newNode);
                     // set the new node's previous nodes list
-                    newNode.setPrev(previousBranchLevel);
+                    newNode.SetPrev(previousBranchLevel);
                 }
                 // set the 'next node' list for all nodes in previous level to be thisBranchLevel
                 foreach(SkillTreeNode prevNode in previousBranchLevel)
                 {
-                    prevNode.setNext(thisBranchLevel);
+                    prevNode.SetNext(thisBranchLevel);
                 }
                 // set prevousBranchLevel list to be thisBranchLevel so the next level has the proper items in previousBranchLevel
                 previousBranchLevel = thisBranchLevel;
@@ -51,10 +51,10 @@ public class SkillTree
     {
         string str = "";
         // go over the base spell nodes
-        foreach(SkillTreeNode node in baseNode.getNextNodes())
+        foreach(SkillTreeNode node in baseNode.GetNextNodes())
         {
-            str += node.getName() + ": [\n";
-            List<SkillTreeNode> nextNodes = node.getNextNodes();
+            str += node.GetName() + ": [\n";
+            List<SkillTreeNode> nextNodes = node.GetNextNodes();
             // go over each branch level for this base spell's branch
             while (nextNodes != null)
             {
@@ -62,10 +62,10 @@ public class SkillTree
                 str += "[";
                 foreach(SkillTreeNode nextNode in nextNodes)
                 {
-                    str += nextNode.getName() + ", ";
+                    str += nextNode.GetName() + ", ";
                 }
                 str += "]\n";
-                nextNodes = nextNodes[0].getNextNodes(); // same for all nodes in list
+                nextNodes = nextNodes[0].GetNextNodes(); // same for all nodes in list
             }
             str += "]\n";
         }
