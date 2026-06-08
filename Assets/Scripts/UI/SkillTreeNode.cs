@@ -1,9 +1,11 @@
+using UnityEngine;
 using System.Collections.Generic;
 public class SkillTreeNode
 {
     private string name;
     private bool isTaken;
     private bool isAvailable;
+    private bool isExclusiveInBranchLevel; // true if you can only take one thing in the branch level, false otherwise (false for base spells)
     private List<SkillTreeNode> nextNodes; 
     private List<SkillTreeNode> prevNodes; 
     public SkillTreeNode(string name)
@@ -17,16 +19,22 @@ public class SkillTreeNode
     //  - all nodes in the next branch level are now available
     public void Take()
     {
+        // Debug.Log("TAKING " + name);
         isTaken = true;
-        if (prevNodes != null)
+        if (prevNodes != null && isExclusiveInBranchLevel)
         {
             // iterate over all nodes in the same node branch as this one
             foreach(SkillTreeNode n in prevNodes[0].GetNextNodes())
             {
+                // Debug.Log(n.GetName() + " NOT available");
                 n.SetIsAvailable(false);
             }
+        }
+        if (nextNodes != null)
+        {
             foreach(SkillTreeNode n in nextNodes)
             {
+                // Debug.Log(n.GetName() + " IS available");
                 n.SetIsAvailable(true);
             }
         }
@@ -54,6 +62,16 @@ public class SkillTreeNode
     public void SetIsAvailable(bool available)
     {
         isAvailable = available;
+    }
+
+    public bool GetIsExclusiveInBranchLevel()
+    {
+        return isExclusiveInBranchLevel;
+    }
+
+    public void SetIsExclusiveInBranchLevel(bool exclusiveInBranchLevel)
+    {
+        isExclusiveInBranchLevel = exclusiveInBranchLevel;
     }
 
     public void SetNext(List<SkillTreeNode> nodeList)

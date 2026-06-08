@@ -18,6 +18,7 @@ public class SkillTree
             SkillTreeNode baseSpellNode = new SkillTreeNode(obj.Key);
             baseNode.AddNext(baseSpellNode);
             baseSpellNode.AddPrev(baseNode);
+            baseSpellNode.SetIsExclusiveInBranchLevel(false);
             
             // initialize the previous branch level list of nodes to just have the base spell node
             List<SkillTreeNode> previousBranchLevel = new List<SkillTreeNode>();
@@ -35,6 +36,16 @@ public class SkillTree
                     thisBranchLevel.Add(newNode);
                     // set the new node's previous nodes list
                     newNode.SetPrev(previousBranchLevel);
+                    // make this node exclusive in branch level
+                    newNode.SetIsExclusiveInBranchLevel(true);
+
+                    // string str = newNode.GetName() + " previous nodes: [";
+                    // foreach(SkillTreeNode n in newNode.GetPrevNodes())
+                    // {
+                    //     str += n.GetName() + ", ";
+                    // }
+                    // str += "]";
+                    // Debug.Log(str);
                 }
                 // set the 'next node' list for all nodes in previous level to be thisBranchLevel
                 foreach(SkillTreeNode prevNode in previousBranchLevel)
@@ -45,6 +56,10 @@ public class SkillTree
                 previousBranchLevel = thisBranchLevel;
             }
         }
+
+        // take base node and take arcane bolt base spell for starters
+        baseNode.Take();
+        baseNode.GetNextNodes()[0].Take();
     }
 
     public override string ToString()
