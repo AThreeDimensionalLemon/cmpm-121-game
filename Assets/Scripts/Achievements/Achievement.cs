@@ -24,21 +24,44 @@ class Achievement
         }
     }
 
-    public string name;
-    public string description;
+    private string Name;
+    public string name
+    {
+        get
+        {
+            return this.Name + " " + (this.current_tier + 1).ToString();
+        }
+        set
+        {
+            this.Name = value;
+        }
+    }
+    private string Description;
+    public string description { 
+        get
+        {
+            string[] parsed_desc = this.Description.Split("$");
+            return parsed_desc[0] + this.target_amounts[this.current_tier].ToString() + parsed_desc[1];
+        }
+        set
+        {
+            this.Description = value;
+        }
+    }
 
     string target_stat;
     string reset_trigger;
     TrackType track_type;
 
-    float trigger_amount;
+    List<float> target_amounts;
     string current_total;
+    int current_tier;
 
     bool achieved;
     bool hasListeners;
 
     Action<string> DoTrack = null;
-    public event Action<string, string> OnAchieved = null;
+    public event Action<string, int, string> OnAchieved = null;
 
     public Action<Vector3, Damage, Hittable> OnDealDamage;
     public Action<Vector3, Damage, Hittable> OnTakeDamage;
@@ -48,13 +71,20 @@ class Achievement
 
     public Achievement(JToken jsonConfig)
     {
-        this.name = jsonConfig[name].ToString();
-        this.description = jsonConfig[description].ToString();
-        this.target_stat = jsonConfig[target_stat].ToString();
-        this.reset_trigger = jsonConfig[reset_trigger] != null ? jsonConfig[reset_trigger].ToString() : "none";
-        this.track_type = TrackTypeFromString(jsonConfig[track_type].ToString());
+        this.name = jsonConfig["name"].ToString();
+        this.description = jsonConfig["description"].ToString();
+        this.target_stat = jsonConfig["target_stat"].ToString();
+        this.target_amounts = new List<float>();
+        foreach(float amt in jsonConfig["target_amounts"])
+        {
+            this.target_amounts.Add(amt);
+        }
+        this.reset_trigger = (jsonConfig["reset_trigger"] != null) ? jsonConfig["reset_trigger"].ToString() : "none";
+        this.track_type = TrackTypeFromString(jsonConfig["track_type"].ToString());
         this.current_total = "0";
+        this.current_tier = 0;
         this.achieved = false;
+        Debug.Log(this.name + "\n" + this.description);
         this.BuildTrackCall();
         this.BuildListeners();
     }
@@ -75,7 +105,7 @@ class Achievement
                     return;
             }
             float amt = RPNEvaluator.RPNEvaluator.Evaluatef(this.current_total, new Dictionary<string, float>());
-            if (amt >= this.trigger_amount)
+            if (amt >= this.target_amounts[this.current_tier])
             {
                 this.GiveAchievement();
             }
@@ -94,7 +124,7 @@ class Achievement
                 {
                     if (hittable.team != Hittable.Team.PLAYER)
                     {
-                        this.DoTrack(damage.amount);
+                        this.DoTrack(RPNEvaluator.RPNEvaluator.Evaluate(damage.amount, damage.damage_dict).ToString());
                     }
                 };
                 EventBus.Instance.OnDamage += OnDealDamage;
@@ -104,7 +134,7 @@ class Achievement
                 {
                     if (hittable.team == Hittable.Team.PLAYER)
                     {
-                        this.DoTrack(damage.amount);
+                        this.DoTrack(RPNEvaluator.RPNEvaluator.Evaluate(damage.amount, damage.damage_dict).ToString());
                     }
                 };
                 EventBus.Instance.OnDamage += OnTakeDamage;
@@ -112,14 +142,14 @@ class Achievement
             case "wave_start":
                 this.OnWaveStart = (wave) =>
                 {
-                    this.DoTrack(wave.ToString());
+                    this.DoTrack("1");
                 };
                 EventBus.Instance.OnWaveStart += OnWaveStart;
                 break;
             case "wave_end":
                 this.OnWaveEnd = (wave) =>
                 {
-                    this.DoTrack(wave.ToString());
+                    this.DoTrack("1");
                 };
                 EventBus.Instance.OnWaveEnd += OnWaveEnd;
                 break;
@@ -141,6 +171,24 @@ class Achievement
                 EventBus.Instance.OnDamage += OnTakeDamage;
                 break;
             case "die":
+                this.OnDeath = (hittable) =>
+                {
+                    if (hittable.team == Hittable.Team.PLAYER)
+                    {
+                        this.current_total = "0";
+                    }
+                };
+                EventBus.Instance.OnKill += OnDeath;
+                break;
+            case "run_end":
+                this.OnWaveEnd = (wave) =>
+                {
+                    if (GameManager.Instance.state == GameManager.GameState.GAMEOVER)
+                    {
+                        this.current_total = "0";
+                    }
+                };
+                EventBus.Instance.OnWaveEnd += OnWaveEnd;
                 this.OnDeath = (hittable) =>
                 {
                     if (hittable.team == Hittable.Team.PLAYER)
@@ -188,6 +236,10 @@ class Achievement
             case "die":
                 EventBus.Instance.OnKill -= OnDeath;
                 break;
+            case "run_end":
+                EventBus.Instance.OnWaveEnd -= OnWaveEnd;
+                EventBus.Instance.OnKill -= OnDeath;
+                break;
             default: // should happen if reset_trigger == "none"
                 return;
         }
@@ -197,9 +249,12 @@ class Achievement
     {
         if (this.achieved) return;
 
-        OnAchieved?.Invoke(this.name, this.description);
+        OnAchieved?.Invoke(this.name, this.current_tier + 1, this.description);
         this.achieved = true;
 
-        this.DestroyListeners();
+        Debug.Log("Achievement get: " + this.name + "\n" + this.description);
+        this.current_tier++;
+
+        if (this.current_tier >= this.target_amounts.Count) this.DestroyListeners();
     }
 }

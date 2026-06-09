@@ -1,0 +1,89 @@
+[
+    {
+        "name": "Fighter",
+        "description": "Deal $ damage to enemies.",
+        "target_stat": "deal_damage",
+        "target_amounts": [
+            100,
+            1000,
+            5000,
+            10000
+        ],
+        "track_type": "cumulative"
+    },
+    {
+        "name": "Heavy Hitter",
+        "description": "Deal $ damage to an enemy in a single hit.",
+        "target_stat": "deal_damage",
+        "target_amounts": [
+            30,
+            50,
+            70,
+            100
+        ],
+        "track_type": "single_event"
+    },
+    {
+        "name": "Cautious Explorer",
+        "description": "Deal $ damage to enemies without being hit.",
+        "target_stat": "deal_damage",
+        "target_amounts": [
+            100,
+            250,
+            500,
+            1000
+        ],
+        "reset_trigger": "take_damage",
+        "track_type": "cumulative"
+    },
+    {
+        "name": "Careless Explorer",
+        "description": "Take $ damage.",
+        "target_stat": "take_damage",
+        "target_amounts": [
+            100,
+            300,
+            750,
+            1500
+        ],
+        "track_type": "cumulative"
+    },
+    {
+        "name": "Risk Manager",
+        "description": "Take $ damage without dying.",
+        "target_stat": "take_damage",
+        "target_amounts": [
+            90,
+            125,
+            175,
+            300
+        ],
+        "reset_trigger": "die",
+        "track_type": "cumulative"
+    },
+    {
+        "name": "Dungeon Crawler",
+        "description": "Clear $ waves in total.",
+        "target_stat": "wave_end",
+        "target_amounts": [
+            1,
+            10,
+            20,
+            50
+        ],
+        "track_type": "cumulative"
+    },
+    {
+        "name": "Dungeon Conqueror",
+        "description": "Reach wave $.",
+        "target_stat": "wave_start",
+        "target_amounts": [
+            3,
+            5,
+            10,
+            15
+        ],
+        "reset_trigger": "run_end",
+        "track_type": "cumulative"
+    }
+]
