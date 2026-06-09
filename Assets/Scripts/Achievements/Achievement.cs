@@ -57,7 +57,6 @@ class Achievement
     string current_total;
     int current_tier;
 
-    bool achieved;
     bool hasListeners;
 
     Action<string> DoTrack = null;
@@ -83,7 +82,6 @@ class Achievement
         this.track_type = TrackTypeFromString(jsonConfig["track_type"].ToString());
         this.current_total = "0";
         this.current_tier = 0;
-        this.achieved = false;
         // Debug.Log(this.name + "\n" + this.description);
         this.BuildTrackCall();
         this.BuildListeners();
