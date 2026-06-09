@@ -18,11 +18,14 @@ public class TreeSpellAndRelicAdapter {
 
     public void ApplyReward(string name, SkillTreeNode node = null) {
         SpellBuilder spellBuilder = SpellBuilder.Instance;
+        RelicManager relicManager = RelicManager.Instance;
         PlayerController playerController = GameManager.Instance.player.GetComponent<PlayerController>();
+
         if (spellBuilder.BaseSpells.ContainsKey(name)) {
             Spell newSpell = spellBuilder.BuildSpell(playerController.spellcaster, name);
             playerController.AddNewSpell(newSpell);
         }
+
         else if (spellBuilder.SpellModifiers.ContainsKey(name) && node != null) {
             SkillTreeNode prevNode = node;
             string prevName = prevNode.GetName();
@@ -40,10 +43,18 @@ public class TreeSpellAndRelicAdapter {
                 }
             }
             if (baseSpell == null) Debug.LogError("To-be-modified spell couldn't be found amongst player's spells");
+
             ModifiedSpell newSpell = spellBuilder.ModifySpell(playerController.spellcaster, baseSpell, name);
+
             playerController.AddNewSpell(newSpell);
         }
-        else if (RelicManager.Instance.UnownedRelics.ContainsKey(name)) Debug.Log("Apply relic to player");
+
+        else if (relicManager.UnownedRelics.ContainsKey(name)) {
+            Relic newRelic = relicManager.GetRelic(name);
+            EventBus.Instance.TakeRelic(newRelic);
+            relicManager.UnownedRelics.Remove(newRelic.name);
+        }
+
         else Debug.LogError("Invalid upgrade name received");
     }
 }

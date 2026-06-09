@@ -160,8 +160,8 @@ public class RewardScreenManager : MonoBehaviour
     //    }
     //}
 
-    public void GiveRelicToPlayer(int index)
-    {
+    //public void GiveRelicToPlayer(int index)
+    //{
         //for (int i = 0; i < rewardRelicUIs.Count; i++) {
         //    rewardRelicUIs.ElementAt(i).transform.parent.GameObject().SetActive(false);
         //    RelicManager.Instance.AddRelicToUnowned(rewardRelics.ElementAt(i).name);
@@ -170,7 +170,7 @@ public class RewardScreenManager : MonoBehaviour
         //    }
         //}
         //rewardRelics.Clear();
-    }
+    //}
 
     void SetRewardScreenText(TextTypes in_text)
     {
