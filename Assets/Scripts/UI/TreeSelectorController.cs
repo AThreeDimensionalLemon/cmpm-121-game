@@ -11,6 +11,6 @@ class TreeSelectorController : MenuSelectorController {
     }
 
     public void ExecuteTask() {
-        TreeSpellAndRelicAdapter.Instance.ApplyReward(label.text);
+        TreeSpellAndRelicAdapter.Instance.ApplyReward(label.text, node);
     }
 }
