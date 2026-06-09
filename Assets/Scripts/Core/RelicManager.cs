@@ -37,6 +37,11 @@ public class RelicManager
 		return to_give;
 	}
 
+	public Dictionary<string, Relic> GetAllRelics()
+	{
+		return relics;
+	}
+
 	public void AddRelicToUnowned(string name)
 	{
 		if (!relics.ContainsKey(name))

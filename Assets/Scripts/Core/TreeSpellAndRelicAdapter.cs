@@ -29,7 +29,7 @@ public class TreeSpellAndRelicAdapter {
         else if (spellBuilder.SpellModifiers.ContainsKey(name) && node != null) {
             SkillTreeNode prevNode = node;
             string prevName = prevNode.GetName();
-            while (spellBuilder.BaseSpells.ContainsKey(prevName) || spellBuilder.SpellModifiers.ContainsKey(prevName)) {
+            while (spellBuilder.BaseSpells.ContainsKey(prevName) || spellBuilder.SpellModifiers.ContainsKey(prevName) || relicManager.GetAllRelics().ContainsKey(prevName)) {
                 prevNode = prevNode.GetPrevNodes()[0];
                 prevName = prevNode.GetName();
             }
