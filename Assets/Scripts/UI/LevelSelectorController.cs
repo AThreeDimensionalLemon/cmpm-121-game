@@ -5,12 +5,12 @@ using System.Text;
 public class LevelSelectorController : MenuSelectorController {
     public string level;
 
-    public override void Setup(string text) {
+    public void Setup(string text) {
         level = text;
         label.text = text;
     }
 
-    public override void ExecuteTask() {
+    public void ExecuteTask() {
         spawner.StartClassChoosing(level);
     }
 }
