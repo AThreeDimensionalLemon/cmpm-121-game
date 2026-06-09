@@ -710,7 +710,8 @@ MonoBehaviour:
   nextWaveButton: {fileID: 284566016}
   restartButton: {fileID: 1259289756}
   spellUI: {fileID: 1982188287}
-  skillTree: {fileID: 1662566404}
+  skillTreeUI: {fileID: 1662566404}
+  skillTreeNode: {fileID: 4418029532670088069, guid: 60a11b69e6cc8e04f9e22afdaae06b98, type: 3}
   text: 0
 --- !u!4 &220180078
 Transform:
@@ -3821,8 +3822,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -325, y: -200}
-  m_SizeDelta: {x: 650, y: 300}
+  m_AnchoredPosition: {x: -150.1, y: -291.4}
+  m_SizeDelta: {x: 275.62, y: 89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &800594544
 MonoBehaviour:
@@ -7084,11 +7085,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 14.3
+  m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 14
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1

@@ -16,8 +16,9 @@ public class RewardScreenManager : MonoBehaviour
     public GameObject nextWaveButton;
     public GameObject restartButton;
     public SpellUIContainer spellUI;
-    public GameObject skillTree;
+    public GameObject skillTreeUI;
     private SkillTree skillTreeData;
+    public GameObject skillTreeNode;    // prefab
 
     public enum TextTypes
     {
@@ -38,6 +39,8 @@ public class RewardScreenManager : MonoBehaviour
 
         // make skilltree object
         skillTreeData = new SkillTree();
+
+        CreateSkillTreeButtons();
     }
 
     // Update is called once per frame
@@ -51,7 +54,7 @@ public class RewardScreenManager : MonoBehaviour
                     SetRewardScreenText(TextTypes.POSTWAVE);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(true);
-                    skillTree.SetActive(true);
+                    skillTreeUI.SetActive(true);
                     restartButton.SetActive(false);
                 }
                 break;
@@ -61,7 +64,7 @@ public class RewardScreenManager : MonoBehaviour
                     SetRewardScreenText(TextTypes.WIN);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(false);
-                    skillTree.SetActive(false);
+                    skillTreeUI.SetActive(false);
                     restartButton.SetActive(true);
                 }
                 break;
@@ -71,7 +74,7 @@ public class RewardScreenManager : MonoBehaviour
                     SetRewardScreenText(TextTypes.LOSS);
                     rewardUI.SetActive(true);
                     nextWaveButton.SetActive(false);
-                    skillTree.SetActive(false);
+                    skillTreeUI.SetActive(false);
                     restartButton.SetActive(true);
                     GameManager.Instance.KillAllEnemies();
                 }
@@ -96,5 +99,12 @@ public class RewardScreenManager : MonoBehaviour
             tmp.text += stats.GetStatisticsReadout();
         }
         else statsReadout.SetActive(false);
+    }
+
+    void CreateSkillTreeButtons()
+    {
+        // attach to the moving "tree" background
+        GameObject scrollableBG = skillTreeUI.transform.GetChild(0).gameObject;
+        GameObject test = Instantiate(skillTreeNode, scrollableBG.transform);
     }
 }

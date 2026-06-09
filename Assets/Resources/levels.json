@@ -191,7 +191,7 @@
        "spawns": [
             {
                 "enemy": "zombie",
-                "count": "3",
+                "count": "1",
                 "hp": "1",
                 "delay": "0",
                 "damage": "5",
