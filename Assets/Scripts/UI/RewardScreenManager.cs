@@ -137,14 +137,14 @@ public class RewardScreenManager : MonoBehaviour
     //    spellDescription.GetComponent<TextMeshProUGUI>().text = rewardSpell.GetName() + "\n\n" + rewardSpell.GetDescription();
     //}
 
-    public void GiveSpellToPlayer()
-    {
+    //public void GiveSpellToPlayer()
+    //{
         //if (GameManager.Instance.player.GetComponent<PlayerController>().AddNewSpell(rewardSpell))
         //{
         //    takeSpellButton.SetActive(false);
         //    spellUI.DeactivateDropButtons();
         //}
-    }
+    //}
 
     //void GenerateRelicRewards()
     //{

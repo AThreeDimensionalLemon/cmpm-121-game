@@ -29,8 +29,13 @@ public class TreeSpellAndRelicAdapter {
     }
 
     public static void ApplyReward(string name) {
-        if (SpellBuilder.Instance.BaseSpells.ContainsKey(name)) Debug.Log("Apply spell to player");
-        else if (SpellBuilder.Instance.SpellModifiers.ContainsKey(name)) Debug.Log("Apply modifier to spell");
+        SpellBuilder spellBuilder = SpellBuilder.Instance;
+        PlayerController playerController = GameManager.Instance.player.GetComponent<PlayerController>();
+        if (spellBuilder.BaseSpells.ContainsKey(name)) {
+            Spell newSpell = spellBuilder.BuildSpell(playerController.spellcaster, name);
+            playerController.AddNewSpell(newSpell);
+        }
+        else if (spellBuilder.SpellModifiers.ContainsKey(name)) Debug.Log("Apply modifier to spell");
         else if (RelicManager.Instance.UnownedRelics.ContainsKey(name)) Debug.Log("Apply relic to player");
         else Debug.LogError("Invalid upgrade name received");
     }
