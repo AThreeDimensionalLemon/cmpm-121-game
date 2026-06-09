@@ -33,6 +33,9 @@ public class PlayerController : MonoBehaviour
         unit = GetComponent<Unit>();
         GameManager.Instance.player = gameObject;
         EventBus.Instance.OnRelicPickup += OnRelicPickup;
+
+        // temp
+        AchievementManager.Instance.Initialize();
     }
 
     public void StartLevel()
