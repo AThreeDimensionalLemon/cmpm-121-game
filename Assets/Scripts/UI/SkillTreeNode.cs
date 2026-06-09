@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 public class SkillTreeNode
 {
     private string name;
@@ -8,6 +9,7 @@ public class SkillTreeNode
     private bool isExclusiveInBranchLevel; // true if you can only take one thing in the branch level, false otherwise (false for base spells)
     private List<SkillTreeNode> nextNodes; 
     private List<SkillTreeNode> prevNodes; 
+    public GameObject treeButton;   // reference gets set when RewardScreenManager does CreateSkillTreeButtons()
     public SkillTreeNode(string name)
     {
         this.name = name;
@@ -18,8 +20,8 @@ public class SkillTreeNode
     //  - all nodes in the same branch level are no longer available
     //  - all nodes in the next branch level are now available
     public void Take()
-    {
-        // Debug.Log("TAKING " + name);
+    {     
+        Debug.Log("TAKING " + name);
         isTaken = true;
         if (prevNodes != null && isExclusiveInBranchLevel)
         {
@@ -39,6 +41,14 @@ public class SkillTreeNode
             }
         }
 
+    }
+
+    public void SetButtonActive()
+    {
+        if (treeButton != null)
+        {
+            treeButton.GetComponent<Button>().interactable = isAvailable;
+        }
     }
 
 
@@ -62,6 +72,7 @@ public class SkillTreeNode
     public void SetIsAvailable(bool available)
     {
         isAvailable = available;
+        SetButtonActive();
     }
 
     public bool GetIsExclusiveInBranchLevel()

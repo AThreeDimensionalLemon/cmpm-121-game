@@ -88,6 +88,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1949700200616903927, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: -2852474721839139255}
+    - target: {fileID: 1949700200616903927, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExecuteTask
+      objectReference: {fileID: 0}
+    - target: {fileID: 1949700200616903927, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TreeSelectorController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_text
+      value: test
+      objectReference: {fileID: 0}
     - target: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_Name
       value: SkillTreeNode
@@ -95,5 +111,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2852474721839139255}
   m_SourcePrefab: {fileID: 100100000, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+--- !u!1 &4418029532670088069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+  m_PrefabInstance: {fileID: 7138060708309878442}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2852474721839139255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418029532670088069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e079233c9d18c94b9592d0a81989ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TreeSelectorController
+  label: {fileID: 5804042241343306140}
+  spawner: {fileID: 0}
+--- !u!114 &5804042241343306140 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+  m_PrefabInstance: {fileID: 7138060708309878442}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -112,18 +112,23 @@ public class RewardScreenManager : MonoBehaviour
         int spacingBetweenBaseSpells = 250;
         int spacingBetweenLevels = 100;
         int spacingBetweenModOrRelic = 60;
+
+        GameObject baseNode = Instantiate(skillTreeNode, scrollableBG.transform);
+        baseNode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*1.5f, -spacingBetweenLevels, 0);   // does nothing, represents initial state
+
         // make the 4 base spell nodes off of the base node
         foreach(SkillTreeNode node in skillTreeData.baseNode.GetNextNodes())
         {
-            GameObject baseSpellNode = Instantiate(skillTreeNode, scrollableBG.transform);
+            // make and place the button
+            GameObject baseSpellUINode = Instantiate(skillTreeNode, scrollableBG.transform);
+            node.treeButton = baseSpellUINode;
+            baseSpellUINode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*i, 0, 0);
 
-            baseSpellNode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*i, 0, 0);
-            UnityEngine.Debug.Log("made new button at " + baseSpellNode.transform.localPosition);
-            
+            //TODO: draw line between new button and previous button
 
-            // TODO: do some thing to make them do something
-            // selector.GetComponent<LevelSelectorController>().spawner = this;
-            // selector.GetComponent<LevelSelectorController>().Setup(levelsJson[i]["name"].ToObject<string>());
+            // give the node a tree selector controller
+            baseSpellUINode.GetComponent<TreeSelectorController>().Setup(node.GetName(), node);
+            node.SetButtonActive();  // update buttons' active status
             
             int currentLevel = 1;
             List<SkillTreeNode> nextNodes = node.GetNextNodes();
@@ -136,9 +141,13 @@ public class RewardScreenManager : MonoBehaviour
                 foreach(SkillTreeNode nextNode in nextNodes)
                 {
                     GameObject modOrRelicNode = Instantiate(skillTreeNode, scrollableBG.transform);
+                    nextNode.treeButton = modOrRelicNode;
                     int x = spacingBetweenBaseSpells*i - currentLevelWidth / 2 + spacingBetweenModOrRelic*j;
                     modOrRelicNode.transform.localPosition += new UnityEngine.Vector3(x, spacingBetweenLevels*currentLevel, 0);
                     j++;
+
+                    modOrRelicNode.GetComponent<TreeSelectorController>().Setup(nextNode.GetName(), nextNode);
+                    nextNode.SetButtonActive();
                 }
                 nextNodes = nextNodes[0].GetNextNodes(); // same for all nodes in list
                 currentLevel++;

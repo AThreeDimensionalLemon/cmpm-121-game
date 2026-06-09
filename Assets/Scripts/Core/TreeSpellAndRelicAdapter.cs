@@ -16,7 +16,8 @@ public class TreeSpellAndRelicAdapter {
         }
     }
 
-    public void ApplyReward(string name, SkillTreeNode node = null) {
+//TODO: call applyreward when we take the first spell
+    public void ApplyReward(string name, SkillTreeNode node) {
         SpellBuilder spellBuilder = SpellBuilder.Instance;
         RelicManager relicManager = RelicManager.Instance;
         PlayerController playerController = GameManager.Instance.player.GetComponent<PlayerController>();
@@ -37,7 +38,8 @@ public class TreeSpellAndRelicAdapter {
             ICastable baseSpell = null;
             ICastable[] spells = playerController.spellcaster.spells;
             for (int i = 0; i < spells.Length; i++) {
-                if (prevName == spells[i].GetName()) {
+                // UnityEngine.Debug.Log("looking at spell " + i + " with name " + spells[i].GetName());
+                if (spells[i] != null && prevName == spells[i].GetName()) {
                     baseSpell = spells[i];
                     break;
                 }
