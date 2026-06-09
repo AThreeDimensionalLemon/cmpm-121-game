@@ -6,7 +6,7 @@ using System.Text;
 
 class AchievementManager
 {
-    private Dictionary<string, Achievement> achievements;
+    public Dictionary<string, Achievement> achievements { get; }
     private static AchievementManager theInstance;
     public void Initialize()
     {
@@ -31,4 +31,6 @@ class AchievementManager
             achievements.Add(achievement.name, achievement);
         }
     }
+
+
 }

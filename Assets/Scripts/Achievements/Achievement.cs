@@ -29,7 +29,7 @@ class Achievement
     {
         get
         {
-            return this.Name + " " + (this.current_tier + 1).ToString();
+            return "\"" + this.Name + "\" - Tier " + (this.current_tier + 1).ToString();
         }
         set
         {
@@ -84,7 +84,7 @@ class Achievement
         this.current_total = "0";
         this.current_tier = 0;
         this.achieved = false;
-        Debug.Log(this.name + "\n" + this.description);
+        // Debug.Log(this.name + "\n" + this.description);
         this.BuildTrackCall();
         this.BuildListeners();
     }
@@ -247,12 +247,9 @@ class Achievement
 
     void GiveAchievement()
     {
-        if (this.achieved) return;
-
         OnAchieved?.Invoke(this.name, this.current_tier + 1, this.description);
-        this.achieved = true;
 
-        Debug.Log("Achievement get: " + this.name + "\n" + this.description);
+        // Debug.Log("Achievement get: " + this.name + "\n" + this.description);
         this.current_tier++;
 
         if (this.current_tier >= this.target_amounts.Count) this.DestroyListeners();

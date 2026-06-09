@@ -4,10 +4,11 @@
         "description": "Deal $ damage to enemies.",
         "target_stat": "deal_damage",
         "target_amounts": [
+            10,
             100,
-            1000,
-            5000,
-            10000
+            200,
+            500,
+            1500
         ],
         "track_type": "cumulative"
     },
@@ -67,9 +68,9 @@
         "target_stat": "wave_end",
         "target_amounts": [
             1,
+            5,
             10,
-            20,
-            50
+            20
         ],
         "track_type": "cumulative"
     },
@@ -78,7 +79,7 @@
         "description": "Reach wave $.",
         "target_stat": "wave_start",
         "target_amounts": [
-            3,
+            2,
             5,
             10,
             15
