@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -105,6 +106,44 @@ public class RewardScreenManager : MonoBehaviour
     {
         // attach to the moving "tree" background
         GameObject scrollableBG = skillTreeUI.transform.GetChild(0).gameObject;
-        GameObject test = Instantiate(skillTreeNode, scrollableBG.transform);
+        // GameObject test = Instantiate(skillTreeNode, scrollableBG.transform);
+
+        int i = 0;
+        int spacingBetweenBaseSpells = 250;
+        int spacingBetweenLevels = 100;
+        int spacingBetweenModOrRelic = 60;
+        // make the 4 base spell nodes off of the base node
+        foreach(SkillTreeNode node in skillTreeData.baseNode.GetNextNodes())
+        {
+            GameObject baseSpellNode = Instantiate(skillTreeNode, scrollableBG.transform);
+
+            baseSpellNode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*i, 0, 0);
+            UnityEngine.Debug.Log("made new button at " + baseSpellNode.transform.localPosition);
+            
+
+            // TODO: do some thing to make them do something
+            // selector.GetComponent<LevelSelectorController>().spawner = this;
+            // selector.GetComponent<LevelSelectorController>().Setup(levelsJson[i]["name"].ToObject<string>());
+            
+            int currentLevel = 1;
+            List<SkillTreeNode> nextNodes = node.GetNextNodes();
+            // go over each branch level for this base spell's branch
+            while (nextNodes != null)
+            {
+                int currentLevelWidth = spacingBetweenModOrRelic * (nextNodes.Count-1);
+                int j = 0;
+                // go over each item in this branch level
+                foreach(SkillTreeNode nextNode in nextNodes)
+                {
+                    GameObject modOrRelicNode = Instantiate(skillTreeNode, scrollableBG.transform);
+                    int x = spacingBetweenBaseSpells*i - currentLevelWidth / 2 + spacingBetweenModOrRelic*j;
+                    modOrRelicNode.transform.localPosition += new UnityEngine.Vector3(x, spacingBetweenLevels*currentLevel, 0);
+                    j++;
+                }
+                nextNodes = nextNodes[0].GetNextNodes(); // same for all nodes in list
+                currentLevel++;
+            }
+            i++;
+        }
     }
 }

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 public class SkillTree
 {
-    private SkillTreeNode baseNode;
+    public SkillTreeNode baseNode;
     public SkillTree()
     {
         baseNode = new SkillTreeNode("base");

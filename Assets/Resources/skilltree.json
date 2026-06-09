@@ -16,5 +16,23 @@
         ["doubler", "splitter", "chaos", "homing"],
         ["Fleetfoot Boots"],
         ["exploder", "whirlwind"]
+    ],
+    "unfinished1": [
+        ["damage_amp", "speed_amp", "cheap"],
+        ["Golden Mask"],
+        ["cheap", "fast but light", "slowed"],
+        ["Cursed Scroll"],
+        ["doubler", "splitter", "chaos", "homing"],
+        ["Fleetfoot Boots"],
+        ["exploder", "whirlwind"]
+    ],
+    "unfinished2": [
+        ["damage_amp", "speed_amp", "cheap"],
+        ["Golden Mask"],
+        ["cheap", "fast but light", "slowed"],
+        ["Cursed Scroll"],
+        ["doubler", "splitter", "chaos", "homing"],
+        ["Fleetfoot Boots"],
+        ["exploder", "whirlwind"]
     ]
 }
