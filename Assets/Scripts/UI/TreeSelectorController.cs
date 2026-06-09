@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 class TreeSelectorController : MenuSelectorController {
-    public override void Setup(string text) {
+
+    public void Setup(string text) {
         label.text = text;
     }
 
-    public override void ExecuteTask() {
-
+    public void ExecuteTask() {
+        TreeSpellAndRelicAdapter.Instance.ApplyReward(label.text);
     }
 }

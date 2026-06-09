@@ -6,12 +6,12 @@ public class ClassSelectorController : MenuSelectorController {
     public string playerClass;
     public PlayerController playerController;
 
-    public override void Setup(string text) {
+    public void Setup(string text) {
         playerClass = text;
         label.text = text;
     }
 
-    public override void ExecuteTask() {
+    public void ExecuteTask() {
         GameManager.Instance.playerClassesManager.SetPlayerClass(playerClass);
         spawner.StartLevel();
     }
