@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 public class ClassSelectorController : MenuSelectorController {
     public string playerClass;
@@ -12,6 +13,7 @@ public class ClassSelectorController : MenuSelectorController {
     }
 
     public void ExecuteTask() {
+        gameObject.transform.parent.GetComponent<AudioSource>().Play();
         GameManager.Instance.playerClassesManager.SetPlayerClass(playerClass);
         spawner.StartLevel();
     }
