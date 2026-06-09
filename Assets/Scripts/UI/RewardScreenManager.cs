@@ -137,10 +137,10 @@ public class RewardScreenManager : MonoBehaviour
     //    spellDescription.GetComponent<TextMeshProUGUI>().text = rewardSpell.GetName() + "\n\n" + rewardSpell.GetDescription();
     //}
 
-    public void GiveSpellToPlayer(string spellName) {
-        ICastable rewardSpell = SpellBuilder.Instance.BuildSpell(GameManager.Instance.player.GetComponent<PlayerController>().spellcaster, spellName);
-        GameManager.Instance.player.GetComponent<PlayerController>().AddNewSpell(rewardSpell);
-        //if (GameManager.Instance.player.GetComponent<PlayerController>().AddNewSpell(rewardSpell)) {
+    public void GiveSpellToPlayer()
+    {
+        //if (GameManager.Instance.player.GetComponent<PlayerController>().AddNewSpell(rewardSpell))
+        //{
         //    takeSpellButton.SetActive(false);
         //    spellUI.DeactivateDropButtons();
         //}
