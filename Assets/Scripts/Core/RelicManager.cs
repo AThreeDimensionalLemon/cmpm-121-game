@@ -70,4 +70,14 @@ public class RelicManager
 			unownedRelics.Add(relic.name, relic);
 		}
     }
+
+	public void ResetRelics()
+	{
+		unownedRelics = new Dictionary<string, Relic>();
+		foreach((string key, Relic r) in relics)
+		{
+			unownedRelics.Add(key, r);
+		}
+		Debug.Log(unownedRelics);
+	}
 }

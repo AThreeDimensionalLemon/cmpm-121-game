@@ -20,6 +20,7 @@ public class RewardScreenManager : MonoBehaviour
     private SkillTree skillTreeData;
     public GameObject skillTreeNode;    // prefab
     public GameObject skillTreeLine;    // prefab
+    private bool buttonsMade;
 
     public enum TextTypes
     {
@@ -40,6 +41,7 @@ public class RewardScreenManager : MonoBehaviour
 
         // make skilltree object
         skillTreeData = new SkillTree();
+        buttonsMade = false;
 
         // CreateSkillTreeButtons();    // this gets called from PlayerController StartLevel now...
     }
@@ -104,6 +106,8 @@ public class RewardScreenManager : MonoBehaviour
 
     public void CreateSkillTreeButtons()
     {
+        if (buttonsMade) return;
+        buttonsMade = true;
         // attach to the moving "tree" background
         GameObject scrollableBG = skillTreeUI.transform.GetChild(0).gameObject;
         // GameObject test = Instantiate(skillTreeNode, scrollableBG.transform);

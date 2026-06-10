@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public SpellCaster spellcaster;
     public SpellUIContainer spellUI;
     [SerializeField] public GameObject rewardManager;
+    [SerializeField] public GameObject relicUIManager;
 
     public List<Relic> relics;
 
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
         EventBus.Instance.OnRelicPickup += OnRelicPickup;
 
         // rewardManager.GetComponent<RewardScreenManager>().GetInitialSkillTreeNodes();
+        // rewardManager.GetComponent<RewardScreenManager>().CreateSkillTreeButtons();
 
         // temp
         AchievementManager.Instance.Initialize();
@@ -43,21 +45,25 @@ public class PlayerController : MonoBehaviour
 
     public void StartLevel()
     {
+        Debug.Log("startlevel called");
         Dictionary<string, int> RPNDict = new Dictionary<string, int>();
         RPNDict.Add("wave", GameManager.Instance.GetWave());
         this.playerClass = GameManager.Instance.playerClassesManager.GetPlayerClass();
         spriteRenderer.sprite = GameManager.Instance.playerSpriteManager.Get(this.playerClass.sprite);
         Debug.Assert(playerClass != null, "Player does not have a class");
 
-        rewardManager.GetComponent<RewardScreenManager>().CreateSkillTreeButtons(); // not nice
 
+        rewardManager.GetComponent<RewardScreenManager>().CreateSkillTreeButtons(); // not nice
+        Debug.Log("making new spellcaster");
         spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana, RPNDict),
                                       RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana_regeneration, RPNDict),
                                       RPNEvaluator.RPNEvaluator.Evaluate(playerClass.spellpower, RPNDict),
                                       Hittable.Team.PLAYER);
+        Debug.Log("new spellcaster");
         spellUI.ResetSpellUI();
         AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "Arcane Bolt"));
         StartCoroutine(spellcaster.ManaRegeneration());
+        Debug.Log("spells should be reset now");
 
         hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.health, RPNDict),
                           Hittable.Team.PLAYER, gameObject);
@@ -65,6 +71,11 @@ public class PlayerController : MonoBehaviour
         hp.team = Hittable.Team.PLAYER;
 
         relics = new List<Relic>();
+        // need to reset relicui and relicmanager
+        RelicManager.Instance.ResetRelics();
+        relicUIManager.GetComponent<RelicUIManager>().ResetRelicUI();
+
+        Debug.Log("relics should be reset now");
 
         // Here's how you give a relic to the player. -Iain
         // EventBus.Instance.TakeRelic(RelicManager.Instance.GetRelic("Green Gem"));
