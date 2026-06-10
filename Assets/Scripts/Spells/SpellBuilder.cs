@@ -26,6 +26,7 @@ public class SpellBuilder
 
     public Spell BuildSpell(SpellCaster owner, string name)
     {
+        Debug.Log("BuildSpell called");
         return new Spell(owner, base_spells[name]);
     }
 

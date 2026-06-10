@@ -1,5 +1,5 @@
 {
-   "arcane_bolt":  {
+   "Arcane Bolt":  {
        "name": "Arcane Bolt",
        "description": "A straight-flying bolt.",
        "icon": 0,
@@ -8,7 +8,7 @@
        "cooldown": "2",
        "projectile": {"trajectory": "straight", "speed": "8 power 5 / +", "sprite": 0}
    },
-   "magic_missile":  {
+   "Magic Missile":  {
        "name": "Magic Missile",
        "description": "A homing bolt.",
        "icon": 2,
@@ -17,10 +17,10 @@
        "cooldown": "3",
        "projectile": {"trajectory": "homing", "speed": "10", "sprite": 0}
    },
-   "arcane_blast":  {
+   "Arcane Blast":  {
        "name": "Arcane Blast",
        "description": "A bolt that explodes into smaller bolts on impact.",
-       "icon": 2,
+       "icon": 1,
        "N": "8 power 5 / +",
        "num_splits": "1",
        "damage": {"amount": "20 power 3 / +", "type": "arcane"},
@@ -30,10 +30,10 @@
        "projectile": {"trajectory": "straight", "speed": "12", "sprite": 0, "is_splitting": true},
        "secondary_projectile": {"trajectory": "straight", "speed": "20", "lifetime": "0.1", "sprite": 0}
    },
-   "arcane_spray":  {
+   "Arcane Spray":  {
        "name": "Arcane Spray",
        "description": "A large number of short-range bolts in a cone.",
-       "icon": 1,
+       "icon": 3,
        "N": "7 power 25 / +",
        "spray": "0.3",
        "damage": {"amount": "3 power 5 / +", "type": "arcane"},
@@ -41,8 +41,8 @@
        "cooldown": "0.5",
        "projectile": {"trajectory": "straight", "speed": "8", "sprite": 0, "lifetime": "0.1 power 100 / +"}
    },
-   "damage_amp": {
-       "name": "damage-amplified",
+   "damage amplified": {
+       "name": "damage amplified",
        "description": "Increased damage and increased mana cost.",
        "modifiers" : {
             "damage": {
@@ -55,8 +55,8 @@
             }
        }
    },
-   "speed_amp": {
-       "name": "speed-amplified",
+   "speed amplified": {
+       "name": "speed amplified",
        "description": "Faster projectile speed",
        "modifiers": {
             "speed": {
@@ -65,7 +65,7 @@
             }
        }
    },
-   "doubler": {
+   "doubled": {
        "name": "doubled",
        "description": "Spell is cast a second time after a small delay; increased mana cost and cooldown.",
        "modifiers": {
@@ -83,7 +83,7 @@
             }
        }
    },
-   "splitter": {
+   "split": {
        "name": "split",
        "description": "Spell is cast twice in slightly different directions; increased mana cost.",
        "modifiers": {
@@ -97,7 +97,7 @@
             }
        }
    },
-   "chaos": {
+   "chaotic": {
        "name": "chaotic",
        "description": "Significantly increased damage, but projectile is spiraling.",
        "modifiers": {
@@ -153,7 +153,7 @@
             }
         }
    },
-   "exploder": {
+   "exploding": {
         "name": "exploding",
         "description": "Explodes into smaller bolts on impact, or on an additional recursive impact.",
         "modifiers": {

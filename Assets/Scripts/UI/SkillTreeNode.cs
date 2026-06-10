@@ -1,16 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 public class SkillTreeNode
 {
     private string name;
+    private int branchIndex;
     private bool isTaken;
     private bool isAvailable;
     private bool isExclusiveInBranchLevel; // true if you can only take one thing in the branch level, false otherwise (false for base spells)
     private List<SkillTreeNode> nextNodes; 
     private List<SkillTreeNode> prevNodes; 
-    public SkillTreeNode(string name)
+    public GameObject treeButton;   // reference gets set when RewardScreenManager does CreateSkillTreeButtons()
+    public List<GameObject> precedingLines = new List<GameObject>();    // ^
+    public SkillTreeNode(string name, int branchIndex)
     {
         this.name = name;
+        this.branchIndex = branchIndex;
         isTaken = false;
     }
 
@@ -18,9 +23,12 @@ public class SkillTreeNode
     //  - all nodes in the same branch level are no longer available
     //  - all nodes in the next branch level are now available
     public void Take()
-    {
-        // Debug.Log("TAKING " + name);
+    {     
+        Debug.Log("TAKING " + name);
+        // TreeSpellAndRelicAdapter.Instance.ApplyReward(name, this);
+        // Debug.Log("HFJDSHFJLKDSHLJGD");
         isTaken = true;
+        SetIsAvailable(false);
         if (prevNodes != null && isExclusiveInBranchLevel)
         {
             // iterate over all nodes in the same node branch as this one
@@ -39,6 +47,16 @@ public class SkillTreeNode
             }
         }
 
+        SetIsAvailable(false);
+        EventBus.Instance.InvokeRewardClaimed(this);
+    }
+
+    public void SetButtonActive()
+    {
+        if (treeButton != null)
+        {
+            treeButton.GetComponent<Button>().interactable = isAvailable;
+        }
     }
 
 
@@ -49,9 +67,18 @@ public class SkillTreeNode
         return name;
     }
 
+    public int GetBranchIndex()
+    {
+        return branchIndex;
+    }
+
     public bool GetIsTaken()
     {
         return isTaken;
+    }
+    public void SetIsTaken(bool taken)
+    {
+        isTaken = taken;
     }
 
     public bool GetIsAvailable()
@@ -62,6 +89,22 @@ public class SkillTreeNode
     public void SetIsAvailable(bool available)
     {
         isAvailable = available;
+        SetButtonActive();
+        foreach(GameObject l in precedingLines)
+        {
+            l.GetComponent<UILineRenderer>().color = available ? new Color(1f, 0.7f, 0f) : new Color(1f,0f,0f); // yellow if available, else red
+        }
+        // bad hack to figure out which one to set green, since lines only know one of their endpoints
+        if (prevNodes != null && isTaken)
+        {
+            for (int j = 0; j < prevNodes.Count; j++)
+            {
+                if (prevNodes[j].isTaken && j < precedingLines.Count)
+                {
+                    precedingLines[j].GetComponent<UILineRenderer>().color = new Color(0f, 1f, 0f); // taken = green
+                }
+            }
+        }
     }
 
     public bool GetIsExclusiveInBranchLevel()
