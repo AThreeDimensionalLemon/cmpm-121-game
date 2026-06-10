@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 class TreeSelectorController : MenuSelectorController {
     SkillTreeNode node;
@@ -12,5 +13,6 @@ class TreeSelectorController : MenuSelectorController {
 
     public void ExecuteTask() {
         TreeSpellAndRelicAdapter.Instance.ApplyReward(label.text, node);
+        gameObject.GetComponent<AudioSource>().Play();
     }
 }
