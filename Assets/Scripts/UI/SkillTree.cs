@@ -59,9 +59,7 @@ public class SkillTree
             }
         }
 
-        // take base node and take arcane bolt base spell for starters
-        baseNode.Take();
-        baseNode.GetNextNodes()[0].Take();
+        StartGameState();
     }
 
     public override string ToString()
@@ -88,5 +86,39 @@ public class SkillTree
         }
         str += "]\n";
         return str;
+    }
+
+    private void StartGameState()
+    {
+        // take base node and take arcane bolt base spell for starters
+        baseNode.Take();
+        baseNode.GetNextNodes()[0].Take();
+    }
+
+    public void Reset()
+    {
+        baseNode.SetIsTaken(false);
+        baseNode.SetIsAvailable(false);
+        // go over all nodes in tree after base node, set isTaken and isAvailable to false
+        // go over the base spell nodes
+        foreach(SkillTreeNode node in baseNode.GetNextNodes())
+        {
+            node.SetIsTaken(false);
+            node.SetIsAvailable(false);
+            List<SkillTreeNode> nextNodes = node.GetNextNodes();
+            // go over each branch level for this base spell's branch
+            while (nextNodes != null)
+            {
+                // go over each item in this branch level
+                foreach(SkillTreeNode nextNode in nextNodes)
+                {
+                    nextNode.SetIsTaken(false);
+                    nextNode.SetIsAvailable(false);
+                }
+                nextNodes = nextNodes[0].GetNextNodes(); // same for all nodes in list
+            }
+        }
+        // enter state for start of game
+        StartGameState();
     }
 }

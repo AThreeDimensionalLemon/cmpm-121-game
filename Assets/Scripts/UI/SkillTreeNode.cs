@@ -73,6 +73,10 @@ public class SkillTreeNode
     {
         return isTaken;
     }
+    public void SetIsTaken(bool taken)
+    {
+        isTaken = taken;
+    }
 
     public bool GetIsAvailable()
     {

@@ -74,6 +74,8 @@ public class PlayerController : MonoBehaviour
         // need to reset relicui and relicmanager
         RelicManager.Instance.ResetRelics();
         relicUIManager.GetComponent<RelicUIManager>().ResetRelicUI();
+        // reset skill tree
+        rewardManager.GetComponent<RewardScreenManager>().ResetSkillTree();
 
         Debug.Log("relics should be reset now");
 

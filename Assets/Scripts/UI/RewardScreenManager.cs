@@ -187,11 +187,8 @@ public class RewardScreenManager : MonoBehaviour
         }
     }
 
-    public void GetInitialSkillTreeNodes()
+    public void ResetSkillTree()
     {
-        // skillTreeData.baseNode.Take();
-        // Debug.Log("AAAA" + skillTreeData.baseNode.GetNextNodes()[0].GetName());
-        // skillTreeData.baseNode.GetNextNodes()[0].Take();
-        // Debug.Log("AAAAAAAAA");
+        skillTreeData.Reset();
     }
 }

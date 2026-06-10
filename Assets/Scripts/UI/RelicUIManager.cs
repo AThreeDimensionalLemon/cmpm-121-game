@@ -41,5 +41,7 @@ public class RelicUIManager : MonoBehaviour
         {
             Destroy(rui);
         }
+        relicUIList = new List<GameObject>();
+        currRelicIndex = 0;
     }
 }
