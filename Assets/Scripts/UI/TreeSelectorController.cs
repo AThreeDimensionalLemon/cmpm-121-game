@@ -13,6 +13,7 @@ class TreeSelectorController : MenuSelectorController {
 
     public void ExecuteTask() {
         TreeSpellAndRelicAdapter.Instance.ApplyReward(label.text, node);
+        node.Take();
         UnityEngine.Debug.Log("clicked");
     }
 }
