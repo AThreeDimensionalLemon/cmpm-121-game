@@ -41,7 +41,7 @@ public class TreeSpellAndRelicAdapter {
                 prevName = prevNode.GetName();
             }
 
-            ICastable baseSpell = null;
+            /*ICastable baseSpell = null;
             ICastable[] spells = playerController.spellcaster.spells;
             for (int i = 0; i < spells.Length; i++) {
                 UnityEngine.Debug.Log("looking at spell " + i + " with name " + spells[i].GetName());
@@ -52,11 +52,12 @@ public class TreeSpellAndRelicAdapter {
                     break;
                 }
             }
-            if (baseSpell == null) Debug.LogError("To-be-modified spell couldn't be found amongst player's spells");
+            if (baseSpell == null) Debug.LogError("To-be-modified spell couldn't be found amongst player's spells");*/
+            ICastable baseSpell = playerController.spellcaster.spells[node.GetBranchIndex()];
 
             ModifiedSpell newSpell = spellBuilder.ModifySpell(playerController.spellcaster, baseSpell, name);
 
-            playerController.AddNewSpell(newSpell);
+            playerController.SetSpellAtIndex(newSpell, node.GetBranchIndex());
         }
 
         else if (relicManager.UnownedRelics.ContainsKey(name)) {

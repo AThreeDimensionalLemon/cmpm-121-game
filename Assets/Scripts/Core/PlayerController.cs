@@ -97,6 +97,11 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
+    public void SetSpellAtIndex(ICastable spell, int index)
+    {
+        spellcaster.SetSpellAtIndex(spell, index);
+        spellUI.spellUIs[index].GetComponent<SpellUI>().SetSpell(spell);
+    }
     public void RemoveSpellAtIndex(int index)
     {
         spellcaster.DropSpell(index);

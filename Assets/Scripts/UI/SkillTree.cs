@@ -7,15 +7,17 @@ public class SkillTree
     public SkillTreeNode baseNode;
     public SkillTree()
     {
-        baseNode = new SkillTreeNode("base");
+        int branch_index_counter = -1;
+        baseNode = new SkillTreeNode("base", branch_index_counter);
 
         // parse json and make skill tree!
         JObject parsedSkillTreeJson = JObject.Parse(Resources.Load<TextAsset>("skilltree").text);
         Dictionary<string, JToken> branches = new Dictionary<string, JToken>();
 
-        foreach(KeyValuePair<string, JToken> obj in parsedSkillTreeJson)
+        foreach(KeyValuePair<string, JToken> branch in parsedSkillTreeJson)
         {
-            SkillTreeNode baseSpellNode = new SkillTreeNode(obj.Key);
+            branch_index_counter++;
+            SkillTreeNode baseSpellNode = new SkillTreeNode(branch.Key, branch_index_counter);
             baseNode.AddNext(baseSpellNode);
             baseSpellNode.AddPrev(baseNode);
             baseSpellNode.SetIsExclusiveInBranchLevel(false);
@@ -25,14 +27,14 @@ public class SkillTree
             previousBranchLevel.Add(baseSpellNode);
 
             // iterate over all branch levels and set up their nodes and dependencies
-            foreach(JToken branchLevel in obj.Value.Children())
+            foreach(JToken branchLevel in branch.Value.Children())
             {
                 // new list to hold all items in the current branch level
                 List<SkillTreeNode> thisBranchLevel = new List<SkillTreeNode>();
                 // iterate over everything in this branch level, make a new skill tree node for it, and add to list
                 foreach(JToken branchItem in branchLevel.Children())
                 {
-                    SkillTreeNode newNode = new SkillTreeNode(branchItem.ToString());
+                    SkillTreeNode newNode = new SkillTreeNode(branchItem.ToString(), branch_index_counter);
                     thisBranchLevel.Add(newNode);
                     // set the new node's previous nodes list
                     newNode.SetPrev(previousBranchLevel);

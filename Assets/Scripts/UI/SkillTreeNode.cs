@@ -4,15 +4,17 @@ using UnityEngine.UI;
 public class SkillTreeNode
 {
     private string name;
+    private int branchIndex;
     private bool isTaken;
     private bool isAvailable;
     private bool isExclusiveInBranchLevel; // true if you can only take one thing in the branch level, false otherwise (false for base spells)
     private List<SkillTreeNode> nextNodes; 
     private List<SkillTreeNode> prevNodes; 
     public GameObject treeButton;   // reference gets set when RewardScreenManager does CreateSkillTreeButtons()
-    public SkillTreeNode(string name)
+    public SkillTreeNode(string name, int branchIndex)
     {
         this.name = name;
+        this.branchIndex = branchIndex;
         isTaken = false;
     }
 
@@ -59,6 +61,11 @@ public class SkillTreeNode
     public string GetName()
     {
         return name;
+    }
+
+    public int GetBranchIndex()
+    {
+        return branchIndex;
     }
 
     public bool GetIsTaken()
