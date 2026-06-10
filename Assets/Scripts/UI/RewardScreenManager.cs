@@ -114,6 +114,7 @@ public class RewardScreenManager : MonoBehaviour
         int spacingBetweenModOrRelic = 64;
 
         GameObject baseNode = Instantiate(skillTreeNode, scrollableBG.transform);
+        skillTreeData.baseNode.treeButton = baseNode;
         var p = GameManager.Instance.player.GetComponent<PlayerController>();
         var playericon = GameManager.Instance.playerSpriteManager.Get(p.playerClass.sprite);
         baseNode.GetComponent<TreeSelectorController>().icon.GetComponent<Image>().sprite = playericon;
@@ -185,13 +186,13 @@ public class RewardScreenManager : MonoBehaviour
             }
             i++;
         }
+
+        GetInitialSkillTreeNodes();
     }
 
     public void GetInitialSkillTreeNodes()
     {
-        // skillTreeData.baseNode.Take();
-        // Debug.Log("AAAA" + skillTreeData.baseNode.GetNextNodes()[0].GetName());
-        // skillTreeData.baseNode.GetNextNodes()[0].Take();
-        // Debug.Log("AAAAAAAAA");
+        skillTreeData.baseNode.Take();
+        skillTreeData.baseNode.GetNextNodes()[0].Take();
     }
 }

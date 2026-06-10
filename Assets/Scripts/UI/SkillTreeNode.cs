@@ -33,7 +33,7 @@ public class SkillTreeNode
             // iterate over all nodes in the same node branch as this one
             foreach(SkillTreeNode n in prevNodes[0].GetNextNodes())
             {
-                Debug.Log(n.GetName() + " NOT available");
+                // Debug.Log(n.GetName() + " NOT available");
                 n.SetIsAvailable(false);
             }
         }
@@ -84,11 +84,9 @@ public class SkillTreeNode
     {
         isAvailable = available;
         SetButtonActive();
-        Debug.Log(name + " is available: " + available);
         foreach(GameObject l in precedingLines)
         {
-            Debug.Log("setting color for " + name);
-            l.GetComponent<UILineRenderer>().color = available ? new Color(1f, 1f, 0f) : new Color(1f,0f,0f); // yellow if available, else red
+            l.GetComponent<UILineRenderer>().color = available ? new Color(1f, 0.7f, 0f) : new Color(1f,0f,0f); // yellow if available, else red
         }
         // bad hack to figure out which one to set green, since lines only know one of their endpoints
         if (prevNodes != null && isTaken)

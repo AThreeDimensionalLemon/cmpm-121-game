@@ -60,8 +60,9 @@ public class SkillTree
         }
 
         // take base node and take arcane bolt base spell for starters
-        baseNode.Take();
-        baseNode.GetNextNodes()[0].Take();
+        // baseNode.Take();
+        // baseNode.GetNextNodes()[0].Take();
+        // THIS HAS BEEN MOVED TO REWARDSCREENMANAGER after it makes the buttons
     }
 
     public override string ToString()
