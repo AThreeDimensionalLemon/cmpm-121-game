@@ -234,7 +234,7 @@ public class ModifiedSpell : ICastable
                 }
                 foreach (Vector3 target in baseSpell.GetTargetList(impact, Vector3.right, 2 * (float)Math.PI, intN))
                 {
-                    GameManager.Instance.projectileManager.CreateProjectile(baseSpell.GetIcon(), splitProjectile.trajectory, impact, target - impact, speed, OnHit, lifetime, splits + 1, other);
+                    GameManager.Instance.projectileManager.CreateProjectile(splitProjectile.trajectory, impact, target - impact, speed, OnHit, lifetime, splits + 1, other);
                 }
             }
 

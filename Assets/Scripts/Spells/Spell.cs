@@ -35,8 +35,7 @@ public class Spell : ICastable
         this.owner = owner;
         this.name = jsonConfig["name"].ToString();
         this.description = jsonConfig["description"].ToString();
-        // this.icon = jsonConfig["icon"].ToObject<int>();
-        this.icon = 0;
+        this.icon = jsonConfig["icon"].ToObject<int>();
         this.N = (jsonConfig["N"] != null) ? jsonConfig["N"].ToString() : "0"; //if the key doesn't exist, use default of "0"
         this.num_splits = (jsonConfig["num_splits"] != null) ? jsonConfig["num_splits"].ToString() : "0";
         this.spray = (jsonConfig["spray"] != null) ? jsonConfig["spray"].ToString() : "0";
@@ -168,7 +167,7 @@ public class Spell : ICastable
         last_cast = Time.time;
         //spawn projectiles
         foreach (Vector3 listedTarget in target) {
-            GameManager.Instance.projectileManager.CreateProjectile(this.icon, trajectory, where, listedTarget - where, speed, HitEvent);
+            GameManager.Instance.projectileManager.CreateProjectile(trajectory, where, listedTarget - where, speed, HitEvent);
         }
 
         yield return new WaitForEndOfFrame();
@@ -201,7 +200,7 @@ public class Spell : ICastable
                 float lifetime = RPNEvaluator.RPNEvaluator.Evaluatef(secondary_projectile.lifetime, RPNDictFloat);
 
                 foreach (Vector3 target in GetTargetList(impact, Vector3.right, 2 * (float)Math.PI, intN)) {
-                    GameManager.Instance.projectileManager.CreateProjectile(this.icon, this.secondary_projectile.trajectory, impact, target - impact, speed, OnHit, lifetime, splits + 1, other);
+                    GameManager.Instance.projectileManager.CreateProjectile(this.secondary_projectile.trajectory, impact, target - impact, speed, OnHit, lifetime, splits + 1, other);
                 }
             }
             if (team == Hittable.Team.PLAYER) {
