@@ -28,7 +28,7 @@ public class TreeSpellAndRelicAdapter {
             Debug.Log(name + " is base spell");
             Spell newSpell = spellBuilder.BuildSpell(playerController.spellcaster, name);
             // Debug.Log("new spell: " + newSpell);
-            playerController.AddNewSpell(newSpell);
+            playerController.SetSpellAtIndex(newSpell, node.GetBranchIndex());
             // Debug.Log(newSpell);
         }
 
@@ -41,18 +41,18 @@ public class TreeSpellAndRelicAdapter {
                 prevName = prevNode.GetName();
             }
 
-            /*ICastable baseSpell = null;
-            ICastable[] spells = playerController.spellcaster.spells;
-            for (int i = 0; i < spells.Length; i++) {
-                UnityEngine.Debug.Log("looking at spell " + i + " with name " + spells[i].GetName());
-                Debug.Log(spells[i].GetName() + " vs " + prevName);
-                if (spells[i] != null && prevName == spells[i].GetName()) {
-                    Debug.Log("found!");
-                    baseSpell = spells[i];
-                    break;
-                }
-            }
-            if (baseSpell == null) Debug.LogError("To-be-modified spell couldn't be found amongst player's spells");*/
+            // ICastable baseSpell = null;
+            // ICastable[] spells = playerController.spellcaster.spells;
+            // for (int i = 0; i < spells.Length; i++) {
+            //     UnityEngine.Debug.Log("looking at spell " + i + " with name " + spells[i].GetName());
+            //     Debug.Log(spells[i].GetName() + " vs " + prevName);
+            //     if (spells[i] != null && prevName == spells[i].GetName()) {
+            //         Debug.Log("found!");
+            //         baseSpell = spells[i];
+            //         break;
+            //     }
+            // }
+            // if (baseSpell == null) Debug.LogError("To-be-modified spell couldn't be found amongst player's spells");
             ICastable baseSpell = playerController.spellcaster.spells[node.GetBranchIndex()];
 
             ModifiedSpell newSpell = spellBuilder.ModifySpell(playerController.spellcaster, baseSpell, name);

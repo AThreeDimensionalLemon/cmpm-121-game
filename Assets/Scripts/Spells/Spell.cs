@@ -35,7 +35,7 @@ public class Spell : ICastable
         this.owner = owner;
         this.name = jsonConfig["name"].ToString();
         this.description = jsonConfig["description"].ToString();
-        //this.icon = jsonConfig["icon"].ToObject<int>();
+        // this.icon = jsonConfig["icon"].ToObject<int>();
         this.icon = 0;
         this.N = (jsonConfig["N"] != null) ? jsonConfig["N"].ToString() : "0"; //if the key doesn't exist, use default of "0"
         this.num_splits = (jsonConfig["num_splits"] != null) ? jsonConfig["num_splits"].ToString() : "0";

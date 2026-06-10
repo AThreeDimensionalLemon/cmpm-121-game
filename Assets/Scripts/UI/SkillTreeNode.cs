@@ -28,6 +28,7 @@ public class SkillTreeNode
         // TreeSpellAndRelicAdapter.Instance.ApplyReward(name, this);
         // Debug.Log("HFJDSHFJLKDSHLJGD");
         isTaken = true;
+        SetIsAvailable(false);
         if (prevNodes != null && isExclusiveInBranchLevel)
         {
             // iterate over all nodes in the same node branch as this one
@@ -74,6 +75,10 @@ public class SkillTreeNode
     public bool GetIsTaken()
     {
         return isTaken;
+    }
+    public void SetIsTaken(bool taken)
+    {
+        isTaken = taken;
     }
 
     public bool GetIsAvailable()

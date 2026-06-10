@@ -7962,6 +7962,7 @@ MonoBehaviour:
   manaui: {fileID: 71109453}
   spellUI: {fileID: 1982188287}
   rewardManager: {fileID: 220180076}
+  relicUIManager: {fileID: 1202924358}
   unit: {fileID: 0}
 --- !u!4 &1718273953
 Transform:
