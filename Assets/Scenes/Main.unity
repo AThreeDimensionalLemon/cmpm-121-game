@@ -712,6 +712,7 @@ MonoBehaviour:
   spellUI: {fileID: 1982188287}
   skillTreeUI: {fileID: 1662566404}
   skillTreeNode: {fileID: 4418029532670088069, guid: 60a11b69e6cc8e04f9e22afdaae06b98, type: 3}
+  skillTreeLine: {fileID: 5089860273502138438, guid: bb3fe89a48c4c4241a4c1c6d1e3a85d8, type: 3}
   text: 0
 --- !u!4 &220180078
 Transform:

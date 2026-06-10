@@ -2,7 +2,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -20,6 +19,7 @@ public class RewardScreenManager : MonoBehaviour
     public GameObject skillTreeUI;
     private SkillTree skillTreeData;
     public GameObject skillTreeNode;    // prefab
+    public GameObject skillTreeLine;    // prefab
 
     public enum TextTypes
     {
@@ -125,6 +125,15 @@ public class RewardScreenManager : MonoBehaviour
             baseSpellUINode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*i, 0, 0);
 
             //TODO: draw line between new button and previous button
+            GameObject lineObj = Instantiate(skillTreeLine, scrollableBG.transform);
+            UILineRenderer line = lineObj.GetComponent<UILineRenderer>();
+            int unfathomableOffset = 50;
+            line.points[0] = new Vector2(baseNode.transform.localPosition.x + unfathomableOffset, baseNode.transform.localPosition.y + unfathomableOffset);
+            line.points[1] = new Vector2(baseSpellUINode.transform.localPosition.x + unfathomableOffset, baseSpellUINode.transform.localPosition.y + unfathomableOffset);
+            // LineRenderer lr = line.GetComponent<LineRenderer>();
+            // lr.SetPosition(0, baseNode.transform.localPosition);
+            // lr.SetPosition(1, baseSpellUINode.transform.localPosition);
+
 
             // give the node a tree selector controller
             baseSpellUINode.GetComponent<TreeSelectorController>().Setup(node.GetName(), node);
