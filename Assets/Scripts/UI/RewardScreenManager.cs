@@ -41,7 +41,7 @@ public class RewardScreenManager : MonoBehaviour
         // make skilltree object
         skillTreeData = new SkillTree();
 
-        CreateSkillTreeButtons();
+        // CreateSkillTreeButtons();    // this gets called from PlayerController StartLevel now...
     }
 
     // Update is called once per frame
@@ -102,7 +102,7 @@ public class RewardScreenManager : MonoBehaviour
         else statsReadout.SetActive(false);
     }
 
-    void CreateSkillTreeButtons()
+    public void CreateSkillTreeButtons()
     {
         // attach to the moving "tree" background
         GameObject scrollableBG = skillTreeUI.transform.GetChild(0).gameObject;
@@ -114,9 +114,9 @@ public class RewardScreenManager : MonoBehaviour
         int spacingBetweenModOrRelic = 64;
 
         GameObject baseNode = Instantiate(skillTreeNode, scrollableBG.transform);
-        // var playericon = GameManager.Instance.playerSpriteManager;
-        // var p = GameManager.Instance.player.GetComponent<PlayerController>();
-        // baseNode.GetComponent<TreeSelectorController>().icon.GetComponent<Image>().sprite = playericon;
+        var p = GameManager.Instance.player.GetComponent<PlayerController>();
+        var playericon = GameManager.Instance.playerSpriteManager.Get(p.playerClass.sprite);
+        baseNode.GetComponent<TreeSelectorController>().icon.GetComponent<Image>().sprite = playericon;
         
         // GameManager.Instance.playerSpriteManager.PlaceSprite(
         //     GameManager.Instance.player.GetComponent<PlayerController>().playerClass.sprite,

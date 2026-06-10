@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
         spriteRenderer.sprite = GameManager.Instance.playerSpriteManager.Get(this.playerClass.sprite);
         Debug.Assert(playerClass != null, "Player does not have a class");
 
+        rewardManager.GetComponent<RewardScreenManager>().CreateSkillTreeButtons(); // not nice
+
         spellcaster = new SpellCaster(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana, RPNDict),
                                       RPNEvaluator.RPNEvaluator.Evaluate(playerClass.mana_regeneration, RPNDict),
                                       RPNEvaluator.RPNEvaluator.Evaluate(playerClass.spellpower, RPNDict),
