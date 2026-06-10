@@ -195,7 +195,6 @@ public class RewardScreenManager : MonoBehaviour
             i++;
         }
 
-        GetInitialSkillTreeNodes();
     }
 
     public void ResetSkillTree()
@@ -221,7 +220,7 @@ public class RewardScreenManager : MonoBehaviour
             desc += " spell modifier:\n\n" + SpellBuilder.Instance.SpellModifiers[name]["description"].ToObject<string>();
         }
         else if (RelicManager.Instance.GetAllRelics().ContainsKey(name)) {
-            desc += " relic:\n\n" + RelicManager.Instance.GetAllRelics()[name].trigger.description + "\n" + RelicManager.Instance.GetAllRelics()[name].effect.description;
+            desc += " relic:\n\n" + RelicManager.Instance.GetAllRelics()[name].trigger.description + ",\n" + RelicManager.Instance.GetAllRelics()[name].effect.description;
         }
 
         rewardText.text = desc;
