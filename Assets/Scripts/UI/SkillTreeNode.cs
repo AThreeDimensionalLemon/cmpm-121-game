@@ -22,6 +22,8 @@ public class SkillTreeNode
     public void Take()
     {     
         Debug.Log("TAKING " + name);
+        // TreeSpellAndRelicAdapter.Instance.ApplyReward(name, this);
+        // Debug.Log("HFJDSHFJLKDSHLJGD");
         isTaken = true;
         if (prevNodes != null && isExclusiveInBranchLevel)
         {

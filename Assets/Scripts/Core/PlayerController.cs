@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 
     public SpellCaster spellcaster;
     public SpellUIContainer spellUI;
+    [SerializeField] public GameObject rewardManager;
 
     public List<Relic> relics;
 
@@ -33,6 +34,8 @@ public class PlayerController : MonoBehaviour
         unit = GetComponent<Unit>();
         GameManager.Instance.player = gameObject;
         EventBus.Instance.OnRelicPickup += OnRelicPickup;
+
+        // rewardManager.GetComponent<RewardScreenManager>().GetInitialSkillTreeNodes();
 
         // temp
         AchievementManager.Instance.Initialize();
@@ -51,7 +54,7 @@ public class PlayerController : MonoBehaviour
                                       RPNEvaluator.RPNEvaluator.Evaluate(playerClass.spellpower, RPNDict),
                                       Hittable.Team.PLAYER);
         spellUI.ResetSpellUI();
-        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "arcane_bolt"));
+        AddNewSpell(SpellBuilder.Instance.BuildSpell(spellcaster, "Arcane Bolt"));
         StartCoroutine(spellcaster.ManaRegeneration());
 
         hp = new Hittable(RPNEvaluator.RPNEvaluator.Evaluate(playerClass.health, RPNDict),

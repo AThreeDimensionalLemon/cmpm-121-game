@@ -1,21 +1,21 @@
 {
-    "arcane_bolt": [
-        ["damage_amp", "speed_amp", "cheap"],
+    "Arcane Bolt": [
+        ["damage amplified", "speed amplified", "cheap"],
         ["Green Gem"],
         ["fast but light", "slowed"],
         ["Jade Elephant"],
-        ["doubler", "splitter", "chaos", "homing"],
+        ["doubled", "split", "chaotic", "homing"],
         ["Glass Sphere"],
-        ["exploder", "whirlwind"]
+        ["exploding", "whirlwind"]
     ],
-    "magic_missile": [
-        ["damage_amp", "speed_amp", "cheap"],
-        ["Golden Mask"],
-        ["cheap", "fast but light", "slowed"],
-        ["Cursed Scroll"],
-        ["doubler", "splitter", "chaos", "homing"],
-        ["Fleetfoot Boots"],
-        ["exploder", "whirlwind"]
+   "Magic Missile": [
+        ["damage-amplified", "speed-amplified", "cheap"],
+        ["Green Gem"],
+        ["fast but light", "slowed"],
+        ["Jade Elephant"],
+        ["doubled", "split", "chaotic", "homing"],
+        ["Glass Sphere"],
+        ["exploding", "whirlwind"]
     ],
     "unfinished1": [
         ["damage_amp", "speed_amp", "cheap"],
