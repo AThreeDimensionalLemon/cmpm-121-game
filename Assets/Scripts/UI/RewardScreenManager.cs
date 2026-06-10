@@ -109,9 +109,9 @@ public class RewardScreenManager : MonoBehaviour
         // GameObject test = Instantiate(skillTreeNode, scrollableBG.transform);
 
         int i = 0;
-        int spacingBetweenBaseSpells = 250;
-        int spacingBetweenLevels = 100;
-        int spacingBetweenModOrRelic = 60;
+        int spacingBetweenBaseSpells = 275;
+        int spacingBetweenLevels = 120;
+        int spacingBetweenModOrRelic = 64;
 
         GameObject baseNode = Instantiate(skillTreeNode, scrollableBG.transform);
         baseNode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*1.5f, -spacingBetweenLevels, 0);   // does nothing, represents initial state
@@ -124,16 +124,13 @@ public class RewardScreenManager : MonoBehaviour
             node.treeButton = baseSpellUINode;
             baseSpellUINode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*i, 0, 0);
 
-            //TODO: draw line between new button and previous button
+            // draw line between new button and previous button
             GameObject lineObj = Instantiate(skillTreeLine, scrollableBG.transform);
+            lineObj.transform.SetAsFirstSibling();    // so lines are under nodes
             UILineRenderer line = lineObj.GetComponent<UILineRenderer>();
-            int unfathomableOffset = 50;
-            line.points[0] = new Vector2(baseNode.transform.localPosition.x + unfathomableOffset, baseNode.transform.localPosition.y + unfathomableOffset);
-            line.points[1] = new Vector2(baseSpellUINode.transform.localPosition.x + unfathomableOffset, baseSpellUINode.transform.localPosition.y + unfathomableOffset);
-            // LineRenderer lr = line.GetComponent<LineRenderer>();
-            // lr.SetPosition(0, baseNode.transform.localPosition);
-            // lr.SetPosition(1, baseSpellUINode.transform.localPosition);
-
+            int magicOffset = 50;
+            line.points[0] = new Vector2(baseNode.transform.localPosition.x + magicOffset, baseNode.transform.localPosition.y + magicOffset);
+            line.points[1] = new Vector2(baseSpellUINode.transform.localPosition.x + magicOffset, baseSpellUINode.transform.localPosition.y + magicOffset);
 
             // give the node a tree selector controller
             baseSpellUINode.GetComponent<TreeSelectorController>().Setup(node.GetName(), node);
@@ -141,11 +138,14 @@ public class RewardScreenManager : MonoBehaviour
             
             int currentLevel = 1;
             List<SkillTreeNode> nextNodes = node.GetNextNodes();
+            List<GameObject> prevNodeObjs = new List<GameObject>();
+            prevNodeObjs.Add(baseSpellUINode);
             // go over each branch level for this base spell's branch
             while (nextNodes != null)
             {
                 int currentLevelWidth = spacingBetweenModOrRelic * (nextNodes.Count-1);
                 int j = 0;
+                List<GameObject> currentNodeObjs = new List<GameObject>();  // ourghhhhhhhhh
                 // go over each item in this branch level
                 foreach(SkillTreeNode nextNode in nextNodes)
                 {
@@ -154,10 +154,21 @@ public class RewardScreenManager : MonoBehaviour
                     int x = spacingBetweenBaseSpells*i - currentLevelWidth / 2 + spacingBetweenModOrRelic*j;
                     modOrRelicNode.transform.localPosition += new UnityEngine.Vector3(x, spacingBetweenLevels*currentLevel, 0);
                     j++;
+                    currentNodeObjs.Add(modOrRelicNode);
 
+                    foreach (GameObject prevNode in prevNodeObjs)
+                    {
+                        lineObj = Instantiate(skillTreeLine, scrollableBG.transform);
+                        lineObj.transform.SetAsFirstSibling();
+                        line = lineObj.GetComponent<UILineRenderer>();
+                        line.points[0] = new Vector2(prevNode.transform.localPosition.x + magicOffset, prevNode.transform.localPosition.y + magicOffset);
+                        line.points[1] = new Vector2(modOrRelicNode.transform.localPosition.x + magicOffset, modOrRelicNode.transform.localPosition.y + magicOffset);
+                    }
+                    
                     modOrRelicNode.GetComponent<TreeSelectorController>().Setup(nextNode.GetName(), nextNode);
                     nextNode.SetButtonActive();
                 }
+                prevNodeObjs = new List<GameObject>(currentNodeObjs);
                 nextNodes = nextNodes[0].GetNextNodes(); // same for all nodes in list
                 currentLevel++;
             }

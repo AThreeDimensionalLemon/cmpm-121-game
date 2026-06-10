@@ -34,11 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1785753800591858090, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 50
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 1785753800591858090, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 1785753800591858090, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_LocalPosition.x
@@ -102,7 +102,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_text
-      value: test
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_fontSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711922461900209974, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6791571272867747119, guid: 47865e4d0d1669541a3aa2992225a687, type: 3}
       propertyPath: m_Name
