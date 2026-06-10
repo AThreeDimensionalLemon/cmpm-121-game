@@ -5,8 +5,7 @@
         ["fast but light", "slowed"],
         ["Jade Elephant"],
         ["doubler", "splitter", "chaos", "homing"],
-        ["Glass Sphere"],
-        ["exploder", "whirlwind"]
+        ["exploder"]
     ],
     "magic_missile": [
         ["damage_amp", "speed_amp", "cheap"],
@@ -14,25 +13,22 @@
         ["cheap", "fast but light", "slowed"],
         ["Cursed Scroll"],
         ["doubler", "splitter", "chaos", "homing"],
-        ["Fleetfoot Boots"],
-        ["exploder", "whirlwind"]
+        ["Fleetfoot Boots"]
     ],
-    "unfinished1": [
+    "arcane_spray": [
         ["damage_amp", "speed_amp", "cheap"],
-        ["Golden Mask"],
+        ["Blood Siphon"],
         ["cheap", "fast but light", "slowed"],
-        ["Cursed Scroll"],
+        ["Evolving Wand"],
         ["doubler", "splitter", "chaos", "homing"],
-        ["Fleetfoot Boots"],
-        ["exploder", "whirlwind"]
+        ["Tastee Wheat"]
     ],
-    "unfinished2": [
+    "arcane_blast": [
         ["damage_amp", "speed_amp", "cheap"],
-        ["Golden Mask"],
+        ["Royal Crown"],
         ["cheap", "fast but light", "slowed"],
-        ["Cursed Scroll"],
+        ["Glass Sphere"],
         ["doubler", "splitter", "chaos", "homing"],
-        ["Fleetfoot Boots"],
-        ["exploder", "whirlwind"]
+        ["whirlwind"]
     ]
 }

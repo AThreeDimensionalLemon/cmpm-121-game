@@ -20,7 +20,7 @@
    "arcane_blast":  {
        "name": "Arcane Blast",
        "description": "A bolt that explodes into smaller bolts on impact.",
-       "icon": 2,
+       "icon": 1,
        "N": "8 power 5 / +",
        "num_splits": "1",
        "damage": {"amount": "20 power 3 / +", "type": "arcane"},
@@ -33,7 +33,7 @@
    "arcane_spray":  {
        "name": "Arcane Spray",
        "description": "A large number of short-range bolts in a cone.",
-       "icon": 1,
+       "icon": 3,
        "N": "7 power 25 / +",
        "spray": "0.3",
        "damage": {"amount": "3 power 5 / +", "type": "arcane"},

@@ -114,6 +114,13 @@ public class RewardScreenManager : MonoBehaviour
         int spacingBetweenModOrRelic = 64;
 
         GameObject baseNode = Instantiate(skillTreeNode, scrollableBG.transform);
+        // var playericon = GameManager.Instance.playerSpriteManager;
+        // var p = GameManager.Instance.player.GetComponent<PlayerController>();
+        // baseNode.GetComponent<TreeSelectorController>().icon.GetComponent<Image>().sprite = playericon;
+        
+        // GameManager.Instance.playerSpriteManager.PlaceSprite(
+        //     GameManager.Instance.player.GetComponent<PlayerController>().playerClass.sprite,
+        //     baseNode.GetComponent<TreeSelectorController>().icon.GetComponent<Image>());    // this is getting out of hand
         baseNode.transform.localPosition += new UnityEngine.Vector3(spacingBetweenBaseSpells*1.5f, -spacingBetweenLevels, 0);   // does nothing, represents initial state
 
         // make the 4 base spell nodes off of the base node
