@@ -11,6 +11,7 @@ public class SkillTreeNode
     private List<SkillTreeNode> nextNodes; 
     private List<SkillTreeNode> prevNodes; 
     public GameObject treeButton;   // reference gets set when RewardScreenManager does CreateSkillTreeButtons()
+    public List<GameObject> precedingLines = new List<GameObject>();    // ^
     public SkillTreeNode(string name, int branchIndex)
     {
         this.name = name;
@@ -32,7 +33,7 @@ public class SkillTreeNode
             // iterate over all nodes in the same node branch as this one
             foreach(SkillTreeNode n in prevNodes[0].GetNextNodes())
             {
-                // Debug.Log(n.GetName() + " NOT available");
+                Debug.Log(n.GetName() + " NOT available");
                 n.SetIsAvailable(false);
             }
         }
@@ -45,6 +46,7 @@ public class SkillTreeNode
             }
         }
 
+        SetIsAvailable(false);
     }
 
     public void SetButtonActive()
@@ -82,6 +84,23 @@ public class SkillTreeNode
     {
         isAvailable = available;
         SetButtonActive();
+        Debug.Log(name + " is available: " + available);
+        foreach(GameObject l in precedingLines)
+        {
+            Debug.Log("setting color for " + name);
+            l.GetComponent<UILineRenderer>().color = available ? new Color(1f, 1f, 0f) : new Color(1f,0f,0f); // yellow if available, else red
+        }
+        // bad hack to figure out which one to set green, since lines only know one of their endpoints
+        if (prevNodes != null && isTaken)
+        {
+            for (int j = 0; j < prevNodes.Count; j++)
+            {
+                if (prevNodes[j].isTaken && j < precedingLines.Count)
+                {
+                    precedingLines[j].GetComponent<UILineRenderer>().color = new Color(0f, 1f, 0f); // taken = green
+                }
+            }
+        }
     }
 
     public bool GetIsExclusiveInBranchLevel()

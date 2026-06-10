@@ -134,6 +134,8 @@ public class RewardScreenManager : MonoBehaviour
             // draw line between new button and previous button
             GameObject lineObj = Instantiate(skillTreeLine, scrollableBG.transform);
             lineObj.transform.SetAsFirstSibling();    // so lines are under nodes
+            node.precedingLines.Add(lineObj);
+            node.SetIsAvailable(node.GetIsAvailable());  // kinda bad.. just to refresh the lines
             UILineRenderer line = lineObj.GetComponent<UILineRenderer>();
             int magicOffset = 50;
             line.points[0] = new Vector2(baseNode.transform.localPosition.x + magicOffset, baseNode.transform.localPosition.y + magicOffset);
@@ -170,6 +172,8 @@ public class RewardScreenManager : MonoBehaviour
                         line = lineObj.GetComponent<UILineRenderer>();
                         line.points[0] = new Vector2(prevNode.transform.localPosition.x + magicOffset, prevNode.transform.localPosition.y + magicOffset);
                         line.points[1] = new Vector2(modOrRelicNode.transform.localPosition.x + magicOffset, modOrRelicNode.transform.localPosition.y + magicOffset);
+                        nextNode.precedingLines.Add(lineObj);
+                        nextNode.SetIsAvailable(nextNode.GetIsAvailable());
                     }
                     
                     modOrRelicNode.GetComponent<TreeSelectorController>().Setup(nextNode.GetName(), nextNode);
