@@ -4,14 +4,14 @@
         ["Green Gem"],
         ["fast but light", "slowed"],
         ["Jade Elephant"],
-        ["doubler", "splitter", "chaos", "homing"],
-        ["exploder"]
+        ["doubled", "split", "chaotic", "homing"],
+        ["exploding"]
     ],
    "Magic Missile": [
         ["damage amplified", "speed amplified", "cheap"],
-        ["Green Gem"],
+        ["Cursed Scroll"],
         ["fast but light", "slowed"],
-        ["Jade Elephant"],
+        ["Golden Mask"],
         ["doubled", "split", "chaotic", "homing"],
         ["Glass Sphere"]
     ],
@@ -20,15 +20,15 @@
         ["Blood Siphon"],
         ["cheap", "fast but light", "slowed"],
         ["Evolving Wand"],
-        ["doubler", "splitter", "chaos", "homing"],
+        ["doubled", "split", "chaotic", "homing"],
         ["Tastee Wheat"]
     ],
     "Arcane Blast": [
         ["damage amplified", "speed amplified", "cheap"],
         ["Royal Crown"],
         ["cheap", "fast but light", "slowed"],
-        ["Glass Sphere"],
-        ["doubler", "splitter", "chaos", "homing"],
+        ["Fleetfoot Boots"],
+        ["doubled", "split", "chaotic", "homing"],
         ["whirlwind"]
     ]
 }
