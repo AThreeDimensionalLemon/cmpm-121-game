@@ -18,7 +18,7 @@
     "Arcane Spray": [
         ["damage amplified", "speed amplified", "cheap"],
         ["Blood Siphon"],
-        ["cheap", "fast but light", "slowed"],
+        ["fast but light", "slowed"],
         ["Evolving Wand"],
         ["doubled", "split", "chaotic", "homing"],
         ["Tastee Wheat"]
@@ -26,7 +26,7 @@
     "Arcane Blast": [
         ["damage amplified", "speed amplified", "cheap"],
         ["Royal Crown"],
-        ["cheap", "fast but light", "slowed"],
+        ["fast but light", "slowed"],
         ["Fleetfoot Boots"],
         ["doubled", "split", "chaotic", "homing"],
         ["whirlwind"]

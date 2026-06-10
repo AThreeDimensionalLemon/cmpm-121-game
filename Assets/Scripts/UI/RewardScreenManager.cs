@@ -20,6 +20,7 @@ public class RewardScreenManager : MonoBehaviour
     private SkillTree skillTreeData;
     public GameObject skillTreeNode;    // prefab
     public GameObject skillTreeLine;    // prefab
+    public GameObject rewardClaimedPopup;
 
     public enum TextTypes
     {
@@ -42,6 +43,8 @@ public class RewardScreenManager : MonoBehaviour
         skillTreeData = new SkillTree();
 
         // CreateSkillTreeButtons();    // this gets called from PlayerController StartLevel now...
+
+        EventBus.Instance.OnRewardClaimed += ShowClaimedScreen;
     }
 
     // Update is called once per frame
@@ -57,6 +60,7 @@ public class RewardScreenManager : MonoBehaviour
                     nextWaveButton.SetActive(true);
                     skillTreeUI.SetActive(true);
                     restartButton.SetActive(false);
+                    rewardClaimedPopup.SetActive(false);
                 }
                 break;
             case GameManager.GameState.GAMEOVER:
@@ -194,5 +198,27 @@ public class RewardScreenManager : MonoBehaviour
     {
         skillTreeData.baseNode.Take();
         skillTreeData.baseNode.GetNextNodes()[0].Take();
+    }
+
+    // triggered from rewardclaimed event
+    public void ShowClaimedScreen(SkillTreeNode node)
+    {
+        rewardClaimedPopup.SetActive(true);
+        var rewardText = rewardClaimedPopup.transform.GetChild(0).GetComponent<Text>();
+
+        //TODO: maybe the treespellandrelic adapter should have a general purpose translation method so i don't have to do this here
+        string name = node.GetName();
+        string desc = "\"" + name + "\" ";
+        if (SpellBuilder.Instance.BaseSpells.ContainsKey(name)) {
+            desc += " base spell:\n\n" + SpellBuilder.Instance.BaseSpells[name]["description"].ToObject<string>();
+        }
+        else if (SpellBuilder.Instance.SpellModifiers.ContainsKey(name) && node != null) {
+            desc += " spell modifier:\n\n" + SpellBuilder.Instance.SpellModifiers[name]["description"].ToObject<string>();
+        }
+        else if (RelicManager.Instance.GetAllRelics().ContainsKey(name)) {
+            desc += " relic:\n\n" + RelicManager.Instance.GetAllRelics()[name].trigger.description + "\n" + RelicManager.Instance.GetAllRelics()[name].effect.description;
+        }
+
+        rewardText.text = desc;
     }
 }

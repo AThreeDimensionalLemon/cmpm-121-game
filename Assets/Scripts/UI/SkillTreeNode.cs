@@ -47,6 +47,7 @@ public class SkillTreeNode
         }
 
         SetIsAvailable(false);
+        EventBus.Instance.InvokeRewardClaimed(this);
     }
 
     public void SetButtonActive()
