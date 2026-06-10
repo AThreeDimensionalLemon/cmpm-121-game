@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 public class LevelSelectorController : MenuSelectorController {
     public string level;
@@ -11,6 +12,8 @@ public class LevelSelectorController : MenuSelectorController {
     }
 
     public void ExecuteTask() {
+        AudioSource audioSource = gameObject.transform.parent.GetComponent<AudioSource>();
+        audioSource.Play();
         spawner.StartClassChoosing(level);
     }
 }

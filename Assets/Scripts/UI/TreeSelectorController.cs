@@ -39,5 +39,6 @@ class TreeSelectorController : MenuSelectorController {
         TreeSpellAndRelicAdapter.Instance.ApplyReward(label.text, node);
         node.Take();
         UnityEngine.Debug.Log("clicked");
+        gameObject.GetComponent<AudioSource>().Play();
     }
 }
