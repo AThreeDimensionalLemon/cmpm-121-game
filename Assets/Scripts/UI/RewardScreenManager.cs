@@ -21,6 +21,7 @@ public class RewardScreenManager : MonoBehaviour
     public GameObject skillTreeNode;    // prefab
     public GameObject skillTreeLine;    // prefab
     private bool buttonsMade;
+    public GameObject rewardClaimedPopup;
 
     public enum TextTypes
     {
@@ -44,6 +45,8 @@ public class RewardScreenManager : MonoBehaviour
         buttonsMade = false;
 
         // CreateSkillTreeButtons();    // this gets called from PlayerController StartLevel now...
+
+        EventBus.Instance.OnRewardClaimed += ShowClaimedScreen;
     }
 
     // Update is called once per frame
@@ -59,6 +62,7 @@ public class RewardScreenManager : MonoBehaviour
                     nextWaveButton.SetActive(true);
                     skillTreeUI.SetActive(true);
                     restartButton.SetActive(false);
+                    rewardClaimedPopup.SetActive(false);
                 }
                 break;
             case GameManager.GameState.GAMEOVER:
@@ -118,6 +122,7 @@ public class RewardScreenManager : MonoBehaviour
         int spacingBetweenModOrRelic = 64;
 
         GameObject baseNode = Instantiate(skillTreeNode, scrollableBG.transform);
+        skillTreeData.baseNode.treeButton = baseNode;
         var p = GameManager.Instance.player.GetComponent<PlayerController>();
         var playericon = GameManager.Instance.playerSpriteManager.Get(p.playerClass.sprite);
         baseNode.GetComponent<TreeSelectorController>().icon.GetComponent<Image>().sprite = playericon;
@@ -138,6 +143,8 @@ public class RewardScreenManager : MonoBehaviour
             // draw line between new button and previous button
             GameObject lineObj = Instantiate(skillTreeLine, scrollableBG.transform);
             lineObj.transform.SetAsFirstSibling();    // so lines are under nodes
+            node.precedingLines.Add(lineObj);
+            node.SetIsAvailable(node.GetIsAvailable());  // kinda bad.. just to refresh the lines
             UILineRenderer line = lineObj.GetComponent<UILineRenderer>();
             int magicOffset = 50;
             line.points[0] = new Vector2(baseNode.transform.localPosition.x + magicOffset, baseNode.transform.localPosition.y + magicOffset);
@@ -174,6 +181,8 @@ public class RewardScreenManager : MonoBehaviour
                         line = lineObj.GetComponent<UILineRenderer>();
                         line.points[0] = new Vector2(prevNode.transform.localPosition.x + magicOffset, prevNode.transform.localPosition.y + magicOffset);
                         line.points[1] = new Vector2(modOrRelicNode.transform.localPosition.x + magicOffset, modOrRelicNode.transform.localPosition.y + magicOffset);
+                        nextNode.precedingLines.Add(lineObj);
+                        nextNode.SetIsAvailable(nextNode.GetIsAvailable());
                     }
                     
                     modOrRelicNode.GetComponent<TreeSelectorController>().Setup(nextNode.GetName(), nextNode);
@@ -185,10 +194,36 @@ public class RewardScreenManager : MonoBehaviour
             }
             i++;
         }
+
+        GetInitialSkillTreeNodes();
     }
 
     public void ResetSkillTree()
     {
         skillTreeData.Reset();
+        skillTreeData.baseNode.Take();
+        skillTreeData.baseNode.GetNextNodes()[0].Take();
+    }
+
+    // triggered from rewardclaimed event
+    public void ShowClaimedScreen(SkillTreeNode node)
+    {
+        rewardClaimedPopup.SetActive(true);
+        var rewardText = rewardClaimedPopup.transform.GetChild(0).GetComponent<Text>();
+
+        //TODO: maybe the treespellandrelic adapter should have a general purpose translation method so i don't have to do this here
+        string name = node.GetName();
+        string desc = "\"" + name + "\" ";
+        if (SpellBuilder.Instance.BaseSpells.ContainsKey(name)) {
+            desc += " base spell:\n\n" + SpellBuilder.Instance.BaseSpells[name]["description"].ToObject<string>();
+        }
+        else if (SpellBuilder.Instance.SpellModifiers.ContainsKey(name) && node != null) {
+            desc += " spell modifier:\n\n" + SpellBuilder.Instance.SpellModifiers[name]["description"].ToObject<string>();
+        }
+        else if (RelicManager.Instance.GetAllRelics().ContainsKey(name)) {
+            desc += " relic:\n\n" + RelicManager.Instance.GetAllRelics()[name].trigger.description + "\n" + RelicManager.Instance.GetAllRelics()[name].effect.description;
+        }
+
+        rewardText.text = desc;
     }
 }

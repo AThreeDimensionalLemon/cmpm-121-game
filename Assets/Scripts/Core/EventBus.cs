@@ -26,6 +26,7 @@ public class EventBus
     public event Func<float, string> OnGetLastCast;
     public event Action<int> OnWaveEnd;
     public event Action<int> OnWaveStart;
+    public event Action<SkillTreeNode> OnRewardClaimed;
     
     public void DoDamage(Vector3 where, Damage dmg, Hittable target)
     {
@@ -115,5 +116,10 @@ public class EventBus
             to_ret = RPNEvaluator.RPNEvaluator.Evaluatef(to_ret + " " + mod, new Dictionary<string, int>()).ToString();
         }
         return RPNEvaluator.RPNEvaluator.Evaluatef(to_ret, new Dictionary<string, int>());
+    }
+
+    public void InvokeRewardClaimed(SkillTreeNode n)
+    {
+        OnRewardClaimed?.Invoke(n);
     }
 }
