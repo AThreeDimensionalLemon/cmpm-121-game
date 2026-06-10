@@ -27,6 +27,7 @@ public class SkillTreeNode
         // TreeSpellAndRelicAdapter.Instance.ApplyReward(name, this);
         // Debug.Log("HFJDSHFJLKDSHLJGD");
         isTaken = true;
+        SetIsAvailable(false);
         if (prevNodes != null && isExclusiveInBranchLevel)
         {
             // iterate over all nodes in the same node branch as this one
