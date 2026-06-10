@@ -75,6 +75,12 @@ public class SpellCaster
         return i;
     }
 
+    public void SetSpellAtIndex(ICastable spell, int index)
+    {
+        spells[index] = spell;
+        current_spell_index = index;
+    }
+
     public void DropSpell(int index)
     {
         spells[index] = null;

@@ -1,30 +1,30 @@
 {
-    "arcane_bolt": [
-        ["damage_amp", "speed_amp", "cheap"],
+    "Arcane Bolt": [
+        ["damage amplified", "speed amplified", "cheap"],
         ["Green Gem"],
         ["fast but light", "slowed"],
         ["Jade Elephant"],
         ["doubler", "splitter", "chaos", "homing"],
         ["exploder"]
     ],
-    "magic_missile": [
-        ["damage_amp", "speed_amp", "cheap"],
-        ["Golden Mask"],
-        ["cheap", "fast but light", "slowed"],
-        ["Cursed Scroll"],
-        ["doubler", "splitter", "chaos", "homing"],
-        ["Fleetfoot Boots"]
+   "Magic Missile": [
+        ["damage amplified", "speed amplified", "cheap"],
+        ["Green Gem"],
+        ["fast but light", "slowed"],
+        ["Jade Elephant"],
+        ["doubled", "split", "chaotic", "homing"],
+        ["Glass Sphere"]
     ],
-    "arcane_spray": [
-        ["damage_amp", "speed_amp", "cheap"],
+    "Arcane Spray": [
+        ["damage amplified", "speed amplified", "cheap"],
         ["Blood Siphon"],
         ["cheap", "fast but light", "slowed"],
         ["Evolving Wand"],
         ["doubler", "splitter", "chaos", "homing"],
         ["Tastee Wheat"]
     ],
-    "arcane_blast": [
-        ["damage_amp", "speed_amp", "cheap"],
+    "Arcane Blast": [
+        ["damage amplified", "speed amplified", "cheap"],
         ["Royal Crown"],
         ["cheap", "fast but light", "slowed"],
         ["Glass Sphere"],
