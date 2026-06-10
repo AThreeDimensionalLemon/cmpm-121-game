@@ -77,6 +77,11 @@ public class SpellCaster
 
     public void SetSpellAtIndex(ICastable spell, int index)
     {
+        if (index < 0 || index >= this.spells.Length)
+        {
+            Debug.Log("SpellCaster.SetSpellAtIndex: Can't set spell; index " + index + " is invalid!");
+            return;
+        }
         spells[index] = spell;
         current_spell_index = index;
     }
