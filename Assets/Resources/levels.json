@@ -1,7 +1,7 @@
 [
    {
        "name": "Easy",
-       "waves": 1,
+       "waves": 2,
        "spawns": [
             {
                 "enemy": "zombie",

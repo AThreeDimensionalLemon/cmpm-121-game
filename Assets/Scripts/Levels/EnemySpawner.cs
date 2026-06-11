@@ -101,6 +101,8 @@ public class EnemySpawner : MonoBehaviour {
     public void ToMainMenu()
     {
         RestartGame();
+        EventBus.Instance.ResetObservers();
+        AchievementManager.Instance.ResetAchievementListeners();
         SceneManager.LoadScene("Title");
     }
 

@@ -21,6 +21,14 @@ class AchievementManager
         }
     }
 
+    public void ResetAchievementListeners()
+    {
+        foreach(Achievement ach in achievements.Values)
+        {
+            ach.ResetListeners();
+        }
+    }
+
     public static AchievementManager Instance
     {
         get

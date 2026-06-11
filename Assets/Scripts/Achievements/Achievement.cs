@@ -29,6 +29,10 @@ class Achievement
     {
         get
         {
+            if (this.current_tier >= this.target_amounts.Count)
+            {
+                return "\"" + this.Name + "\" - Tier " + this.target_amounts.Count;
+            }
             return "\"" + this.Name + "\" - Tier " + (this.current_tier + 1).ToString();
         }
         set
@@ -41,6 +45,10 @@ class Achievement
         get
         {
             string[] parsed_desc = this.Description.Split("$");
+            if (this.current_tier >= this.target_amounts.Count)
+            {
+                return parsed_desc[0] + this.target_amounts[this.target_amounts.Count - 1].ToString() + parsed_desc[1];
+            }
             return parsed_desc[0] + this.target_amounts[this.current_tier].ToString() + parsed_desc[1];
         }
         set
@@ -246,6 +254,12 @@ class Achievement
             default: // should happen if reset_trigger == "none"
                 return;
         }
+    }
+
+    public void ResetListeners()
+    {
+        if (this.hasListeners) this.DestroyListeners();
+        if (this.current_tier < this.target_amounts.Count) this.BuildListeners();
     }
 
     void GiveAchievement()
