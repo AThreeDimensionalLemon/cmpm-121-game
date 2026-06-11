@@ -38,9 +38,6 @@ public class PlayerController : MonoBehaviour
 
         // rewardManager.GetComponent<RewardScreenManager>().GetInitialSkillTreeNodes();
         // rewardManager.GetComponent<RewardScreenManager>().CreateSkillTreeButtons();
-
-        // temp
-        AchievementManager.Instance.Initialize();
     }
 
     public void StartLevel()

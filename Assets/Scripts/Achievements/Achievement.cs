@@ -53,11 +53,16 @@ class Achievement
     string reset_trigger;
     TrackType track_type;
 
-    List<float> target_amounts;
-    string current_total;
-    int current_tier;
+    public List<float> target_amounts { get; private set; }
+    public int GetNumTiers()
+    {
+        return target_amounts.Count;
+    }
 
-    bool hasListeners;
+    public string current_total { get; private set; }
+    public int current_tier { get; private set; }
+
+    public bool hasListeners { get; private set; }
 
     Action<string> DoTrack = null;
     public event Action<string, int, string> OnAchieved = null;
@@ -251,5 +256,12 @@ class Achievement
         this.current_tier++;
 
         if (this.current_tier >= this.target_amounts.Count) this.DestroyListeners();
+    }
+
+    public void ResetProgress()
+    {
+        this.current_tier = 0;
+        this.current_total = "0";
+        if (!this.hasListeners) this.BuildListeners();
     }
 }

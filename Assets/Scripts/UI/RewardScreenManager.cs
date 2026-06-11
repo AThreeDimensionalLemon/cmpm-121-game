@@ -15,6 +15,7 @@ public class RewardScreenManager : MonoBehaviour
     public GameObject statsReadout;
     public GameObject nextWaveButton;
     public GameObject restartButton;
+    public GameObject mainMenuButton;
     public SpellUIContainer spellUI;
     public GameObject skillTreeUI;
     private SkillTree skillTreeData;
@@ -62,6 +63,7 @@ public class RewardScreenManager : MonoBehaviour
                     nextWaveButton.SetActive(true);
                     skillTreeUI.SetActive(true);
                     restartButton.SetActive(false);
+                    mainMenuButton.SetActive(false);
                     rewardClaimedPopup.SetActive(false);
                 }
                 break;
@@ -73,6 +75,8 @@ public class RewardScreenManager : MonoBehaviour
                     nextWaveButton.SetActive(false);
                     skillTreeUI.SetActive(false);
                     restartButton.SetActive(true);
+                    mainMenuButton.SetActive(true);
+                    rewardClaimedPopup.SetActive(false);
                 }
                 break;
             case GameManager.GameState.GAMELOST:
@@ -83,6 +87,8 @@ public class RewardScreenManager : MonoBehaviour
                     nextWaveButton.SetActive(false);
                     skillTreeUI.SetActive(false);
                     restartButton.SetActive(true);
+                    mainMenuButton.SetActive(true);
+                    rewardClaimedPopup.SetActive(false);
                     GameManager.Instance.KillAllEnemies();
                 }
                 break;
