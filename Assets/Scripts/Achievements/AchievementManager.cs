@@ -8,10 +8,6 @@ class AchievementManager
 {
     public Dictionary<string, Achievement> achievements { get; }
     private static AchievementManager theInstance;
-    public void Initialize()
-    {
-        if (theInstance == null) theInstance = new AchievementManager();
-    }
 
     public void ResetAchievements()
     {

@@ -21,20 +21,11 @@ public class TitleScreenManager : MonoBehaviour
     public GameObject AchievementsDisplayContentArea;
     public GameObject AchievementDisplayBox;
     public GameObject TitleText;
-    EventSystem eventSystem;
-    AudioListener audioListener;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
-        audioListener = GameObject.Find("Main Camera").GetComponent<AudioListener>();
         this.ViewMainMenu();
         this.BuildAchievementsReadout();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 
     public void StartGame()
@@ -42,7 +33,7 @@ public class TitleScreenManager : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-public void ViewMainMenu()
+    public void ViewMainMenu()
     {
         TitleText.SetActive(true);
         PlayButton.SetActive(true);
