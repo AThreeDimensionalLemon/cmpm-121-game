@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEditor.ShaderGraph.Internal;
 using RPNEvaluator;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 //at this point, EnemySpawner has lost its single purpose, so I'm gonna start keeping track of all its purposes here, because I sure as hell don't give a damn about fixing it this late in the quarter
 // - spawning level and class selector buttons
@@ -95,6 +96,14 @@ public class EnemySpawner : MonoBehaviour {
         GameManager.Instance.ResetWaves();
         GameManager.Instance.playerStatisticsManager.ResetStatistics();
         level_selector.GameObject().SetActive(true);
+    }
+
+    public void ToMainMenu()
+    {
+        RestartGame();
+        EventBus.Instance.ResetObservers();
+        AchievementManager.Instance.ResetAchievementListeners();
+        SceneManager.LoadScene("Title");
     }
 
     public void StartClassChoosing(string inLevelName) {

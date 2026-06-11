@@ -29,6 +29,10 @@ class Achievement
     {
         get
         {
+            if (this.current_tier >= this.target_amounts.Count)
+            {
+                return "\"" + this.Name + "\" - Tier " + this.target_amounts.Count;
+            }
             return "\"" + this.Name + "\" - Tier " + (this.current_tier + 1).ToString();
         }
         set
@@ -41,6 +45,10 @@ class Achievement
         get
         {
             string[] parsed_desc = this.Description.Split("$");
+            if (this.current_tier >= this.target_amounts.Count)
+            {
+                return parsed_desc[0] + this.target_amounts[this.target_amounts.Count - 1].ToString() + parsed_desc[1];
+            }
             return parsed_desc[0] + this.target_amounts[this.current_tier].ToString() + parsed_desc[1];
         }
         set
@@ -53,11 +61,16 @@ class Achievement
     string reset_trigger;
     TrackType track_type;
 
-    List<float> target_amounts;
-    string current_total;
-    int current_tier;
+    public List<float> target_amounts { get; private set; }
+    public int GetNumTiers()
+    {
+        return target_amounts.Count;
+    }
 
-    bool hasListeners;
+    public string current_total { get; private set; }
+    public int current_tier { get; private set; }
+
+    public bool hasListeners { get; private set; }
 
     Action<string> DoTrack = null;
     public event Action<string, int, string> OnAchieved = null;
@@ -243,6 +256,12 @@ class Achievement
         }
     }
 
+    public void ResetListeners()
+    {
+        if (this.hasListeners) this.DestroyListeners();
+        if (this.current_tier < this.target_amounts.Count) this.BuildListeners();
+    }
+
     void GiveAchievement()
     {
         OnAchieved?.Invoke(this.name, this.current_tier + 1, this.description);
@@ -251,5 +270,12 @@ class Achievement
         this.current_tier++;
 
         if (this.current_tier >= this.target_amounts.Count) this.DestroyListeners();
+    }
+
+    public void ResetProgress()
+    {
+        this.current_tier = 0;
+        this.current_total = "0";
+        if (!this.hasListeners) this.BuildListeners();
     }
 }

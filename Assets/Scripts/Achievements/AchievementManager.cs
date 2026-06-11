@@ -12,6 +12,23 @@ class AchievementManager
     {
         if (theInstance == null) theInstance = new AchievementManager();
     }
+
+    public void ResetAchievements()
+    {
+        foreach(Achievement ach in achievements.Values)
+        {
+            ach.ResetProgress();
+        }
+    }
+
+    public void ResetAchievementListeners()
+    {
+        foreach(Achievement ach in achievements.Values)
+        {
+            ach.ResetListeners();
+        }
+    }
+
     public static AchievementManager Instance
     {
         get

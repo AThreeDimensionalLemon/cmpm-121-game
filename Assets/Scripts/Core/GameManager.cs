@@ -49,6 +49,7 @@ public class GameManager
         if (currentWave > levelManager.GetLevel().waves && theInstance.state != GameState.GAMELOST)
         {
             theInstance.state = GameState.GAMEOVER;
+            EventBus.Instance.DoWaveEnd(currentWave - 1);
         }
     }
 

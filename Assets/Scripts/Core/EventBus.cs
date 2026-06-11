@@ -27,6 +27,22 @@ public class EventBus
     public event Action<int> OnWaveEnd;
     public event Action<int> OnWaveStart;
     public event Action<SkillTreeNode> OnRewardClaimed;
+
+    public void ResetObservers()
+    {
+        OnDamage = null;
+        OnRelicPickup = null;
+        OnKill = null;
+        OnSpellCast = null;
+        OnGetSpellPower = null;
+        OnGetMana = null;
+        OnGetSpeed = null;
+        OnGetPlayerHP = null;
+        OnGetLastCast = null;
+        OnWaveEnd = null;
+        OnWaveStart = null;
+        OnRewardClaimed = null;
+    }
     
     public void DoDamage(Vector3 where, Damage dmg, Hittable target)
     {
